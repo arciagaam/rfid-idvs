@@ -2,24 +2,99 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Role {
-  id         Int      @id @default(autoincrement())
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  users User[]
+    id         Int      @id @default(autoincrement())
+    users      User[]
+    name       String
+    created_at DateTime @default(now())
+    updated_at DateTime @default(now())
 }
 
 model User {
-  id      Int   @id @default(autoincrement())
-  role    Role  @relation(fields: [role_id], references: [id])
-  role_id Int
+    id             Int      @id @default(autoincrement())
+    role           Role     @relation(fields: [role_id], references: [id])
+    role_id        Int
+    username       String   @unique
+    email          String   @unique
+    first_name     String
+    middle_name    String?
+    last_name      String
+    remember_token String?
+    created_at     DateTime @default(now())
+    updated_at     DateTime @default(now())
+}
+
+model Department {
+    id         Int      @id @default(autoincrement())
+    courses    Course[]
+    name       String
+    created_at DateTime @default(now())
+    updated_at DateTime @default(now())
+}
+
+model Course {
+    id            Int        @id @default(autoincrement())
+    department    Department @relation(fields: [department_id], references: [id])
+    department_id Int
+    students      Student[]
+    name          String
+    created_at    DateTime   @default(now())
+    updated_at    DateTime   @default(now())
+}
+
+model Student {
+    id             Int                 @id @default(autoincrement())
+    terms          TermStudent[]
+    validation     ValidationHistory[]
+    course         Course              @relation(fields: [course_id], references: [id])
+    course_id      Int
+    student_number Int                 @unique
+    rfid_number    String              @unique
+    first_name     String
+    middle_name    String?
+    last_name      String
+    year           Int
+    section        String?
+    is_active      Boolean             @default(true)
+    created_at     DateTime            @default(now())
+    updated_at     DateTime            @default(now())
+}
+
+model Term {
+    id              Int                 @id @default(autoincrement())
+    students        TermStudent[]
+    validation      ValidationHistory[]
+    year_start      Int
+    year_end        Int
+    number_of_terms Int
+    created_at      DateTime            @default(now())
+    updated_at      DateTime            @default(now())
+}
+
+// Pivot table for Term and Student table
+model TermStudent {
+    id         Int      @id @default(autoincrement())
+    student    Student  @relation(fields: [student_id], references: [id])
+    student_id Int
+    term       Term     @relation(fields: [term_id], references: [id])
+    term_id    Int
+    created_at DateTime @default(now())
+    updated_at DateTime @default(now())
+}
+
+model ValidationHistory {
+    id         Int      @id @default(autoincrement())
+    student    Student  @relation(fields: [student_id], references: [id])
+    student_id Int
+    term       Term     @relation(fields: [term_id], references: [id])
+    term_id    Int
+    created_at DateTime @default(now())
 }
