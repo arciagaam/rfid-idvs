@@ -12,10 +12,9 @@ export const validateRequestBody = (schema: z.Schema) => {
             next();
         } catch (e) {
             const err = e as ZodError;
-            console.log(err);
             const payload = {
                 code: 400,
-                message: err.message
+                payload: err.issues.map(issue => ({path:issue.path, message:issue.message}))
             };
 
             res.status(400).json(payload);
