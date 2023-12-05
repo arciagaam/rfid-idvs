@@ -24,6 +24,7 @@ model user {
     role_id        Int
     username       String   @unique
     email          String   @unique
+    password       String
     first_name     String
     middle_name    String?
     last_name      String
@@ -51,32 +52,32 @@ model course {
 }
 
 model student {
-    id             Int                 @id @default(autoincrement())
+    id             Int                  @id @default(autoincrement())
     terms          term_student[]
     validation     validation_history[]
-    course         course              @relation(fields: [course_id], references: [id])
+    course         course               @relation(fields: [course_id], references: [id])
     course_id      Int
-    student_number Int                 @unique
-    rfid_number    String              @unique
+    student_number Int                  @unique
+    rfid_number    String               @unique
     first_name     String
     middle_name    String?
     last_name      String
     year           Int
     section        String?
-    is_active      Boolean             @default(true)
-    created_at     DateTime            @default(now())
-    updated_at     DateTime            @default(now())
+    is_active      Boolean              @default(true)
+    created_at     DateTime             @default(now())
+    updated_at     DateTime             @default(now())
 }
 
 model term {
-    id              Int                 @id @default(autoincrement())
+    id              Int                  @id @default(autoincrement())
     students        term_student[]
     validation      validation_history[]
     year_start      Int
     year_end        Int
     number_of_terms Int
-    created_at      DateTime            @default(now())
-    updated_at      DateTime            @default(now())
+    created_at      DateTime             @default(now())
+    updated_at      DateTime             @default(now())
 }
 
 // Pivot table for Term and Student table

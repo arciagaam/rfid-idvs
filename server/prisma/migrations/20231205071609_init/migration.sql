@@ -12,6 +12,7 @@ CREATE TABLE "user" (
     "role_id" INTEGER NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "first_name" TEXT NOT NULL,
     "middle_name" TEXT,
     "last_name" TEXT NOT NULL,

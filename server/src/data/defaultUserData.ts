@@ -1,11 +1,6 @@
 import bcrypt from 'bcrypt';
-let defaultPassword
 
-const generatePassword = async () => {
-   defaultPassword = await bcrypt.hash('password', 12);
-}
-
-generatePassword();
+const DEFAULT_PASSWORD = bcrypt.hashSync('password', 12);
 
 const users = [
     {
@@ -13,7 +8,16 @@ const users = [
         last_name: "adminln",
         username: "admin",
         email: "admin@email.com",
+        password: DEFAULT_PASSWORD,
         role_id: 1,
+    },
+    {
+        first_name: "stafffn",
+        last_name: "staffln",
+        username: "staff",
+        email: "staff@email.com",
+        password: DEFAULT_PASSWORD,
+        role_id: 2,
     }
 ]
 
