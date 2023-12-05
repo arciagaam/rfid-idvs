@@ -92,7 +92,7 @@ const updateUser = asyncHandler(
             const payload = {
                 code: 401,
                 message: "User successfully updated.",
-                data: getUserDTO(user)
+                data: []
             }
 
             res.status(200).json()

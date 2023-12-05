@@ -28,7 +28,7 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
                 lastName: user.last_name,
             }
 
-            res.status(200).json({code:200, payload});
+            res.status(200).json({code:200, user:payload});
 
         } else {
             res.status(401).json({
