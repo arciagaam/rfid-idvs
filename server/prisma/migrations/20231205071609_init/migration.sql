@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Role" (
+CREATE TABLE "role" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -7,7 +7,7 @@ CREATE TABLE "Role" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "user" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "role_id" INTEGER NOT NULL,
     "username" TEXT NOT NULL,
@@ -18,11 +18,11 @@ CREATE TABLE "User" (
     "remember_token" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "User_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Role" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "user_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "Role" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Department" (
+CREATE TABLE "department" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -30,17 +30,17 @@ CREATE TABLE "Department" (
 );
 
 -- CreateTable
-CREATE TABLE "Course" (
+CREATE TABLE "course" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "department_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Course_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "Department" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "course_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "department" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Student" (
+CREATE TABLE "student" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "course_id" INTEGER NOT NULL,
     "student_number" INTEGER NOT NULL,
@@ -53,11 +53,11 @@ CREATE TABLE "Student" (
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "Student_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "Course" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "student_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "course" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Term" (
+CREATE TABLE "term" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "year_start" INTEGER NOT NULL,
     "year_end" INTEGER NOT NULL,
@@ -67,37 +67,37 @@ CREATE TABLE "Term" (
 );
 
 -- CreateTable
-CREATE TABLE "TermStudent" (
+CREATE TABLE "term_student" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "student_id" INTEGER NOT NULL,
     "term_id" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "TermStudent_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Student" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "TermStudent_term_id_fkey" FOREIGN KEY ("term_id") REFERENCES "Term" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "term_student_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Student" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "term_student_term_id_fkey" FOREIGN KEY ("term_id") REFERENCES "Term" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "ValidationHistory" (
+CREATE TABLE "validation_history" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "student_id" INTEGER NOT NULL,
     "term_id" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "ValidationHistory_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "Student" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "ValidationHistory_term_id_fkey" FOREIGN KEY ("term_id") REFERENCES "Term" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "ValidationHistory_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "student" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "ValidationHistory_term_id_fkey" FOREIGN KEY ("term_id") REFERENCES "term" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE UNIQUE INDEX "user_username_key" ON "user"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_student_number_key" ON "Student"("student_number");
+CREATE UNIQUE INDEX "student_student_number_key" ON "student"("student_number");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_rfid_number_key" ON "Student"("rfid_number");
+CREATE UNIQUE INDEX "student_rfid_number_key" ON "student"("rfid_number");
 
 -- CreateTrigger
 CREATE TRIGGER role_update AFTER UPDATE ON Role
@@ -109,55 +109,55 @@ BEGIN
 END;
 
 -- CreateTrigger
-CREATE TRIGGER user_update AFTER UPDATE ON User
+CREATE TRIGGER user_update AFTER UPDATE ON user
 FOR EACH ROW
 BEGIN
-    UPDATE User
+    UPDATE user
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
 
 -- CreateTrigger
-CREATE TRIGGER department_update AFTER UPDATE ON Department
+CREATE TRIGGER department_update AFTER UPDATE ON department
 FOR EACH ROW
 BEGIN
-    UPDATE Department
+    UPDATE department
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
 
 -- CreateTrigger
-CREATE TRIGGER course_update AFTER UPDATE ON Course
+CREATE TRIGGER course_update AFTER UPDATE ON course
 FOR EACH ROW
 BEGIN
-    UPDATE Course
+    UPDATE course
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
 
 -- CreateTrigger
-CREATE TRIGGER student_update AFTER UPDATE ON Student
+CREATE TRIGGER student_update AFTER UPDATE ON student
 FOR EACH ROW
 BEGIN
-    UPDATE Student
+    UPDATE student
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
 
 -- CreateTrigger
-CREATE TRIGGER term_update AFTER UPDATE ON Term
+CREATE TRIGGER term_update AFTER UPDATE ON term
 FOR EACH ROW
 BEGIN
-    UPDATE Term
+    UPDATE term
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
 
 -- CreateTrigger
-CREATE TRIGGER term_student_update AFTER UPDATE ON TermStudent
+CREATE TRIGGER term_student_update AFTER UPDATE ON term_student
 FOR EACH ROW
 BEGIN
-    UPDATE TermStudent
+    UPDATE term_student
     SET updated_at = CURRENT_TIMESTAMP
     WHERE id = NEW.id;
 END;
