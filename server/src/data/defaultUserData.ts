@@ -9,11 +9,11 @@ generatePassword();
 
 const users = [
     {
-        username: 'admin',
-        email: 'admin@email.com',
-        first_name: 'adminFN',
-        last_name: 'adminFN',
-        role: '1'
+        first_name: "adminfn",
+        last_name: "adminln",
+        username: "admin",
+        email: "admin@email.com",
+        role_id: 1,
     }
 ]
 
