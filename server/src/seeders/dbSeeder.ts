@@ -1,29 +1,28 @@
 import { PrismaClient } from "@prisma/client";
 import defaultUserData from './../data/defaultUserData';
 import defaultRoleData from './../data/defaultRoleData';
-import colors from 'colors'
+
+import tableSeeder from "./seederWrapper";
 
 const prisma = new PrismaClient();
 
 async function run() {
 
-    console.log(colors.blue('[Running] Role Seeder...'));
-    for await (const role of defaultRoleData) {
-        await prisma.role.create({
-            data: role
-        })
-    }
-    console.log(colors.green('[Success] Role Seeder...'));
+    await tableSeeder('Role', async () => {
+        for await (const role of defaultRoleData) {
+            await prisma.role.create({
+                data: role
+            })
+        }
+    })
 
-    console.log(colors.blue('[Running] User Seeder...'));
-    for await (const user of defaultUserData) {
-        await prisma.user.create({
-            data: user
-        })
-    }
-    console.log(colors.green('[Success] User Seeder...'));
-
-
+    await tableSeeder('User', async () => {
+        for await (const user of defaultUserData) {
+            await prisma.user.create({
+                data: user
+            })
+        }
+    })
 }
 
 run();
