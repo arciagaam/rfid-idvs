@@ -16,6 +16,10 @@ app.set('port', 3000)
 
 app.use('/api', routes);
 
+app.get('/', (req, res) => {
+    res.send('API is running');
+});
+
 app.listen(app.get('port'), () => {
     console.log(`Listening to http://localhost:${app.get('port')}`)
 })
