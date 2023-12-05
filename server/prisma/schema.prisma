@@ -58,7 +58,7 @@ model student {
     course         course               @relation(fields: [course_id], references: [id])
     course_id      Int
     student_number Int                  @unique
-    rfid_number    String               @unique
+    rfid_number    String?               @unique
     first_name     String
     middle_name    String?
     last_name      String

@@ -65,7 +65,7 @@ const storeUser = asyncHandler(
                 }
             };
 
-            res.status(200).json(payload)
+            res.status(200).json(payload);
         } catch (e) {
             const payload = {
                 code: 401,
