@@ -9,10 +9,14 @@ const protect = asyncHandler(async (req: Request | any, res: Response, next: Nex
     let token;
     token = req.cookies.jwt;
 
-    if(token) {
+    if (token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
-            req.user = await prisma.user.findFirst({id: decoded.id});
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret) as { id: number };
+            req.user = await prisma.user.findFirst({
+                where: {
+                    id: decoded.id
+                }
+            });
             next();
         } catch (error) {
             console.error(error);
@@ -26,7 +30,7 @@ const protect = asyncHandler(async (req: Request | any, res: Response, next: Nex
 });
 
 const admin = (req: Request | any, res: Response, next: NextFunction) => {
-    if(req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === 'admin') {
         next();
     } else {
         res.status(401)
