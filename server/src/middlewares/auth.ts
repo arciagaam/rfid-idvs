@@ -5,14 +5,20 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+type TJWT = {
+    id: number
+}
+
 const protect = asyncHandler(async (req: Request | any, res: Response, next: NextFunction) => {
     let token;
     token = req.cookies.jwt;
 
     if(token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
-            req.user = await prisma.user.findFirst({id: decoded.id});
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret) as TJWT;
+            req.user = await prisma.user.findFirst({
+                where: {id: decoded.id}
+            });
             next();
         } catch (error) {
             console.error(error);

@@ -7,28 +7,51 @@ import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient();
 
-const authenticate = asyncHandler(async (req: Request, res: Response) => {
-    const {username, password} = req.body;
+const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
+    const { username, password } = req.body;
 
-    const user = await prisma.user.findUnique({
-        where: {
-           username
-        }
-    });
-
-    if(user && (bcrypt.compareSync(password, user.password))) {
-        generateToken(res, user);
-
-        res.status(200).json({
-            id: user.id,
-            email: user.email,
-            username: user.username,
-            firstName: user.first_name,
-            middleName: user.middle_name,
-            lastName: user.last_name,
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                username
+            }
         });
-    }else {
-        res.status(401);
-        throw new Error('Invalid email or password');
+
+        if (user && (bcrypt.compareSync(password, user.password))) {
+            generateToken(res, user);
+            const payload = {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                firstName: user.first_name,
+                middleName: user.middle_name,
+                lastName: user.last_name,
+            }
+
+            res.status(200).json({code:200, payload});
+
+        } else {
+            res.status(401).json({
+                code: 401,
+                message: 'Invalid email or password'
+            });
+        }
+
+    } catch (error) {
+        res.status(401).json({
+            code: 401,
+            message: error instanceof Error ? error.message : 'Unknown error'
+        })
     }
 });
+
+const logoutUser = asyncHandler(async(req: Request, res: Response) => {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(0)
+    })
+
+    res.status(200).json({code:200, message: 'User logged out'});
+})
+
+export { authenticateUser, logoutUser }
