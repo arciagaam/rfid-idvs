@@ -12,7 +12,7 @@ const protect = asyncHandler(async (req: Request | any, res: Response, next: Nex
     if(token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
-            req.user = await prisma.user.findFirst({id: decoded.userId});
+            req.user = await prisma.user.findFirst({id: decoded.id});
             next();
         } catch (error) {
             console.error(error);
