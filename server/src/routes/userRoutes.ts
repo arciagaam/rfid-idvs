@@ -2,7 +2,7 @@ import express from 'express';
 import { admin, verifyToken, verifyBearerToken } from '../middlewares/auth';
 import { validateRequestBody } from '../middlewares/validateRequestBody';
 import { userSchema } from '../schemas/userSchema';
-import { getAllUser, storeUser, updateUser } from '../controllers/UserController';
+import { deleteUser, getAllUser, getUser, storeUser, updateUser } from '../controllers/UserController';
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ router
 
 router
     .route('/:id')
-    .put(validateRequestBody(userSchema), updateUser);
+    .get(getUser)
+    .put(validateRequestBody(userSchema), updateUser)
+    .delete(deleteUser);
 
 export default router;

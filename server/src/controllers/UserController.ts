@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
-import generateToken from "../utils/generateToken";
-import jwt from 'jsonwebtoken';
 import { TUserDTO, TUser } from "../types/UserDTO";
 
 const prisma = new PrismaClient();
@@ -37,11 +35,45 @@ const getAllUser = asyncHandler(
     }
 )
 
-const getUser = (req: Request, res: Response) => {
-    const { id } = req.params;
+const getUser = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
 
-    // code here...
-}
+        try {
+            const user = await prisma.user.findUniqueOrThrow({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+            const payload = {
+                code: 200,
+                message: "User successfully retrieved.",
+                data: {}
+            };
+
+            if (user) {
+                Object.assign(payload.data, {
+                    id: user.id,
+                    email: user.email,
+                    username: user.username,
+                    firstName: user.first_name,
+                    middleName: user.middle_name,
+                    lastName: user.last_name,
+                });
+            }
+
+            res.status(200).json(payload);
+        } catch (e) {
+            const payload = {
+                code: 401,
+                message: e instanceof Error ? e.message : "Unknown error"
+            }
+
+            res.status(401).json(payload);
+        }
+    }
+)
 
 const storeUser = asyncHandler(
     async (req: Request, res: Response) => {
@@ -83,16 +115,26 @@ const updateUser = asyncHandler(
         const body = req.body as TUserDTO;
 
         try {
-            const user = await prisma.user.findFirst({
+            const user = await prisma.user.update({
                 where: {
                     id: parseInt(id)
+                },
+                data: {
+                    ...body
                 }
             });
 
             const payload = {
                 code: 401,
                 message: "User successfully updated.",
-                data: []
+                data: {
+                    id: user.id,
+                    email: user.email,
+                    username: user.username,
+                    firstName: user.first_name,
+                    middleName: user.middle_name,
+                    lastName: user.last_name,
+                }
             }
 
             res.status(200).json(payload)
@@ -107,11 +149,34 @@ const updateUser = asyncHandler(
     }
 )
 
-const deleteUser = (req: Request, res: Response) => {
-    const { id } = req.params;
+const deleteUser = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
 
-    // code here...
-}
+        try {
+            await prisma.user.delete({
+                where: {
+                    id: parseInt(id)
+                }
+            });
+
+            const payload = {
+                code: 401,
+                message: "User successfully deleted.",
+                data: {}
+            };
+
+            res.status(200).json(payload);
+        } catch (e) {
+            const payload = {
+                code: 401,
+                message: e instanceof Error ? e.message : "Unknown error"
+            }
+
+            res.status(401).json(payload);
+        }
+    }
+)
 
 export {
     getAllUser,
