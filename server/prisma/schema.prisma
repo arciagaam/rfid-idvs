@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "mysql"
     url      = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ model role {
     users      user[]
     name       String
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model user {
@@ -30,7 +30,7 @@ model user {
     last_name      String
     remember_token String?
     created_at     DateTime @default(now())
-    updated_at     DateTime @default(now())
+    updated_at     DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model department {
@@ -38,7 +38,7 @@ model department {
     courses    course[]
     name       String
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model course {
@@ -48,7 +48,7 @@ model course {
     students      student[]
     name          String
     created_at    DateTime   @default(now())
-    updated_at    DateTime   @default(now())
+    updated_at    DateTime   @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model student {
@@ -58,7 +58,7 @@ model student {
     course         course               @relation(fields: [course_id], references: [id])
     course_id      Int
     student_number Int                  @unique
-    rfid_number    String?               @unique
+    rfid_number    String?              @unique
     first_name     String
     middle_name    String?
     last_name      String
@@ -66,7 +66,7 @@ model student {
     section        String?
     is_active      Boolean              @default(true)
     created_at     DateTime             @default(now())
-    updated_at     DateTime             @default(now())
+    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model term {
@@ -77,7 +77,7 @@ model term {
     year_end        Int
     number_of_terms Int
     created_at      DateTime             @default(now())
-    updated_at      DateTime             @default(now())
+    updated_at      DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 // Pivot table for Term and Student table
@@ -88,7 +88,7 @@ model term_student {
     term       term     @relation(fields: [term_id], references: [id])
     term_id    Int
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 model validation_history {
