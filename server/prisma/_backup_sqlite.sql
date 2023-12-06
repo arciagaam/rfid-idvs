@@ -1,3 +1,5 @@
+-- Migration backup with Triggers
+
 -- CreateTable
 CREATE TABLE "role" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
