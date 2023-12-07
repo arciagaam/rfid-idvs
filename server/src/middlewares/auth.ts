@@ -2,14 +2,23 @@ import jwt, { Secret } from 'jsonwebtoken';
 import asyncHandler from './asyncHandler';
 import { NextFunction, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { TUser } from '../types/UserDTO';
 
 const prisma = new PrismaClient();
 
-type TJWT = {
-    id: number
+type JWTToken = {
+    id: number;
 }
 
-const verifyToken = asyncHandler(async (req: Request | any, res: Response, next: NextFunction) => {
+type RequestWithUser = Request & {
+    user: TUser;
+}
+
+const isUserId = (value: unknown): value is JWTToken => {
+    return (value as JWTToken).id !== undefined;
+}
+
+const verifyToken = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
 
     if (!token) {
@@ -17,9 +26,11 @@ const verifyToken = asyncHandler(async (req: Request | any, res: Response, next:
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret) as TJWT;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
 
-        req.user = await prisma.user.findFirst({
+        if (!isUserId(decoded)) throw new Error("Unauthorized access.");
+
+        req.user = await prisma.user.findUniqueOrThrow({
             where: { id: decoded.id }
         });
 
