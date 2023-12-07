@@ -70,14 +70,23 @@ model student {
 }
 
 model term {
-    id              Int                  @id @default(autoincrement())
-    students        term_student[]
-    validation      validation_history[]
-    year_start      Int
-    year_end        Int
-    number_of_terms Int
-    created_at      DateTime             @default(now())
-    updated_at      DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+    id             Int                  @id @default(autoincrement())
+    students       term_student[]
+    validation     validation_history[]
+    school_year    school_year          @relation(fields: [school_year_id], references: [id])
+    school_year_id Int
+    term           Int
+    created_at     DateTime             @default(now())
+    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+}
+
+model school_year {
+    id         Int      @id @default(autoincrement())
+    term       term[]
+    year_start Int
+    year_end   Int
+    created_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
 
 // Pivot table for Term and Student table
