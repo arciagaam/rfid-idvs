@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import asyncHandler from "../middlewares/asyncHandler";
 import { TUserClientDTOWithPassword, TUserServerDTO } from "../types/UserDTO";
@@ -23,7 +24,6 @@ const getUserWithRoleDTO = (user: TUserServerDTO) => {
 
 const getAllUsers = asyncHandler(
     async (req: Request, res: Response) => {
-        console.log("Getting all users...", req.params);
         try {
             const users = await prisma.user.findMany({
                 select: {
@@ -42,22 +42,26 @@ const getAllUsers = asyncHandler(
                 }
             });
 
-            res.status(200).json(users);
-        } catch (e) {
             const payload = {
-                code: 401,
-                message: e instanceof Error ? e.message : "Unknown error",
-                data: []
+                code: 200,
+                message: "User successfully created.",
+                data: users
             };
 
-            res.status(401).json(payload);
+            res.status(200).json(payload);
+        } catch (e) {
+            const payload = {
+                code: e instanceof PrismaClientKnownRequestError ? e.code : 400,
+                message: e instanceof Error ? e.message : "Unknown error",
+            };
+
+            res.status(400).json(payload);
         }
     }
 )
 
 const getUser = asyncHandler(
     async (req: Request, res: Response) => {
-        console.log("Getting user by ID...", req.params);
         const { id } = req.params;
 
         try {
@@ -90,11 +94,11 @@ const getUser = asyncHandler(
             res.status(200).json(payload);
         } catch (e) {
             const payload = {
-                code: 401,
-                message: e instanceof Error ? e.message : "Unknown error"
+                code: e instanceof PrismaClientKnownRequestError ? e.code : 400,
+                message: e instanceof Error ? e.message : "Unknown error",
             }
 
-            res.status(401).json(payload);
+            res.status(400).json(payload);
         }
     }
 )
@@ -131,11 +135,11 @@ const storeUser = asyncHandler(
             res.status(200).json(payload);
         } catch (e) {
             const payload = {
-                code: 401,
+                code: e instanceof PrismaClientKnownRequestError ? e.code : 400,
                 message: e instanceof Error ? e.message : "Unknown error"
             }
 
-            res.status(401).json(payload);
+            res.status(400).json(payload);
         }
     }
 )
@@ -168,7 +172,7 @@ const updateUser = asyncHandler(
             });
 
             const payload = {
-                code: 401,
+                code: 400,
                 message: "User successfully updated.",
                 data: getUserWithRoleDTO(user)
             }
@@ -176,11 +180,11 @@ const updateUser = asyncHandler(
             res.status(200).json(payload)
         } catch (e) {
             const payload = {
-                code: 401,
+                code: e instanceof PrismaClientKnownRequestError ? e.code : 400,
                 message: e instanceof Error ? e.message : "Unknown error"
             }
 
-            res.status(401).json(payload);
+            res.status(400).json(payload);
         }
     }
 )
@@ -197,7 +201,7 @@ const deleteUser = asyncHandler(
             });
 
             const payload = {
-                code: 401,
+                code: 400,
                 message: "User successfully deleted.",
                 data: {}
             };
@@ -205,11 +209,11 @@ const deleteUser = asyncHandler(
             res.status(200).json(payload);
         } catch (e) {
             const payload = {
-                code: 401,
+                code: e instanceof PrismaClientKnownRequestError ? e.code : 400,
                 message: e instanceof Error ? e.message : "Unknown error"
             }
 
-            res.status(401).json(payload);
+            res.status(400).json(payload);
         }
     }
 )
