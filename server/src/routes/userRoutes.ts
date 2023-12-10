@@ -2,7 +2,7 @@ import express from 'express';
 import { admin, verifyToken, verifyBearerToken } from '../middlewares/auth';
 import { validateRequestBody } from '../middlewares/validateRequestBody';
 import { userSchema } from '../schemas/userSchema';
-import { deleteUser, getAllUser, getUser, storeUser, updateUser } from '../controllers/UserController';
+import { deleteUser, getAllUser, getUser, storeUser, updateUser } from '../controllers/userController';
 
 const router = express.Router();
 

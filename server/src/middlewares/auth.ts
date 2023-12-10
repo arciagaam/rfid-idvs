@@ -61,7 +61,7 @@ const verifyBearerToken = asyncHandler(
     })
 
 const admin = (req: Request | any, res: Response, next: NextFunction) => {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role_id === 1) {
         next();
     } else {
         res.status(401).json({ message: "Not authorized, token failed." });
