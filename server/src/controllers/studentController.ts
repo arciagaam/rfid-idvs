@@ -55,19 +55,12 @@ const getStudent = asyncHandler(
         const { id } = req.params;
 
         try {
-            const student = await prisma.user.findUniqueOrThrow({
+            const student = await prisma.student.findUniqueOrThrow({
                 where: {
                     id: parseInt(id)
                 },
                 select: {
                     id: true,
-                    role_id: true,
-                    role: {
-                        select: {
-                            name: true
-                        }
-                    },
-                    email: true,
                     first_name: true,
                     middle_name: true,
                     last_name: true,
@@ -97,17 +90,10 @@ const storeStudent = asyncHandler(
         const body = req.body as any;
 
         try {
-            const student = await prisma.user.create({
+            const student = await prisma.student.create({
                 data: body,
                 select: {
                     id: true,
-                    role_id: true,
-                    role: {
-                        select: {
-                            name: true
-                        }
-                    },
-                    email: true,
                     first_name: true,
                     middle_name: true,
                     last_name: true,
@@ -138,20 +124,13 @@ const updateStudent = asyncHandler(
         const body = req.body as any;
 
         try {
-            const student = await prisma.user.update({
+            const student = await prisma.student.update({
                 where: {
                     id: parseInt(id)
                 },
                 data: body,
                 select: {
                     id: true,
-                    role_id: true,
-                    role: {
-                        select: {
-                            name: true
-                        }
-                    },
-                    email: true,
                     first_name: true,
                     middle_name: true,
                     last_name: true,
