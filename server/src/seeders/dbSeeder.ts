@@ -32,7 +32,7 @@ async function run() {
     await tableSeeder('department', async () => {
         for await (const department of departments) {
             await prisma.department.create({
-                data: department
+                data: department,
             });
         }
 

@@ -86,7 +86,7 @@ model term {
 
 model school_year {
     id         Int      @id @default(autoincrement())
-    term       term[]
+    terms      term[]
     year_start Int      @unique
     year_end   Int
     created_at DateTime @default(now())
