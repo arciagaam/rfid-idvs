@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn ./app.ts",
-    "db:fresh": "prisma migrate reset && npx ts-node ./src/seeders/dbSeeder.ts"
+    "db:fresh": "prisma migrate reset && npx ts-node ./src/seeders/dbSeeder.ts",
+    "db:push": "prisma db push"
   },
   "dependencies": {
-    "@prisma/client": "^5.6.0",
+    "@prisma/client": "^5.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.5",
     "bcrypt": "^5.1.1",

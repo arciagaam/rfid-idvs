@@ -13,7 +13,7 @@ datasource db {
 model role {
     id         Int      @id @default(autoincrement())
     users      user[]
-    name       String
+    name       String   @db.VarChar(191)
     created_at DateTime @default(now())
     updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
@@ -25,10 +25,10 @@ model user {
     username       String   @unique
     email          String   @unique
     password       String
-    first_name     String
-    middle_name    String?
-    last_name      String
-    remember_token String?
+    first_name     String   @db.VarChar(191)
+    middle_name    String?  @db.VarChar(191)
+    last_name      String   @db.VarChar(191)
+    remember_token String?  @db.VarChar(191)
     created_at     DateTime @default(now())
     updated_at     DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
@@ -36,7 +36,7 @@ model user {
 model department {
     id         Int      @id @default(autoincrement())
     courses    course[]
-    name       String
+    name       String   @db.VarChar(191)
     created_at DateTime @default(now())
     updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
@@ -46,7 +46,7 @@ model course {
     department    department @relation(fields: [department_id], references: [id])
     department_id Int
     students      student[]
-    name          String
+    name          String     @db.VarChar(191)
     created_at    DateTime   @default(now())
     updated_at    DateTime   @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
@@ -59,10 +59,13 @@ model student {
     course_id      Int
     student_number Int                  @unique
     rfid_number    String?              @unique
-    first_name     String
-    middle_name    String?
-    last_name      String
-    address        String
+    first_name     String               @db.VarChar(191)
+    middle_name    String?              @db.VarChar(191)
+    last_name      String               @db.VarChar(191)
+    address_line_1 String
+    address_line_2 String?
+    city           String               @db.VarChar(191)
+    province       String               @db.VarChar(191)
     year           Int
     section        String?
     is_active      Boolean              @default(true)

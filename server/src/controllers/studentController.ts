@@ -23,16 +23,9 @@ const getStudentWithRoleDTO = (student: any) => {
 const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
         try {
-            const students = await prisma.user.findMany({
+            const students = await prisma.student.findMany({
                 select: {
                     id: true,
-                    role_id: true,
-                    role: {
-                        select: {
-                            name: true
-                        }
-                    },
-                    email: true,
                     first_name: true,
                     middle_name: true,
                     last_name: true,
