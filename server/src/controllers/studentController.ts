@@ -2,30 +2,28 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
-import { TUserDTOWithPassword, TUserDTOWithRole } from "../types/UserDTO";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 
 const prisma = new PrismaClient();
 
-const getUserWithRoleDTO = (user: TUserDTOWithRole) => {
+const getStudentWithRoleDTO = (student: any) => {
     return {
-        id: user.id,
-        role_id: user.role_id,
+        id: student.id,
+        role_id: student.role_id,
         role: {
-            name: user.role.name
+            name: student.role.name
         },
-        email: user.email,
-        username: user.username,
-        first_name: user.first_name,
-        middle_name: user.middle_name ? user.middle_name : null,
-        last_name: user.last_name,
+        email: student.email,
+        first_name: student.first_name,
+        middle_name: student.middle_name ? student.middle_name : null,
+        last_name: student.last_name,
     }
 }
 
-const getAllUsers = asyncHandler(
+const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
         try {
-            const users = await prisma.user.findMany({
+            const students = await prisma.user.findMany({
                 select: {
                     id: true,
                     role_id: true,
@@ -34,7 +32,6 @@ const getAllUsers = asyncHandler(
                             name: true
                         }
                     },
-                    username: true,
                     email: true,
                     first_name: true,
                     middle_name: true,
@@ -44,8 +41,8 @@ const getAllUsers = asyncHandler(
 
             const payload = {
                 code: 200,
-                message: "Users successfully retrieved.",
-                data: users
+                message: "Students successfully retrieved.",
+                data: students
             };
 
             res.status(200).json(payload);
@@ -60,12 +57,12 @@ const getAllUsers = asyncHandler(
     }
 )
 
-const getUser = asyncHandler(
+const getStudent = asyncHandler(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
         try {
-            const user = await prisma.user.findUniqueOrThrow({
+            const student = await prisma.user.findUniqueOrThrow({
                 where: {
                     id: parseInt(id)
                 },
@@ -77,7 +74,6 @@ const getUser = asyncHandler(
                             name: true
                         }
                     },
-                    username: true,
                     email: true,
                     first_name: true,
                     middle_name: true,
@@ -87,8 +83,8 @@ const getUser = asyncHandler(
 
             const payload = {
                 code: 200,
-                message: "User successfully retrieved.",
-                data: getUserWithRoleDTO(user)
+                message: "Student successfully retrieved.",
+                data: getStudentWithRoleDTO(student)
             };
 
             res.status(200).json(payload);
@@ -103,12 +99,12 @@ const getUser = asyncHandler(
     }
 )
 
-const storeUser = asyncHandler(
+const storeStudent = asyncHandler(
     async (req: Request, res: Response) => {
-        const body = req.body as TUserDTOWithPassword;
+        const body = req.body as any;
 
         try {
-            const user = await prisma.user.create({
+            const student = await prisma.user.create({
                 data: body,
                 select: {
                     id: true,
@@ -118,7 +114,6 @@ const storeUser = asyncHandler(
                             name: true
                         }
                     },
-                    username: true,
                     email: true,
                     first_name: true,
                     middle_name: true,
@@ -128,8 +123,8 @@ const storeUser = asyncHandler(
 
             const payload = {
                 code: 200,
-                message: "User successfully created.",
-                data: getUserWithRoleDTO(user)
+                message: "Student successfully created.",
+                data: getStudentWithRoleDTO(student)
             };
 
             res.status(200).json(payload);
@@ -144,13 +139,13 @@ const storeUser = asyncHandler(
     }
 )
 
-const updateUser = asyncHandler(
+const updateStudent = asyncHandler(
     async (req: Request, res: Response) => {
         const { id } = req.params;
-        const body = req.body as TUserDTOWithPassword;
+        const body = req.body as any;
 
         try {
-            const user = await prisma.user.update({
+            const student = await prisma.user.update({
                 where: {
                     id: parseInt(id)
                 },
@@ -163,7 +158,6 @@ const updateUser = asyncHandler(
                             name: true
                         }
                     },
-                    username: true,
                     email: true,
                     first_name: true,
                     middle_name: true,
@@ -173,8 +167,8 @@ const updateUser = asyncHandler(
 
             const payload = {
                 code: 400,
-                message: "User successfully updated.",
-                data: getUserWithRoleDTO(user)
+                message: "Student successfully updated.",
+                data: getStudentWithRoleDTO(student)
             }
 
             res.status(200).json(payload)
@@ -189,12 +183,12 @@ const updateUser = asyncHandler(
     }
 )
 
-const deleteUser = asyncHandler(
+const deleteStudent = asyncHandler(
     async (req: Request, res: Response) => {
         const { id } = req.params;
 
         try {
-            await prisma.user.delete({
+            await prisma.student.delete({
                 where: {
                     id: parseInt(id)
                 }
@@ -202,7 +196,7 @@ const deleteUser = asyncHandler(
 
             const payload = {
                 code: 400,
-                message: "User successfully deleted.",
+                message: "Student successfully deleted.",
                 data: {}
             };
 
@@ -219,9 +213,9 @@ const deleteUser = asyncHandler(
 )
 
 export {
-    getAllUsers,
-    getUser,
-    storeUser,
-    updateUser,
-    deleteUser
+    getAllStudents,
+    getStudent,
+    storeStudent,
+    updateStudent,
+    deleteStudent
 };

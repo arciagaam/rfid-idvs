@@ -1,27 +1,15 @@
 import type { user } from '@prisma/client'
+import type { WithOptional } from '../helpers/genericHelpers';
 
-export type TUserClientDTO = {
-    username: string;
-    email: string;
-    first_name: string;
-    middle_name?: string;
-    last_name: string;
-    role_id: number;
-}
+export type TUser = Omit<user, "created_at" | "updated_at" | "remember_token">;
 
-export type TUserClientDTOWithPassword = TUserClientDTO & { password: string };
+export type TUserDTO = WithOptional<TUser, "middle_name">
 
-export type TUserServerDTO = {
-    id: number,
-    role_id: number;
+export type TUserDTOWithPassword = TUserDTO;
+export type TUserDTOWithoutPassword = Omit<TUserDTO, "password">;
+
+export type TUserDTOWithRole = WithOptional<TUserDTOWithoutPassword, "middle_name"> & {
     role: {
-        name: string;
-    },
-    username: string;
-    email: string;
-    first_name: string;
-    middle_name: string | null;
-    last_name: string;
-}
-
-export type TUser = user;
+        name: string
+    }
+};
