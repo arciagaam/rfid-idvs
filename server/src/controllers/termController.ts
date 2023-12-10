@@ -21,7 +21,7 @@ const getAllTerms = asyncHandler(async(req: Request, res: Response) => {
         res.status(200).json(payload);
 
     } catch (e) {
-        
+
         const payload = {
             code: 401,
             message: e instanceof Error ? e.message : "Unknown error",
@@ -123,4 +123,18 @@ const storeTerm = asyncHandler(async (req: Request, res: Response) => {
     }
 })
 
-export { getAllTerms, getTerm, storeTerm }
+const updateTerm = asyncHandler(async (req: Request, res: Response) => {
+    //update Term
+});
+
+const deleteTerm = asyncHandler(async (req: Request, res: Response) => {
+    //update Term
+})
+
+export { 
+    getAllTerms, 
+    getTerm, 
+    storeTerm,
+    updateTerm,
+    deleteTerm 
+}
