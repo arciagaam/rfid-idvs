@@ -2,27 +2,47 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
-import { TUserDTO, TUser } from "../types/UserDTO";
+import { TUserClientDTOWithPassword, TUserServerDTO } from "../types/UserDTO";
 
 const prisma = new PrismaClient();
 
-const getUserDTO = (user: TUser) => {
+const getUserWithRoleDTO = (user: TUserServerDTO) => {
     return {
+        id: user.id,
+        role_id: user.role_id,
+        role: {
+            name: user.role.name
+        },
         email: user.email,
         username: user.username,
         first_name: user.first_name,
-        middle_name: user.middle_name ? user.middle_name : undefined,
+        middle_name: user.middle_name ? user.middle_name : null,
         last_name: user.last_name,
-        role_id: user.role_id
     }
 }
 
-const getAllUser = asyncHandler(
+const getAllUsers = asyncHandler(
     async (req: Request, res: Response) => {
+        console.log("Getting all users...", req.params);
         try {
-            const user = await prisma.user.findMany();
+            const users = await prisma.user.findMany({
+                select: {
+                    id: true,
+                    role_id: true,
+                    role: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    username: true,
+                    email: true,
+                    first_name: true,
+                    middle_name: true,
+                    last_name: true,
+                }
+            });
 
-            res.status(200).json(user);
+            res.status(200).json(users);
         } catch (e) {
             const payload = {
                 code: 401,
@@ -37,31 +57,35 @@ const getAllUser = asyncHandler(
 
 const getUser = asyncHandler(
     async (req: Request, res: Response) => {
+        console.log("Getting user by ID...", req.params);
         const { id } = req.params;
 
         try {
             const user = await prisma.user.findUniqueOrThrow({
                 where: {
                     id: parseInt(id)
+                },
+                select: {
+                    id: true,
+                    role_id: true,
+                    role: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    username: true,
+                    email: true,
+                    first_name: true,
+                    middle_name: true,
+                    last_name: true,
                 }
             });
 
             const payload = {
                 code: 200,
                 message: "User successfully retrieved.",
-                data: {}
+                data: getUserWithRoleDTO(user)
             };
-
-            if (user) {
-                Object.assign(payload.data, {
-                    id: user.id,
-                    email: user.email,
-                    username: user.username,
-                    firstName: user.first_name,
-                    middleName: user.middle_name,
-                    lastName: user.last_name,
-                });
-            }
 
             res.status(200).json(payload);
         } catch (e) {
@@ -77,24 +101,31 @@ const getUser = asyncHandler(
 
 const storeUser = asyncHandler(
     async (req: Request, res: Response) => {
-        const body = req.body as TUserDTO;
+        const body = req.body as TUserClientDTOWithPassword;
 
         try {
             const user = await prisma.user.create({
-                data: body
+                data: body,
+                select: {
+                    id: true,
+                    role_id: true,
+                    role: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    username: true,
+                    email: true,
+                    first_name: true,
+                    middle_name: true,
+                    last_name: true,
+                }
             });
 
             const payload = {
                 code: 200,
                 message: "User successfully created.",
-                data: {
-                    id: user.id,
-                    email: user.email,
-                    username: user.username,
-                    firstName: user.first_name,
-                    middleName: user.middle_name,
-                    lastName: user.last_name,
-                }
+                data: getUserWithRoleDTO(user)
             };
 
             res.status(200).json(payload);
@@ -112,29 +143,34 @@ const storeUser = asyncHandler(
 const updateUser = asyncHandler(
     async (req: Request, res: Response) => {
         const { id } = req.params;
-        const body = req.body as TUserDTO;
+        const body = req.body as TUserClientDTOWithPassword;
 
         try {
             const user = await prisma.user.update({
                 where: {
                     id: parseInt(id)
                 },
-                data: {
-                    ...body
+                data: body,
+                select: {
+                    id: true,
+                    role_id: true,
+                    role: {
+                        select: {
+                            name: true
+                        }
+                    },
+                    username: true,
+                    email: true,
+                    first_name: true,
+                    middle_name: true,
+                    last_name: true,
                 }
             });
 
             const payload = {
                 code: 401,
                 message: "User successfully updated.",
-                data: {
-                    id: user.id,
-                    email: user.email,
-                    username: user.username,
-                    firstName: user.first_name,
-                    middleName: user.middle_name,
-                    lastName: user.last_name,
-                }
+                data: getUserWithRoleDTO(user)
             }
 
             res.status(200).json(payload)
@@ -179,7 +215,7 @@ const deleteUser = asyncHandler(
 )
 
 export {
-    getAllUser,
+    getAllUsers,
     getUser,
     storeUser,
     updateUser,

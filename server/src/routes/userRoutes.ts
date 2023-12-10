@@ -2,17 +2,15 @@ import express from 'express';
 import { admin, verifyToken, verifyBearerToken } from '../middlewares/auth';
 import { validateRequestBody } from '../middlewares/validateRequestBody';
 import { userSchema } from '../schemas/userSchema';
-import { deleteUser, getAllUser, getUser, storeUser, updateUser } from '../controllers/UserController';
+import { deleteUser, getAllUsers, getUser, storeUser, updateUser } from '../controllers/userController';
 
 const router = express.Router();
 
-router.use(verifyBearerToken);
-router.use(verifyToken);
-router.use(admin);
+router.use(verifyBearerToken, verifyToken, admin);
 
 router
     .route('/')
-    .get(getAllUser)
+    .get(getAllUsers)
     .post(validateRequestBody(userSchema), storeUser);
 
 router
