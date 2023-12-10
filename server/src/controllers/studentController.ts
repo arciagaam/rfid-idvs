@@ -3,17 +3,13 @@ import { PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
+import { TStudentDTO } from "../types/StudentDTO";
 
 const prisma = new PrismaClient();
 
-const getStudentWithRoleDTO = (student: any) => {
+const getStudentDTO = (student: TStudentDTO) => {
     return {
         id: student.id,
-        role_id: student.role_id,
-        role: {
-            name: student.role.name
-        },
-        email: student.email,
         first_name: student.first_name,
         middle_name: student.middle_name ? student.middle_name : null,
         last_name: student.last_name,
@@ -59,18 +55,12 @@ const getStudent = asyncHandler(
                 where: {
                     id: parseInt(id)
                 },
-                select: {
-                    id: true,
-                    first_name: true,
-                    middle_name: true,
-                    last_name: true,
-                }
             });
 
             const payload = {
                 code: 200,
                 message: "Student successfully retrieved.",
-                data: getStudentWithRoleDTO(student)
+                data: getStudentDTO(student)
             };
 
             res.status(200).json(payload);
@@ -92,18 +82,12 @@ const storeStudent = asyncHandler(
         try {
             const student = await prisma.student.create({
                 data: body,
-                select: {
-                    id: true,
-                    first_name: true,
-                    middle_name: true,
-                    last_name: true,
-                }
             });
 
             const payload = {
                 code: 200,
                 message: "Student successfully created.",
-                data: getStudentWithRoleDTO(student)
+                data: getStudentDTO(student)
             };
 
             res.status(200).json(payload);
@@ -129,18 +113,12 @@ const updateStudent = asyncHandler(
                     id: parseInt(id)
                 },
                 data: body,
-                select: {
-                    id: true,
-                    first_name: true,
-                    middle_name: true,
-                    last_name: true,
-                }
             });
 
             const payload = {
                 code: 400,
                 message: "Student successfully updated.",
-                data: getStudentWithRoleDTO(student)
+                data: getStudentDTO(student)
             }
 
             res.status(200).json(payload)
