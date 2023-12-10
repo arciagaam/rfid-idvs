@@ -57,6 +57,7 @@ CREATE TABLE `student` (
     `first_name` VARCHAR(191) NOT NULL,
     `middle_name` VARCHAR(191) NULL,
     `last_name` VARCHAR(191) NOT NULL,
+    `address` VARCHAR(191) NOT NULL,
     `year` INTEGER NOT NULL,
     `section` VARCHAR(191) NULL,
     `is_active` BOOLEAN NOT NULL DEFAULT true,
@@ -71,12 +72,23 @@ CREATE TABLE `student` (
 -- CreateTable
 CREATE TABLE `term` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `year_start` INTEGER NOT NULL,
-    `year_end` INTEGER NOT NULL,
-    `number_of_terms` INTEGER NOT NULL,
+    `school_year_id` INTEGER NOT NULL,
+    `term` INTEGER NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `school_year` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `year_start` INTEGER NOT NULL,
+    `year_end` INTEGER NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `school_year_year_start_key`(`year_start`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -109,6 +121,9 @@ ALTER TABLE `course` ADD CONSTRAINT `course_department_id_fkey` FOREIGN KEY (`de
 
 -- AddForeignKey
 ALTER TABLE `student` ADD CONSTRAINT `student_course_id_fkey` FOREIGN KEY (`course_id`) REFERENCES `course`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `term` ADD CONSTRAINT `term_school_year_id_fkey` FOREIGN KEY (`school_year_id`) REFERENCES `school_year`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `term_student` ADD CONSTRAINT `term_student_student_id_fkey` FOREIGN KEY (`student_id`) REFERENCES `student`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
