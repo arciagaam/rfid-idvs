@@ -1,8 +1,20 @@
+import { Route, Routes } from "react-router-dom"
+
+// Layouts
+import { RootLayout } from "./layout/RootLayout"
+
+// Pages
+import { Login } from "./pages/Login"
+import { Home } from "./pages/Home"
+
 function App() {
     return (
-        <>
-            <h1 className="font-bold">RFID Validation System</h1>
-        </>
+        <Routes>
+            <Route element={<RootLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+            </Route>
+        </Routes>
     )
 }
 
