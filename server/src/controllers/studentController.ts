@@ -1,18 +1,36 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
-import { TStudentDTO } from "../types/StudentDTO";
 
 const prisma = new PrismaClient();
 
-const getStudentDTO = (student: TStudentDTO) => {
+const selectStudentDTO: () => Prisma.studentSelect = () => {
     return {
-        id: student.id,
-        first_name: student.first_name,
-        middle_name: student.middle_name ? student.middle_name : null,
-        last_name: student.last_name,
+        id: true,
+
+        // Personal information
+        first_name: true,
+        middle_name: true,
+        last_name: true,
+
+        // Student information
+        rfid_number: true,
+        student_number: true,
+        year: true,
+        terms: true,
+        course: true,
+        section: true,
+        course_id: true,
+
+        // Address
+        address_line_1: true,
+        address_line_2: true,
+        province: true,
+        city: true,
+
+        is_active: true,
     }
 }
 
@@ -20,12 +38,7 @@ const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
         try {
             const students = await prisma.student.findMany({
-                select: {
-                    id: true,
-                    first_name: true,
-                    middle_name: true,
-                    last_name: true,
-                }
+                select: selectStudentDTO()
             });
 
             const payload = {
@@ -55,12 +68,13 @@ const getStudent = asyncHandler(
                 where: {
                     id: parseInt(id)
                 },
+                select: selectStudentDTO()
             });
 
             const payload = {
                 code: 200,
                 message: "Student successfully retrieved.",
-                data: getStudentDTO(student)
+                data: student
             };
 
             res.status(200).json(payload);
@@ -82,12 +96,13 @@ const storeStudent = asyncHandler(
         try {
             const student = await prisma.student.create({
                 data: body,
+                select: selectStudentDTO()
             });
 
             const payload = {
                 code: 200,
                 message: "Student successfully created.",
-                data: getStudentDTO(student)
+                data: student
             };
 
             res.status(200).json(payload);
@@ -112,13 +127,14 @@ const updateStudent = asyncHandler(
                 where: {
                     id: parseInt(id)
                 },
+                select: selectStudentDTO(),
                 data: body,
             });
 
             const payload = {
                 code: 400,
                 message: "Student successfully updated.",
-                data: getStudentDTO(student)
+                data: student
             }
 
             res.status(200).json(payload)

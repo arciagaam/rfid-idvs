@@ -6,7 +6,7 @@ import { deleteStudent, getAllStudents, getStudent, storeStudent, updateStudent 
 
 const router = express.Router();
 
-router.use(verifyBearerToken, verifyToken, admin);
+router.use(verifyBearerToken, verifyToken);
 
 router
     .route('/')
@@ -16,7 +16,7 @@ router
 router
     .route('/:id')
     .get(getStudent)
-    .put(validateRequestBody(userSchema), updateStudent)
-    .delete(deleteStudent);
+    .put(admin, validateRequestBody(userSchema), updateStudent)
+    .delete(admin, deleteStudent);
 
 export default router;

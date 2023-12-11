@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Ignore development database
 prisma/dev.db
+prisma/migrations/*
 
 node_modules
 dist
