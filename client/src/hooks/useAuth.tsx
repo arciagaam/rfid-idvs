@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAuthentication = () => {
+    const navigate = useNavigate();
+
     const [user, setUser] = useState<object | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
@@ -33,11 +36,6 @@ const useAuthentication = () => {
             if (e instanceof Error) {
                 setError(e);
             }
-
-            console.error(
-                "Error while trying to login",
-                e
-            )
         } finally {
             setLoading(false);
         }
@@ -69,11 +67,6 @@ const useAuthentication = () => {
             if (e instanceof Error) {
                 setError(e);
             }
-
-            console.error(
-                "Error while trying to logout",
-                e
-            )
         } finally {
             setLoading(false);
         }
@@ -113,10 +106,25 @@ const useAuthentication = () => {
             }
         };
 
-        console.log(user);
-
         refresh();
-    }, [user])
+
+        if (user) {
+            navigate("/admin");
+        } else {
+            navigate("/login")
+        }
+    }, [user, navigate]);
+
+    // const redirectUser = () => {
+    //     switch (user.role_id) {
+    //         case 1:
+    //             return "/admin";
+    //         case 2:
+    //             return "/user";
+    //         default:
+    //             return "/login";
+    //     }
+    // }
 
     return {
         user,

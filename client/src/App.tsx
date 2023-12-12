@@ -18,7 +18,6 @@ function App() {
                 <Route path="/login" element={<Login />} />
 
                 <Route element={<ProtectedLayout />}>
-
                     <Route path="/admin" element={<AdminLayout />}>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="user-management" element={<Dashboard />} />
