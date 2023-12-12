@@ -5,11 +5,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/providers/auth/useAuthContext";
 
 const Login = () => {
-    const navigate = useNavigate();
     const { login } = useAuth();
     const form = useForm({
         defaultValues: {
@@ -23,11 +22,7 @@ const Login = () => {
         e.preventDefault();
 
         const values = form.getValues();
-        const loggedIn = await login(values);
-
-        if (loggedIn) {
-            navigate('/admin')
-        }
+        await login(values);
     }
 
     return (

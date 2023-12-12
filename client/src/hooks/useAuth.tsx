@@ -1,3 +1,4 @@
+import { TUser } from "@/types/TUser";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
@@ -5,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const useAuthentication = () => {
     const navigate = useNavigate();
 
-    const [user, setUser] = useState<object | undefined>(undefined);
+    const [user, setUser] = useState<TUser | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
 
@@ -62,7 +63,7 @@ const useAuthentication = () => {
             await req.json();
 
             setError({});
-            setUser({});
+            setUser(undefined);
         } catch (e) {
             if (e instanceof Error) {
                 setError(e);
@@ -106,25 +107,20 @@ const useAuthentication = () => {
             }
         };
 
-        refresh();
+        const redirectUser = () => {
+            switch (user?.role_id) {
+                case 1:
+                    return navigate("/app/admin")
+                case 2:
+                    return navigate("/app")
+                default:
+                    return navigate("/login")
+            }
+        };
 
-        if (user) {
-            navigate("/admin");
-        } else {
-            navigate("/login")
-        }
+        // refresh();
+        // redirectUser();
     }, [user, navigate]);
-
-    // const redirectUser = () => {
-    //     switch (user.role_id) {
-    //         case 1:
-    //             return "/admin";
-    //         case 2:
-    //             return "/user";
-    //         default:
-    //             return "/login";
-    //     }
-    // }
 
     return {
         user,

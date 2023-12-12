@@ -31,6 +31,7 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
             const payload = {
                 id: user.id,
                 email: user.email,
+                role_id: user.role_id,
                 username: user.username,
                 firstName: user.first_name,
                 middleName: user.middle_name,
@@ -71,6 +72,7 @@ const refreshUser = asyncHandler(
                 select: {
                     id: true,
                     email: true,
+                    role_id: true,
                     username: true,
                     first_name: true,
                     middle_name: true,
