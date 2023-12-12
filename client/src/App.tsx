@@ -22,15 +22,15 @@ function App() {
     return (
         <Routes>
             <Route element={<RootLayout />}>
-                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
 
-                <Route path="/app" element={<ProtectedLayout />}>
-                    <Route path="" element={<UserLayout />}>
+                <Route element={<ProtectedLayout />}>
+                    <Route element={<UserLayout />}>
                         <Route path="dashboard" element={<Dashboard />} />
                     </Route>
 
-                    <Route path="admin" element={<AdminLayout />}>
+                    <Route path="/admin" element={<AdminLayout />}>
                         <Route path="dashboard" element={<Dashboard />} />
                         <Route path="user-management" element={<UserManagement />} />
                         <Route path="student-management" element={<StudentManagement />} />

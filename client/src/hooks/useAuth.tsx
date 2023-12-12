@@ -110,9 +110,9 @@ const useAuthentication = () => {
         const redirectUser = () => {
             switch (user?.role_id) {
                 case 1:
-                    return navigate("/app/admin")
+                    return navigate("/admin")
                 case 2:
-                    return navigate("/app")
+                    return navigate("/")
                 default:
                     return navigate("/login")
             }
