@@ -8,7 +8,10 @@ import routes from './src/routes';
 const app = express();
 
 app.use(json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3001',
+    credentials: true
+}));
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 

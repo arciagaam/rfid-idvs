@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAuthentication = () => {
@@ -15,6 +15,7 @@ const useAuthentication = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(body)
             });
 
@@ -24,7 +25,7 @@ const useAuthentication = () => {
 
             const res = await req.json();
 
-            setUser(res);
+            setUser(res.user);
             setError({});
 
             return true;
@@ -52,7 +53,8 @@ const useAuthentication = () => {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                credentials: 'include'
             });
 
             if (!req.ok) {
@@ -74,11 +76,45 @@ const useAuthentication = () => {
             )
         } finally {
             setLoading(false);
-            setUser({});
         }
 
         return false;
     }
+
+    useEffect(() => {
+        const refresh = async () => {
+            try {
+                const req = await fetch(API_URL + "/authenticate/refresh", {
+                    method: "post",
+                    credentials: 'include'
+                });
+
+                if (!req.ok) {
+                    throw await req.json();
+                }
+
+                const res = await req.json();
+                console.log(res);
+
+                setError({});
+
+                // if (res.user !== undefined) {
+                //     setUser(res.user);
+                // }
+            } catch (e) {
+                if (e instanceof Error) {
+                    setError(e);
+                }
+
+                console.error(
+                    "An error has occured",
+                    e
+                );
+            }
+        };
+
+        refresh();
+    }, [user])
 
     return {
         user,

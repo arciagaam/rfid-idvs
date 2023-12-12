@@ -28,7 +28,7 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
                 lastName: user.last_name,
             }
 
-            res.status(200).json({code:200, user:payload});
+            res.status(200).json({ code: 200, user: payload });
 
         } else {
             res.status(401).json({
@@ -45,13 +45,24 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
     }
 });
 
-const logoutUser = asyncHandler(async(req: Request, res: Response) => {
-    res.cookie('jwt', '', {
-        httpOnly: true,
-        expires: new Date(0)
-    })
+const refreshUser = asyncHandler(
+    async (req: Request, res: Response) => {
+        const token = req.cookies;
+        console.log("Token:", token);
 
-    res.status(200).json({code:200, message: 'User logged out'});
-})
+        res.status(200).json({ code: 200, message: "Refresh hit." });
+    }
+);
 
-export { authenticateUser, logoutUser }
+const logoutUser = asyncHandler(
+    async (req: Request, res: Response) => {
+        res.cookie('jwt', '', {
+            httpOnly: true,
+            expires: new Date(0)
+        })
+
+        res.status(200).json({ code: 200, message: 'User logged out' });
+    }
+);
+
+export { authenticateUser, refreshUser, logoutUser }
