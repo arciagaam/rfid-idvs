@@ -16,6 +16,22 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+        primary: {
+          '50': '#eef2ff',
+          '100': '#d9e2ff',
+          '200': '#bccdff',
+          '300': '#8eadff',
+          '400': '#5980ff',
+          '500': '#3657ff', // default
+          '600': '#1b30f5',
+          '700': '#141ee1',
+          '800': '#171ab6',
+          '900': '#191e8f',
+          '950': '#141557',
+        }
+      },
+
       keyframes: {
         "accordion-down": {
           from: { height: 0 },

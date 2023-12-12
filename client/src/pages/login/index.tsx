@@ -26,7 +26,7 @@ const Login = () => {
         const loggedIn = await login(values);
 
         if (loggedIn) {
-            navigate('/test')
+            navigate('/admin')
         }
     }
 
