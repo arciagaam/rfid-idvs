@@ -52,8 +52,7 @@ const useAuthentication = () => {
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
-                },
-                credentials: 'include',
+                }
             });
 
             if (!req.ok) {
