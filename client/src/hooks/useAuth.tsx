@@ -83,6 +83,10 @@ const useAuthentication = () => {
 
     useEffect(() => {
         const refresh = async () => {
+            if (user !== undefined) return;
+
+            setLoading(true);
+
             try {
                 const req = await fetch(API_URL + "/authenticate/refresh", {
                     method: "post",
@@ -94,24 +98,22 @@ const useAuthentication = () => {
                 }
 
                 const res = await req.json();
-                console.log(res);
 
                 setError({});
 
-                // if (res.user !== undefined) {
-                //     setUser(res.user);
-                // }
+                if (res.user !== undefined) {
+                    setUser(res.user);
+                }
             } catch (e) {
                 if (e instanceof Error) {
                     setError(e);
                 }
-
-                console.error(
-                    "An error has occured",
-                    e
-                );
+            } finally {
+                setLoading(true);
             }
         };
+
+        console.log(user);
 
         refresh();
     }, [user])
