@@ -6,7 +6,7 @@ import { RootLayout } from "./layout/RootLayout"
 // Pages
 import { Home } from "./pages/home"
 import { Login } from "./pages/login"
-import { AuthProvider } from "./providers/AuthProvider"
+import { ProtectedLayout } from "./layout/ProtectedLayout"
 
 function App() {
     return (
@@ -14,7 +14,7 @@ function App() {
             <Route element={<RootLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route element={<AuthProvider />}>
+                <Route element={<ProtectedLayout />}>
                     <Route path="/test" element={<TestElement />}>
                     </Route>
                 </Route>

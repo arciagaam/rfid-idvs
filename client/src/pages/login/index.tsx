@@ -5,9 +5,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/providers/auth/useAuthContext";
 
 const Login = () => {
+    const navigate = useNavigate();
+    const { login } = useAuth();
     const form = useForm({
         defaultValues: {
             username: "",
@@ -16,11 +19,15 @@ const Login = () => {
         }
     });
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const values = form.getValues();
-        console.log(values);
+        const loggedIn = await login(values);
+
+        if (loggedIn) {
+            navigate('/test')
+        }
     }
 
     return (

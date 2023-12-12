@@ -1,30 +1,32 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthentication } from "@/hooks/useAuth";
 import { createContext } from "react";
-import { Outlet } from "react-router-dom";
 
-const AuthContext = createContext<ReturnType<typeof useAuth> | null>(null);
+const AuthContext = createContext<ReturnType<typeof useAuthentication> | null>(null);
 
 type TAuthContextProviderProps = {
     children: React.ReactNode;
 }
 
+type TAuthProviderProps = {
+    children: React.ReactNode;
+}
+
 const AuthContextProvider = ({ children }: TAuthContextProviderProps) => {
-    const auth = useAuth();
+    const auth = useAuthentication();
 
     return (
         <AuthContext.Provider value={auth}>
             {children}
         </AuthContext.Provider>
     )
-
 }
 
-const AuthProvider = () => {
+const AuthProvider = ({ children }: TAuthProviderProps) => {
     return (
         <AuthContextProvider>
-            <Outlet />
+            {children}
         </AuthContextProvider>
     )
 }
 
-export { AuthProvider };
+export { AuthProvider, AuthContext };

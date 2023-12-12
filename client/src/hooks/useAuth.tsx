@@ -1,8 +1,8 @@
 import { useState } from "react";
 const API_URL = import.meta.env.VITE_API_URL;
 
-const useAuth = () => {
-    const [user, setUser] = useState({});
+const useAuthentication = () => {
+    const [user, setUser] = useState<object | undefined>(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
 
@@ -15,7 +15,6 @@ const useAuth = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                credentials: 'include',
                 body: JSON.stringify(body)
             });
 
@@ -25,8 +24,10 @@ const useAuth = () => {
 
             const res = await req.json();
 
-            setUser(res.data);
+            setUser(res);
             setError({});
+
+            return true;
         } catch (e) {
             if (e instanceof Error) {
                 setError(e);
@@ -39,6 +40,8 @@ const useAuth = () => {
         } finally {
             setLoading(false);
         }
+
+        return false;
     }
 
     const logout = async () => {
@@ -74,6 +77,8 @@ const useAuth = () => {
             setLoading(false);
             setUser({});
         }
+
+        return false;
     }
 
     return {
@@ -85,4 +90,4 @@ const useAuth = () => {
     }
 }
 
-export { useAuth };
+export { useAuthentication };

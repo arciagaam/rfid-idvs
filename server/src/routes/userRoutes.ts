@@ -6,7 +6,7 @@ import { deleteUser, getAllUsers, getUser, storeUser, updateUser } from '../cont
 
 const router = express.Router();
 
-router.use(verifyBearerToken, verifyToken, admin);
+router.use(verifyToken, admin);
 
 router
     .route('/')

@@ -42,6 +42,7 @@ const verifyToken = asyncHandler(
     }
 );
 
+// Will be removed/improved in the future
 const verifyBearerToken = asyncHandler(
     async (req: Request | any, res: Response, next: NextFunction) => {
         const bearerHeader = req.headers['authorization'];

@@ -6,9 +6,7 @@ import { getAllTerms, getTerm, storeTerm, updateTerm, deleteTerm } from '../cont
 
 const router = express.Router();
 
-router.use(verifyBearerToken);
-router.use(verifyToken);
-router.use(admin);
+router.use(verifyToken, admin);
 
 router
     .route('/')
