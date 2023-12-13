@@ -15,15 +15,23 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/providers/auth/useAuthContext';
 
 const NavigationBar = ({ children }: { children: React.ReactNode }) => {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/home");
+    }
+
     return (
         <div className="fixed min-w-[19rem] w-[19rem] h-screen p-3 flex flex-col bg-[#FAFAFA] gap-5 border-r border-[#1E1E1E15] shadow-2xl z-50">
             <div className="flex gap-3">
@@ -63,13 +71,10 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
                     <DropdownMenuTrigger className='focus-within:outline-none'>
                         <IoMdMore size={20}/>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuContent className="gap-4">
+                        <DropdownMenuItem>Manage Account</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                        <DropdownMenuItem>Team</DropdownMenuItem>
-                        <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout} className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
 

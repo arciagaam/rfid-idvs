@@ -1,7 +1,22 @@
 import { NavigationBar, NavigationItem, NavigationItemGroup } from '@/components/global/Navigation'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/providers/auth/useAuthContext'
+import { useEffect } from 'react';
 
 const AdminLayout = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user === null) {
+            return navigate("/login");
+        }
+
+        if (user.role_id !== 1) {
+            return navigate("/")
+        }
+    }, [user, navigate]);
+
     return (
         <div className="flex flex-col">
             <NavigationBar>

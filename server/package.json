@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn ./app.ts",
-    "db:migrate": "ts-node ./src/seeders/dbSeeder.ts",
+    "db:migrate": "npx prisma migrate dev",
+    "db:seed": "ts-node ./src/seeders/dbSeeder.ts",
     "db:fresh": "prisma migrate reset && npx ts-node ./src/seeders/dbSeeder.ts",
     "db:push": "prisma db push"
   },
