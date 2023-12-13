@@ -59,7 +59,7 @@ const refreshUser = asyncHandler(
         const token = req.cookies.jwt;
 
         if (!token) {
-            res.status(200).json({});
+            res.status(200);
         }
 
         try {

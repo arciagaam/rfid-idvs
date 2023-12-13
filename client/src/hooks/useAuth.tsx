@@ -1,16 +1,11 @@
 import { TUser } from "@/types/TUser";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "./useLocalStorage";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAuthentication = () => {
-    const navigate = useNavigate();
-
-    // const [user, setUser] = useState<TUser | undefined>(undefined);
-    const [user, setUser] = useLocalStorage<TUser | null>("user");
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<TUser | null>(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState({});
 
     const login = async (body: unknown) => {
@@ -79,15 +74,13 @@ const useAuthentication = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
+
         const refresh = async () => {
-            if (user !== undefined) return;
-
-            setLoading(true);
-
             try {
                 const req = await fetch(API_URL + "/authenticate/refresh", {
                     method: "post",
-                    credentials: 'include'
+                    credentials: "include"
                 });
 
                 if (!req.ok) {
@@ -106,14 +99,12 @@ const useAuthentication = () => {
                     setError(e);
                 }
             } finally {
-                setLoading(true);
+                setLoading(false);
             }
         };
 
-        if (user) {
-            refresh();
-        }
-    }, [user, setUser, navigate]);
+        refresh();
+    }, []);
 
     return {
         user,
