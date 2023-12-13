@@ -1,5 +1,6 @@
 import { TUser } from "@/types/TUser";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -7,6 +8,10 @@ const useAuthentication = () => {
     const [user, setUser] = useState<TUser | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({});
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const locationRef = useRef(location.pathname);
 
     const login = async (body: unknown) => {
         setLoading(true);
@@ -105,6 +110,14 @@ const useAuthentication = () => {
 
         refresh();
     }, []);
+
+    useEffect(() => {
+        locationRef.current = location.pathname;
+
+        if (locationRef.current === location.pathname) {
+            navigate(locationRef.current);
+        }
+    }, [location.pathname, navigate])
 
     return {
         user,
