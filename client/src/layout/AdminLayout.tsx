@@ -15,7 +15,7 @@ const AdminLayout = () => {
                 </NavigationItemGroup>
             </NavigationBar>
 
-            <div className="flex flex-col p-5 ml-[19rem] min-h-screen">
+            <div className="flex flex-col p-5 ml-[19rem] min-h-screen w-[calc(100%-19rem)] gap-10">
                 <Outlet />
             </div>
         </div>
