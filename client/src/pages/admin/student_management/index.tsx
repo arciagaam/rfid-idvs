@@ -22,8 +22,8 @@ const StudentManagement = () => {
                         usersTableData.push(
                             {
                                 id: student.id,
-                                studentNumber: parseInt(student.studentNumber), //change this kapag string na yung studentNum
-                                fullname: `${student.firstName} ${(student.middleName ?? '')} ${student.lastName}`,
+                                studentNumber: student.studentNumber, 
+                                fullName: `${student.firstName} ${(student.middleName ?? '')} ${student.lastName}`,
                                 rfidStatus: student.rfidNumber ? 'Linked' : 'Not Linked',
                                 departmentCourse: `${student.course.department.name} - ${student.course.name}`,
                                 yearSection: `${student.year} - ${student.section}`,
@@ -50,7 +50,7 @@ const StudentManagement = () => {
                 <Button>Add Student</Button>
             </div>
 
-            <DataTable columns={studentColumns} data={students} />
+            <DataTable columns={studentColumns} data={students}/>
         </>
     )
 }

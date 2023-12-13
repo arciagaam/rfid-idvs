@@ -1,9 +1,11 @@
+import { DataTableColumnHeader } from "@/components/global/DataTable";
 import { ColumnDef } from "@tanstack/react-table"
+
 
 export type TStudentTable = { 
     id: number,
-    studentNumber: number;
-    fullname: string;
+    studentNumber: string;
+    fullName: string;
     rfidStatus: string;
     departmentCourse: string;
     yearSection: string;
@@ -15,12 +17,12 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
         header: 'Student Number'
     },
     {
-        accessorKey: 'fullname',
-        header: 'Name'
+        accessorKey: 'fullName',
+        header: 'Name',
     },
     {
         accessorKey: 'departmentCourse',
-        header: 'Department and Course'
+        header: ({ column }) => (<DataTableColumnHeader column={column} title="Department and Course" />),
     },
     {
         accessorKey: 'yearSection',
