@@ -4,6 +4,9 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import asyncHandler from "../middlewares/asyncHandler";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 
+//helpers
+import { convertObjectKeys } from "../helpers/helpers";
+
 const prisma = new PrismaClient();
 
 const selectStudentDTO: () => Prisma.studentSelect = () => {
@@ -20,7 +23,12 @@ const selectStudentDTO: () => Prisma.studentSelect = () => {
         student_number: true,
         year: true,
         terms: true,
-        course: true,
+        course: {
+            select: {
+                name: true,
+                department: true
+            }
+        },
         section: true,
         course_id: true,
 
@@ -38,13 +46,13 @@ const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
         try {
             const students = await prisma.student.findMany({
-                select: selectStudentDTO()
+                select: selectStudentDTO(),
             });
 
             const payload = {
                 code: 200,
                 message: "Students successfully retrieved.",
-                data: students
+                data: convertObjectKeys(students)
             };
 
             res.status(200).json(payload);

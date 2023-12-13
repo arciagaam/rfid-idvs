@@ -5,6 +5,9 @@ import asyncHandler from "../middlewares/asyncHandler";
 import { TUserDTOWithPassword } from "../types/UserDTO";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 
+//helpers
+import { convertObjectKeys } from "../helpers/helpers";
+
 const prisma = new PrismaClient();
 
 const selectUserWithRoleDTO: () => Prisma.userSelect = () => (
@@ -37,7 +40,7 @@ const getAllUsers = asyncHandler(
             const payload = {
                 code: 200,
                 message: "Users successfully retrieved.",
-                data: users
+                data: convertObjectKeys(users)
             };
 
             res.status(200).json(payload);

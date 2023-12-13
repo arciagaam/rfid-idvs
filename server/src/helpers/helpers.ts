@@ -1,4 +1,4 @@
-export const convertKeysToCamelCase = (key: string) => {
+export const convertKeyToCamelCase = (key: string) => {
     return key.split('_').reduce((acc, curr, idx) => {
         if (idx === 0) {
             return curr;
@@ -21,7 +21,7 @@ export function convertObjectKeys<T>(value: T): object {
         return arrOfObj;
     } else {
         for (const key in value) {
-            const _key = convertKeysToCamelCase(key);
+            const _key = convertKeyToCamelCase(key);
             let _val = value[key] as object;
 
             if (value[key] instanceof Array) {

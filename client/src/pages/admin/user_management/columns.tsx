@@ -1,3 +1,4 @@
+import { DataTableColumnHeader } from "@/components/global/DataTable";
 import { ColumnDef } from "@tanstack/react-table"
 
 export type TUserTable = { 
@@ -23,6 +24,8 @@ export const userColumns: ColumnDef<TUserTable>[] = [
     },
     {
         accessorKey: 'role',
-        header: 'Role'
+        header: ({column}) => (
+            <DataTableColumnHeader column={column} title="Role" />
+        )
     },
 ]
