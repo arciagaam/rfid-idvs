@@ -20,8 +20,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/auth/useAuthContext';
+import { IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 const NavigationBar = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
                 <DropdownMenu >
                     <DropdownMenuTrigger className='focus-within:outline-none'>
-                        <IoMdMore size={20}/>
+                        <IoMdMore size={20} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="gap-4">
                         <DropdownMenuItem>Manage Account</DropdownMenuItem>
@@ -77,34 +78,33 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
                         <DropdownMenuItem onClick={handleLogout} className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-
             </div>
-
         </div>
     )
 }
 
-const NavigationItem = ({ ...props }) => {
-    const { label, to } = props
+const NavigationItem = ({ ...props }: NavLinkProps) => {
+    const { children, to } = props
 
     return (
-        <div className="flex">
-            <NavLink
-                to={to}
-                className={({ isActive }) =>
-                    isActive ? "bg-primary-500 text-medium" : "bg-none"
-                }
-            >{label}</NavLink>
-        </div>
+        <NavLink
+            to={to}
+            className={({ isActive }) =>
+                (isActive ? "bg-primary-200 font-medium outline-4 outline-primary-950" : "bg-none") + " flex items-center flex-row gap-2 w-full p-2 rounded-md"
+            }
+        >{children}</NavLink>
     )
 }
 
 const NavigationItemGroup = ({ children }: { children: React.ReactNode }) => {
     return (
         <Accordion type="single" collapsible>
-            <AccordionItem value="item-1" className='border-none'>
+            <AccordionItem value="item-1" className='p-2 border-none'>
                 <AccordionTrigger className='p-0 hover:no-underline font-normal'>
-                    Student ID Validation
+                    <span className="flex flex-row gap-2 items-center">
+                        <IoShieldCheckmarkOutline />
+                        Student ID Validation
+                    </span>
                 </AccordionTrigger>
                 <AccordionContent>
                     <div className="flex flex-col gap-2 pt-2">
