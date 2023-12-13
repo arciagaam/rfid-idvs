@@ -1,8 +1,8 @@
 import { DataTable } from '@/components/global/DataTable'
-import { Button } from '@/components/ui/button'
 import { userColumns, TUserTable } from './columns'
 import { useEffect, useState } from 'react'
 import { TUser } from '@/types/TUser'
+import { AddUserModal } from './components/AddUserModal'
 const API_URL = import.meta.env.VITE_API_URL
 const UserManagement = () => {
 
@@ -48,7 +48,7 @@ const UserManagement = () => {
         <>
             <div className="flex w-full justify-between">
                 <h2 className='text-lg font-bold'>Users</h2>
-                <Button>Add User</Button>
+                <AddUserModal />
             </div>
 
             <DataTable columns={userColumns} data={users}/>

@@ -5,8 +5,8 @@ export const validateRequestBody = (schema: z.Schema) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const body = req.body;
+            console.log(body)
             const validated = await schema.parseAsync(body);
-
             req.body = validated;
 
             next();
