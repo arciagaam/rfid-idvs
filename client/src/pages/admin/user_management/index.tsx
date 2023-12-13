@@ -20,15 +20,14 @@ const UserManagement = () => {
                 }).then(res => res.json());
                 
                 if(res) {
-                    console.log(res.data)
                     res.data.forEach((user: TUser) => {
                         usersTableData.push(
                             {
-                                id:user.id,
-                                fullname:`${user.firstName} ${(user.middleName ?? '')} ${user.lastName}`,
-                                username:user.username,
-                                email:user.email,
-                                role: 'test'
+                                id: user.id,
+                                fullname :`${user.firstName} ${(user.middleName ?? '')} ${user.lastName}`,
+                                username: user.username,
+                                email: user.email,
+                                role: user.role.name.toUpperCase()
                             }
                         )
                     });

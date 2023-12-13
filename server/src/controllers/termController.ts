@@ -2,6 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Request, Response } from "express";
 
+//helpers
+import { convertObjectKeys } from "../helpers/helpers";
+
 const prisma = new PrismaClient();
 
 const getAllTerms = asyncHandler(async (req: Request, res: Response) => {
@@ -15,7 +18,7 @@ const getAllTerms = asyncHandler(async (req: Request, res: Response) => {
         const payload = {
             code: 200,
             message: "All Terms Successfully Retrieved",
-            data: terms
+            data: convertObjectKeys(terms)
         }
 
         res.status(200).json(payload);
