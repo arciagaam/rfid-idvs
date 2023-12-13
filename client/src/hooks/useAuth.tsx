@@ -1,12 +1,15 @@
 import { TUser } from "@/types/TUser";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "./useLocalStorage";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAuthentication = () => {
     const navigate = useNavigate();
 
-    const [user, setUser] = useState<TUser | undefined>(undefined);
+    // const [user, setUser] = useState<TUser | undefined>(undefined);
+    const [user, setUser] = useLocalStorage<TUser | null>("user");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState({});
 
@@ -63,7 +66,7 @@ const useAuthentication = () => {
             await req.json();
 
             setError({});
-            setUser(undefined);
+            setUser(null);
         } catch (e) {
             if (e instanceof Error) {
                 setError(e);
@@ -107,20 +110,10 @@ const useAuthentication = () => {
             }
         };
 
-        const redirectUser = () => {
-            switch (user?.role_id) {
-                case 1:
-                    return navigate("/admin")
-                case 2:
-                    return navigate("/")
-                default:
-                    return navigate("/login")
-            }
-        };
-
-        // refresh();
-        // redirectUser();
-    }, [user, navigate]);
+        if (user) {
+            refresh();
+        }
+    }, [user, setUser, navigate]);
 
     return {
         user,
