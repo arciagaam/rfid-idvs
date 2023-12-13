@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavigationBar, NavigationItem, NavigationItemGroup } from '@/components/global/Navigation'
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { Outlet, useNavigate } from 'react-router-dom'
 import { IoGridOutline } from 'react-icons/io5';
+import type { TDepartment } from '@/types/TDepartment';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UserLayout = () => {
     const navigate = useNavigate();
+
     const { user } = useAuth();
+    const [departments, setDepartments] = useState<TDepartment[] | null>(null);
 
     useEffect(() => {
         if (user === null) {
@@ -18,6 +23,30 @@ const UserLayout = () => {
         }
     }, [user, navigate]);
 
+    useEffect(() => {
+        const getDepartments = async () => {
+            try {
+                const req = await fetch(API_URL + "/departments", {
+                    method: "get",
+                    credentials: "include"
+                });
+
+                if (!req.ok) {
+                    throw await req.json();
+                }
+
+                const res = await req.json();
+                setDepartments(res.data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(error.message);
+                }
+            }
+        }
+
+        getDepartments();
+    }, []);
+
     return (
         <div className="flex flex-col">
             <NavigationBar>
@@ -26,12 +55,17 @@ const UserLayout = () => {
                     <span>Dashboard</span>
                 </NavigationItem>
                 <NavigationItemGroup>
-                    <NavigationItem to="dashboard">
-                        <span>Department 1</span>
-                    </NavigationItem>
-                    <NavigationItem to="dashboard">
-                        <span>Department 2</span>
-                    </NavigationItem>
+                    {
+                        departments !== null && departments.length > 0 ? (
+                            departments.map((department) => (
+                                <NavigationItem key={department.id} to={`departments/${department.name.toLowerCase()}`}>
+                                    <span>{department.name}</span>
+                                </NavigationItem>
+                            ))
+                        ) : (
+                            <p>Loading...</p>
+                        )
+                    }
                 </NavigationItemGroup>
             </NavigationBar>
 

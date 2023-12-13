@@ -1,7 +1,10 @@
 import { NavigationBar, NavigationItem, NavigationItemGroup } from '@/components/global/Navigation'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/auth/useAuthContext'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { TDepartment } from '@/types/TDepartment';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 import {
     IoCalendarClearOutline,
@@ -12,7 +15,9 @@ import {
 
 const AdminLayout = () => {
     const navigate = useNavigate();
+
     const { user } = useAuth();
+    const [departments, setDepartments] = useState<TDepartment[] | null>(null);
 
     useEffect(() => {
         if (user === null) {
@@ -23,6 +28,30 @@ const AdminLayout = () => {
             return navigate("/")
         }
     }, [user, navigate]);
+
+    useEffect(() => {
+        const getDepartments = async () => {
+            try {
+                const req = await fetch(API_URL + "/departments", {
+                    method: "get",
+                    credentials: "include"
+                });
+
+                if (!req.ok) {
+                    throw await req.json();
+                }
+
+                const res = await req.json();
+                setDepartments(res.data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(error.message);
+                }
+            }
+        }
+
+        getDepartments();
+    }, []);
 
     return (
         <div className="flex flex-col">
@@ -44,12 +73,17 @@ const AdminLayout = () => {
                     <span>School Year Management</span>
                 </NavigationItem>
                 <NavigationItemGroup>
-                    <NavigationItem to="dashboard">
-                        <span>Department 1</span>
-                    </NavigationItem>
-                    <NavigationItem to="dashboard">
-                        <span>Department 2</span>
-                    </NavigationItem>
+                    {
+                        departments !== null && departments.length > 0 ? (
+                            departments.map((department) => (
+                                <NavigationItem key={department.id} to={`departments/${department.name.toLowerCase()}`}>
+                                    <span>{department.name}</span>
+                                </NavigationItem>
+                            ))
+                        ) : (
+                            <p>Loading...</p>
+                        )
+                    }
                 </NavigationItemGroup>
             </NavigationBar>
 

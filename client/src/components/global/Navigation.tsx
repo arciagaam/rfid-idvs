@@ -90,7 +90,7 @@ const NavigationItem = ({ ...props }: NavLinkProps) => {
         <NavLink
             to={to}
             className={({ isActive }) =>
-                (isActive ? "bg-primary-200 font-medium outline-4 outline-primary-950" : "bg-none") + " flex items-center flex-row gap-2 w-full p-2 rounded-md"
+                (isActive ? "text-accent-600 bg-accent-100 font-medium" : "bg-none") + " flex items-center flex-row gap-2 w-full p-2 rounded-md"
             }
         >{children}</NavLink>
     )

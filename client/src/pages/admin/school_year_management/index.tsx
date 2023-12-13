@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { schoolYearColumns } from './columns';
 import { TSchoolYearTable } from './columns';
 import { TSchoolYear } from '@/types/TSchoolYear';
@@ -11,7 +11,6 @@ const SchoolYearManagement = () => {
     const [schoolYears, setSchoolYears] = useState<TSchoolYearTable[]>([]);
 
     useEffect(() => {
-
         const fetchUsers = async () => {
             try {
                 const schoolYearData: TSchoolYearTable[] = [];

@@ -15,8 +15,11 @@ import { UserManagement } from "./pages/admin/user_management"
 import { StudentManagement } from "./pages/admin/student_management"
 import { SchoolYearManagement } from "./pages/admin/school_year_management"
 import { UserLayout } from "./layout/UserLayout"
+import { StudentIDValidation } from "./pages/admin/student_id_validation"
 
 // User pages
+import { Dashboard as UserDashboard } from "./pages/user/dashboard"
+import { StudentIDValidation as UserStudentIDValidation } from "./pages/user/student_id_validation"
 
 function App() {
     return (
@@ -27,7 +30,8 @@ function App() {
 
                 <Route element={<ProtectedLayout />}>
                     <Route path="/" element={<UserLayout />}>
-                        <Route path="dashboard" element={<Dashboard />} />
+                        <Route path="dashboard" element={<UserDashboard />} />
+                        <Route path="departments/:slug" element={<UserStudentIDValidation />} />
                     </Route>
 
                     <Route path="/admin" element={<AdminLayout />}>
@@ -35,6 +39,7 @@ function App() {
                         <Route path="user-management" element={<UserManagement />} />
                         <Route path="student-management" element={<StudentManagement />} />
                         <Route path="school-year-management" element={<SchoolYearManagement />} />
+                        <Route path="departments/:slug" element={<StudentIDValidation />} />
                     </Route>
                 </Route>
             </Route>
