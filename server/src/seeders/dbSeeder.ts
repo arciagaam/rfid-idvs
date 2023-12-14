@@ -1,16 +1,21 @@
 import { PrismaClient } from "@prisma/client";
+import { faker } from '@faker-js/faker';
+import tableSeeder from "./seederWrapper";
+
 import defaultUserData from './../data/defaultUserData';
 import defaultRoleData from './../data/defaultRoleData';
 
-import tableSeeder from "./seederWrapper";
-import mockStudents from "../data/mockStudentData";
+// To be changed
 import courses from "../data/defaultCourseData";
 import departments from "../data/defaultDepartmentData";
+import schoolYears from "../data/mockSchoolYearData";
+
+// To be removed
+import mockStudents from "../data/mockStudentData";
 
 const prisma = new PrismaClient();
 
 async function run() {
-
     await tableSeeder('role', async () => {
         for await (const role of defaultRoleData) {
             await prisma.role.create({
@@ -25,6 +30,25 @@ async function run() {
                 })
             }
         })
+    })
+
+    await tableSeeder('school year', async () => {
+        for await (const schoolYear of schoolYears) {
+            await prisma.school_year.create({
+                data: {
+                    ...schoolYear,
+                    terms: {
+                        createMany: {
+                            data: [
+                                { term: 1 },
+                                { term: 2 },
+                                { term: 3 },
+                            ]
+                        }
+                    }
+                }
+            })
+        }
     })
 
     // Change on production
@@ -46,9 +70,18 @@ async function run() {
             // Remove on production
             await tableSeeder('student', async () => {
                 for await (const student of mockStudents) {
-                    await prisma.student.create({
+                    const { id } = await prisma.student.create({
                         data: student
                     });
+
+                    // Remove if you want to test the validation of RFID
+                    // from scratch
+                    // await prisma.term_student.create({
+                    //     data: {
+                    //         student_id: id,
+                    //         term_id: faker.helpers.arrayElement([1, 2, 3, 4, 5, 6])
+                    //     }
+                    // })
                 }
             });
         });
@@ -57,4 +90,7 @@ async function run() {
 
 }
 
-run();
+run()
+    .finally(() => {
+        prisma.$disconnect();
+    });
