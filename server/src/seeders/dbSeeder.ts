@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import colors from 'colors';
 import defaultUserData from './../data/defaultUserData';
 import defaultRoleData from './../data/defaultRoleData';
 

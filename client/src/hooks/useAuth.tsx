@@ -79,9 +79,9 @@ const useAuthentication = () => {
     }
 
     useEffect(() => {
-        setLoading(true);
-
         const refresh = async () => {
+            setLoading(true);
+
             try {
                 const req = await fetch(API_URL + "/authenticate/refresh", {
                     method: "post",
@@ -112,12 +112,14 @@ const useAuthentication = () => {
     }, []);
 
     useEffect(() => {
-        locationRef.current = location.pathname;
+        if (locationRef.current !== location.pathname) {
+            locationRef.current = location.pathname;
+        }
 
-        if (locationRef.current === location.pathname) {
+        if (!user) {
             navigate(locationRef.current);
         }
-    }, [location.pathname, navigate])
+    }, [user, location.pathname, navigate])
 
     return {
         user,

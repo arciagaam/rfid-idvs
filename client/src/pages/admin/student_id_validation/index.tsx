@@ -17,7 +17,7 @@ const StudentIDValidation = () => {
                         <TabsTrigger value="validation_history">Validation History</TabsTrigger>
                     </TabsList>
                     <TabsContent value="student_id">
-                        <StudentID />
+                        <StudentID slug={slug} />
                     </TabsContent>
                     <TabsContent value="validation_history">
                         <ValidationHistory />
