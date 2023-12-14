@@ -3,39 +3,31 @@ import { userColumns, TUserTable } from './columns'
 import { useEffect, useState } from 'react'
 import { TUser } from '@/types/TUser'
 import { UserModal } from './components/UserModal'
-const API_URL = import.meta.env.VITE_API_URL
+import { getUsers } from '@/api/userAPI'
 const UserManagement = () => {
-
     const [users, setUsers] = useState<TUserTable[]>([]);
-
+    
     useEffect(() => {
-
+        
         const fetchUsers = async () => {
-            try {
-                const usersTableData: TUserTable[] = [];
+            const usersTableData: TUserTable[] = [];
+            const res = await getUsers();
+            
+            if(res) {
 
-                const res = await fetch(`${API_URL}/users`, {
-                    credentials: "include"
-                }).then(res => res.json());
-                
-                if(res) {
-                    res.data.forEach((user: TUser) => {
-                        usersTableData.push(
-                            {
-                                id: user.id,
-                                fullname :`${user.firstName} ${(user.middleName ?? '')} ${user.lastName}`,
-                                username: user.username,
-                                email: user.email,
-                                role: user.role.name.toUpperCase()
-                            }
-                        )
-                    });
+                res.data.forEach((user: TUser) => {
+                    usersTableData.push(
+                        {
+                            id: user.id,
+                            fullname :`${user.firstName} ${(user.middleName ?? '')} ${user.lastName}`,
+                            username: user.username,
+                            email: user.email,
+                            role: user.role.name.toUpperCase()
+                        }
+                    )
+                });
 
-                    setUsers(usersTableData)
-                }
-
-            } catch (error) {
-                console.error(error);
+                setUsers(usersTableData)
             }
         }
 

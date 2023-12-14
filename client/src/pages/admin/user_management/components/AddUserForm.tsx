@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '@/validators/UserSchema';
 import { z } from 'zod';
-const API_URL = import.meta.env.VITE_API_URL;
+import { storeUser } from '@/api/userAPI';
 
 const AddUserForm = () => {
     const addUserForm = useForm<z.infer<typeof userSchema>>({
@@ -29,17 +29,7 @@ const AddUserForm = () => {
     })
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
-
-        const res = await fetch(`${API_URL}/users`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify(values)
-        });
-
-        console.log(res)
+        await storeUser(values);
     }
 
     return (

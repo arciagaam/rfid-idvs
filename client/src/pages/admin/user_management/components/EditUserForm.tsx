@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '@/validators/UserSchema';
 import { z } from 'zod';
 import { TUser } from '@/types/TUser';
-const API_URL = import.meta.env.VITE_API_URL;
+import { getUserByID, updateUser } from '@/api/userAPI';
 
 const EditUserForm = ({ id }: { id: number }) => {
 
@@ -33,52 +33,29 @@ const EditUserForm = ({ id }: { id: number }) => {
     })
 
     useEffect(() => {
-
         const fetchUser = async () => {
+            const res = await getUserByID(id);
 
-            try {
-                const res = await fetch(`${API_URL}/users/${id}`, {
-                    credentials: 'include'
-                }).then(res => res.json());
-
-                if (res) {
-                    setUser(res.data);
-                    editUserForm.reset({
-                        username: res.data.username,
-                        email: res.data.email,
-                        first_name: res.data.firstName,
-                        middle_name: res.data.middleName ?? '',
-                        last_name: res.data.lastName,
-                        role_id: res.data.roleId,
-                    });
-                }
-
-            } catch (error) {
-                console.error(error);
+            if (res) {
+                setUser(res.data);
+                editUserForm.reset({
+                    username: res.data.username,
+                    email: res.data.email,
+                    first_name: res.data.firstName,
+                    middle_name: res.data.middleName ?? '',
+                    last_name: res.data.lastName,
+                    role_id: res.data.roleId,
+                });
             }
         }
-
         fetchUser();
-
-
     }, [])
 
 
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
-
-        const res = await fetch(`${API_URL}/users/${id}`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT',
-            credentials: 'include',
-            body: JSON.stringify(values)
-        });
-
-        console.log(res)
+        await updateUser(id, values);
     }
-
 
     return (
         <Form {...editUserForm}>
