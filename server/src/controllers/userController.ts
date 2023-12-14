@@ -70,7 +70,7 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
         const payload = {
             code: 200,
             message: "User successfully retrieved.",
-            data: user
+            data: convertObjectKeys(user)
         };
 
         res.status(200).json(payload);
