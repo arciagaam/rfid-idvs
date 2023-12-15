@@ -40,7 +40,7 @@ const getDepartment = asyncHandler(
         const { name } = req.params;
 
         try {
-            const validatedStudents = await prisma.term_student.findFirstOrThrow({
+            const validatedStudents = await prisma.term_student.findMany({
                 where: {
                     student: {
                         course: {
