@@ -33,57 +33,55 @@ const selectUserWithRoleDTO: () => Prisma.userSelect = () => (
 )
 
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-    try {
-        const users = await prisma.user.findMany({
-            select: selectUserWithRoleDTO()
-        });
+    // try {
+    const users = await prisma.user.findMany({
+        select: selectUserWithRoleDTO()
+    });
 
-        const payload = {
-            code: 200,
-            message: "Users successfully retrieved.",
-            data: convertObjectKeys(users)
-        };
+    const payload = {
+        code: 200,
+        message: "Users successfully retrieved.",
+        data: convertObjectKeys(users)
+    };
 
-        res.status(200).json(payload);
-    } catch (e) {
-        const payload = {
-            code: prismaErrorHandler(e),
-            message: e instanceof Error ? e.message : "Unknown error",
-        };
+    res.status(200).json(payload);
+    // } catch (e) {
+    //     const payload = {
+    //         code: prismaErrorHandler(e),
+    //         message: e instanceof Error ? e.message : "Unknown error",
+    //     };
 
-        res.status(400).json(payload);
-    }
-}
-)
+    //     res.status(400).json(payload);
+    // }
+})
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    try {
-        const user = await prisma.user.findUniqueOrThrow({
-            where: {
-                id: parseInt(id)
-            },
-            select: selectUserWithRoleDTO()
-        });
+    // try {
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: parseInt(id)
+        },
+        select: selectUserWithRoleDTO()
+    });
 
-        const payload = {
-            code: 200,
-            message: "User successfully retrieved.",
-            data: convertObjectKeys(user)
-        };
+    const payload = {
+        code: 200,
+        message: "User successfully retrieved.",
+        data: convertObjectKeys(user)
+    };
 
-        res.status(200).json(payload);
-    } catch (e) {
-        const payload = {
-            code: prismaErrorHandler(e),
-            message: e instanceof Error ? e.message : "Unknown error",
-        }
+    res.status(200).json(payload);
+    // } catch (e) {
+    //     const payload = {
+    //         code: prismaErrorHandler(e),
+    //         message: e instanceof Error ? e.message : "Unknown error",
+    //     }
 
-        res.status(400).json(payload);
-    }
-}
-)
+    //     res.status(400).json(payload);
+    // }
+})
 
 const storeUser = asyncHandler(async (req: Request, res: Response) => {
     const body = req.body as TUserDTOWithoutPassword;
@@ -93,90 +91,85 @@ const storeUser = asyncHandler(async (req: Request, res: Response) => {
         password: hashSync(body.username, 12)
     }
 
-    console.log(createUser);
-    try {
-        const user = await prisma.user.create({
-            data: createUser,
-            select: selectUserWithRoleDTO()
-        });
+    // try {
+    const user = await prisma.user.create({
+        data: createUser,
+        select: selectUserWithRoleDTO()
+    });
 
-        const payload = {
-            code: 200,
-            message: "User successfully created.",
-            data: user
-        };
+    const payload = {
+        code: 200,
+        message: "User successfully created.",
+        data: user
+    };
 
-        res.status(200).json(payload);
-    } catch (e) {
-        const payload = {
-            code: prismaErrorHandler(e),
-            message: e instanceof Error ? e.message : "Unknown error"
-        }
+    res.status(200).json(payload);
+    // } catch (e) {
+    //     const payload = {
+    //         code: prismaErrorHandler(e),
+    //         message: e instanceof Error ? e.message : "Unknown error"
+    //     }
 
-        res.status(400).json(payload);
-    }
-}
-)
+    //     res.status(400).json(payload);
+    // }
+})
 
 const updateUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = req.body as TUserDTOWithPassword;
 
-    try {
-        const user = await prisma.user.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: body,
-            select: selectUserWithRoleDTO()
-        });
+    // try {
+    const user = await prisma.user.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: body,
+        select: selectUserWithRoleDTO()
+    });
 
-        const payload = {
-            code: 400,
-            message: "User successfully updated.",
-            data: user
-        }
-
-        res.status(200).json(payload)
-    } catch (e) {
-        const payload = {
-            code: prismaErrorHandler(e),
-            message: e instanceof Error ? e.message : "Unknown error"
-        }
-
-        res.status(400).json(payload);
+    const payload = {
+        code: 400,
+        message: "User successfully updated.",
+        data: user
     }
-}
-)
 
-const deleteUser = asyncHandler(
-    async (req: Request, res: Response) => {
-        const { id } = req.params;
+    res.status(200).json(payload)
+    // } catch (e) {
+    //     const payload = {
+    //         code: prismaErrorHandler(e),
+    //         message: e instanceof Error ? e.message : "Unknown error"
+    //     }
 
-        try {
-            await prisma.user.delete({
-                where: {
-                    id: parseInt(id)
-                }
-            });
+    //     res.status(400).json(payload);
+    // }
+})
 
-            const payload = {
-                code: 400,
-                message: "User successfully deleted.",
-                data: {}
-            };
+const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-            res.status(200).json(payload);
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error"
-            }
-
-            res.status(400).json(payload);
+    // try {
+    await prisma.user.delete({
+        where: {
+            id: parseInt(id)
         }
-    }
-)
+    });
+
+    const payload = {
+        code: 400,
+        message: "User successfully deleted.",
+        data: {}
+    };
+
+    res.status(200).json(payload);
+    // } catch (e) {
+    //     const payload = {
+    //         code: prismaErrorHandler(e),
+    //         message: e instanceof Error ? e.message : "Unknown error"
+    //     }
+
+    //     res.status(400).json(payload);
+    // }
+})
 
 export {
     getAllUsers,

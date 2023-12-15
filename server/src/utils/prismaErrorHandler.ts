@@ -7,5 +7,5 @@ export const prismaErrorHandler = (e: unknown) => {
         }
     }
 
-    return 400;
+    return;
 };

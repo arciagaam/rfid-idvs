@@ -4,6 +4,7 @@ import express, { json, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import routes from './src/routes';
+import { errorHandler } from './src/middlewares/errorHandler';
 
 const app = express();
 
@@ -18,6 +19,9 @@ app.use(cookieParser());
 app.set('port', 3000)
 
 app.use('/api', routes);
+
+// Error handle middleware
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
     res.send('API is running');
