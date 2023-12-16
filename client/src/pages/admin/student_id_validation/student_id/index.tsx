@@ -15,16 +15,8 @@ type TStudentIDProps = {
 }
 
 type TValidatedStudentTable = {
-    slug?: string;
-    termId?: number;
-}
-
-type TStudentIDValidationTable = {
-    id: number;
-    student: TStudent;
-    student_id: number;
-    term: TTerm;
-    term_id: number;
+    slug: string;
+    termId: number;
 }
 
 type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName' | 'studentNumber'> & { first_name: string; middle_name?: string; last_name: string, student_number: string };
@@ -120,6 +112,7 @@ const StudentID = ({ slug }: TStudentIDProps) => {
 
 const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
     const [validatedStudents, setValidatedStudents] = useState<TStudentTable[]>([]);
+    const [isValidated, setIsValidated] = useState(true);
 
     useEffect(() => {
         const fetchValidatedStudents = async () => {
@@ -131,7 +124,8 @@ const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
                         'Content-Type': "application/json"
                     },
                     body: JSON.stringify({
-                        term_id: termId
+                        term_id: termId,
+                        validated: isValidated
                     })
                 });
 
@@ -140,12 +134,12 @@ const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
                 }
 
                 const res = await req.json();
-                const responseData = res.data as TStudentIDValidationTable[];
+                const responseData = res.data as TValidatedStudent[];
 
                 const studentTableData: TStudentTable[] = [];
 
                 responseData.forEach((termStudentData) => {
-                    const student = termStudentData.student as unknown as TValidatedStudent;
+                    const student = termStudentData;
 
                     studentTableData.push(
                         {
@@ -167,9 +161,35 @@ const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
         if (slug !== undefined && termId !== undefined) {
             fetchValidatedStudents();
         }
-    }, [slug, termId]);
+    }, [slug, termId, isValidated]);
 
-    return (<DataTable columns={studentColumns} data={validatedStudents} />)
+    const handleChangeValidated = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const element = e.target as HTMLInputElement;
+        const value = element.value;
+
+        switch (value) {
+            case "validated": setIsValidated(true); break;
+            case "non-validated": setIsValidated(false); break;
+        }
+    }
+
+    return (
+        <div className="flex flex-col">
+            <div className="flex flex-col">
+                <p className="text-sm font-medium">Filter</p>
+                <div className="flex flex-row gap-2">
+                    <label htmlFor="validated">Validated</label>
+                    <input type="radio" id="validated" onChange={handleChangeValidated} value={"validated"} name="validated" defaultChecked />
+                </div>
+                <div className="flex flex-row gap-2">
+                    <label htmlFor="non-validated">Non-Validated</label>
+                    <input type="radio" id="non-validated" onChange={handleChangeValidated} value={"non-validated"} name="validated" />
+                </div>
+            </div>
+
+            <DataTable columns={studentColumns} data={validatedStudents} />
+        </div>
+    )
 }
 
 export { StudentID }
