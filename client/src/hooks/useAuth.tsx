@@ -93,7 +93,6 @@ const useAuthentication = () => {
                 }
 
                 const res = await req.json();
-
                 setError({});
 
                 if (res.user !== undefined) {

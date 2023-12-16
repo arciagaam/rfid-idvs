@@ -54,12 +54,11 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
     }
 });
 
-const refreshUser = asyncHandler(
-    async (req: Request, res: Response) => {
+const refreshUser = asyncHandler(async (req: Request, res: Response) => {
         const token = req.cookies.jwt;
 
         if (!token) {
-            res.status(200);
+            res.status(200).json({});
         }
 
         try {
