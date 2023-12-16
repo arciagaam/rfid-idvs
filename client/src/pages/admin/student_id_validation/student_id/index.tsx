@@ -27,7 +27,7 @@ type TStudentIDValidationTable = {
     term_id: number;
 }
 
-type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName'> & { first_name: string; middle_name?: string; last_name: string };
+type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName' | 'studentNumber'> & { first_name: string; middle_name?: string; last_name: string, student_number: string };
 
 const StudentID = ({ slug }: TStudentIDProps) => {
     const [schoolYears, setSchoolYears] = useState<TSchoolYear[]>([]);
@@ -150,7 +150,7 @@ const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
                     studentTableData.push(
                         {
                             id: student.id,
-                            studentNumber: student.studentNumber,
+                            studentNumber: student.student_number,
                             fullName: `${student.first_name} ${(student.middle_name ?? '')} ${student.last_name}`,
                             rfidStatus: student.rfidNumber ? 'Linked' : 'Not Linked',
                             yearSection: `${student.year} - ${student.section}`,
