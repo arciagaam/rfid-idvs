@@ -1,7 +1,7 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import generateToken from "../utils/generateToken";
 import asyncHandler from "../middlewares/asyncHandler";
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt'
 
@@ -58,7 +58,7 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
         const token = req.cookies.jwt;
 
         if (!token) {
-            res.status(200).json({});
+            return res.status(200).json({});
         }
 
         try {
