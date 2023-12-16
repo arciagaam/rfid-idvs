@@ -3,7 +3,6 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
 import { TUserDTOWithPassword, TUserDTOWithoutPassword } from "../types/UserDTO";
-import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 
 import { hashSync } from "bcrypt";
 
@@ -33,7 +32,6 @@ const selectUserWithRoleDTO: () => Prisma.userSelect = () => (
 )
 
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
-    // try {
     const users = await prisma.user.findMany({
         select: selectUserWithRoleDTO()
     });
@@ -45,20 +43,11 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(payload);
-    // } catch (e) {
-    //     const payload = {
-    //         code: prismaErrorHandler(e),
-    //         message: e instanceof Error ? e.message : "Unknown error",
-    //     };
-
-    //     res.status(400).json(payload);
-    // }
 })
 
 const getUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // try {
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             id: parseInt(id)
@@ -73,14 +62,6 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(payload);
-    // } catch (e) {
-    //     const payload = {
-    //         code: prismaErrorHandler(e),
-    //         message: e instanceof Error ? e.message : "Unknown error",
-    //     }
-
-    //     res.status(400).json(payload);
-    // }
 })
 
 const storeUser = asyncHandler(async (req: Request, res: Response) => {
@@ -91,7 +72,6 @@ const storeUser = asyncHandler(async (req: Request, res: Response) => {
         password: hashSync(body.username, 12)
     }
 
-    // try {
     const user = await prisma.user.create({
         data: createUser,
         select: selectUserWithRoleDTO()
@@ -104,21 +84,12 @@ const storeUser = asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(payload);
-    // } catch (e) {
-    //     const payload = {
-    //         code: prismaErrorHandler(e),
-    //         message: e instanceof Error ? e.message : "Unknown error"
-    //     }
-
-    //     res.status(400).json(payload);
-    // }
 })
 
 const updateUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const body = req.body as TUserDTOWithPassword;
 
-    // try {
     const user = await prisma.user.update({
         where: {
             id: parseInt(id)
@@ -134,20 +105,11 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
     }
 
     res.status(200).json(payload)
-    // } catch (e) {
-    //     const payload = {
-    //         code: prismaErrorHandler(e),
-    //         message: e instanceof Error ? e.message : "Unknown error"
-    //     }
-
-    //     res.status(400).json(payload);
-    // }
 })
 
 const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // try {
     await prisma.user.delete({
         where: {
             id: parseInt(id)
@@ -161,14 +123,6 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(payload);
-    // } catch (e) {
-    //     const payload = {
-    //         code: prismaErrorHandler(e),
-    //         message: e instanceof Error ? e.message : "Unknown error"
-    //     }
-
-    //     res.status(400).json(payload);
-    // }
 })
 
 export {

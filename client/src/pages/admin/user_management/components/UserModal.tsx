@@ -8,7 +8,7 @@ const UserModal = ({ ...props }) => {
     const { isEditing = false, id = null } = props;
     return (
         <Modal
-            trigger={isEditing ? <Button variant={"outline"}>Edit User</Button> : <Button>Add User</Button>}
+            trigger={isEditing ? <Button className="w-full font-normal items-start justify-start px-2 py-1.5 h-fit" variant={"ghost"}>Edit User</Button> : <Button>Add User</Button>}
 
             title={`${isEditing ? 'Edit' : 'Add'} User`}
 

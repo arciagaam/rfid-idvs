@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TStudentTable, studentColumns } from './columns';
 import { TStudent } from '@/types/TStudent';
 import { Button } from '@/components/ui/button';

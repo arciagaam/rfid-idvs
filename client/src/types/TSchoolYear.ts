@@ -1,6 +1,8 @@
+import { TTerm } from "./TTerm";
+
 export type TSchoolYear = {
-    id: string;
-    yearStart: string;
-    yearEnd: string;
-    terms: {id:number, term: number}[];
+    id: number;
+    year_start: number;
+    year_end: number;
+    terms: TTerm[];
 }

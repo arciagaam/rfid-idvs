@@ -51,7 +51,7 @@ export const userColumns: ColumnDef<TUserTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <UserModal id={id} isEditing={true}/>
-                        <DropdownMenuItem>Delete User</DropdownMenuItem>
+                        <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete User</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
