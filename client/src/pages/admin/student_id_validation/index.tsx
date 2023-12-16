@@ -11,7 +11,7 @@ const StudentIDValidation = () => {
             <div className="flex flex-col gap-6 w-full justify-between">
                 <h2 className='text-lg font-bold'>ID Validation - {slug !== undefined ? slug.toUpperCase() : "Invalid Department"}</h2>
 
-                <Tabs defaultValue="student_id" className="w-[400px]">
+                <Tabs defaultValue="student_id">
                     <TabsList>
                         <TabsTrigger value="student_id">Student ID</TabsTrigger>
                         <TabsTrigger value="validation_history">Validation History</TabsTrigger>

@@ -7,8 +7,8 @@ const START_YEAR = 2021;
 
 const mockSchoolYearGenerator: (index: number) => TSchoolYear = (index) => (
     {
-        year_start: START_YEAR + index + 1,
-        year_end: START_YEAR + index,
+        year_start: START_YEAR + index,
+        year_end: START_YEAR + index + 1,
     }
 )
 

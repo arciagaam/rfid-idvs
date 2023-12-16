@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import { TSchoolYear } from "@/types/TSchoolYear";
 import { TTerm } from "@/types/TTerm";
+import { TStudent } from "@/types/TStudent";
+import { TStudentTable, studentColumns } from "./columns";
+
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DataTable } from '@/components/global/DataTable';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,9 +16,18 @@ type TStudentIDProps = {
 
 type TValidatedStudentTable = {
     slug?: string;
-    schoolYearId?: number;
     termId?: number;
 }
+
+type TStudentIDValidationTable = {
+    id: number;
+    student: TStudent;
+    student_id: number;
+    term: TTerm;
+    term_id: number;
+}
+
+type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName'> & { first_name: string; middle_name?: string; last_name: string };
 
 const StudentID = ({ slug }: TStudentIDProps) => {
     const [schoolYears, setSchoolYears] = useState<TSchoolYear[]>([]);
@@ -52,7 +66,7 @@ const StudentID = ({ slug }: TStudentIDProps) => {
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-6">
             <div className="flex flex-row gap-5">
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">School Year</p>
@@ -99,19 +113,26 @@ const StudentID = ({ slug }: TStudentIDProps) => {
                     </Select>
                 </div>
             </div>
-            <ValidatedStudentTable slug={slug} schoolYearId={selectedSchoolYearId} termId={selectedTermId} />
+            <ValidatedStudentTable slug={slug} termId={selectedTermId} />
         </div>
     )
 }
 
-const ValidatedStudentTable = ({ slug, schoolYearId, termId }: TValidatedStudentTable) => {
-    console.log(schoolYearId, termId);
+const ValidatedStudentTable = ({ slug, termId }: TValidatedStudentTable) => {
+    const [validatedStudents, setValidatedStudents] = useState<TStudentTable[]>([]);
 
     useEffect(() => {
         const fetchValidatedStudents = async () => {
             try {
                 const req = await fetch(`${API_URL}/departments/${slug}`, {
-                    credentials: 'include'
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({
+                        term_id: termId
+                    })
                 });
 
                 if (!req.ok) {
@@ -119,22 +140,36 @@ const ValidatedStudentTable = ({ slug, schoolYearId, termId }: TValidatedStudent
                 }
 
                 const res = await req.json();
-                console.log(res);
+                const responseData = res.data as TStudentIDValidationTable[];
+
+                const studentTableData: TStudentTable[] = [];
+
+                responseData.forEach((termStudentData) => {
+                    const student = termStudentData.student as unknown as TValidatedStudent;
+
+                    studentTableData.push(
+                        {
+                            id: student.id,
+                            studentNumber: student.studentNumber,
+                            fullName: `${student.first_name} ${(student.middle_name ?? '')} ${student.last_name}`,
+                            rfidStatus: student.rfidNumber ? 'Linked' : 'Not Linked',
+                            yearSection: `${student.year} - ${student.section}`,
+                        }
+                    );
+                });
+
+                setValidatedStudents(studentTableData);
             } catch (error) {
                 console.error(error);
             }
         }
 
-        if (slug !== undefined) {
+        if (slug !== undefined && termId !== undefined) {
             fetchValidatedStudents();
         }
-    }, [slug]);
+    }, [slug, termId]);
 
-    return (
-        <div>
-            <p>Student Table</p>
-        </div>
-    )
+    return (<DataTable columns={studentColumns} data={validatedStudents} />)
 }
 
 export { StudentID }
