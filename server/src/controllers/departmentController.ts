@@ -27,29 +27,24 @@ const getAllDepartments = asyncHandler(async (req: Request, res: Response) => {
 const getDepartment = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
 
-    const validatedStudents = await prisma.term_student.findMany({
+    const departments = await prisma.department.findMany({
         where: {
-            student: {
-                course: {
-                    department: {
-                        name: name
-                    }
+            name: name
+        },
+        include: {
+            courses: {
+                select: {
+                    id: true,
+                    name: true
                 }
             }
-        },
-        select: {
-            id: true,
-            term: true,
-            term_id: true,
-            student: true,
-            student_id: true
         }
-    });
+    })
 
     const payload = {
         code: 200,
         message: "Department successfully retrieved.",
-        data: validatedStudents
+        data: departments
     };
 
     res.status(200).json(payload);
