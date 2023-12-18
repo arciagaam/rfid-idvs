@@ -4,7 +4,6 @@ export type TStudentTable = {
     id: number,
     studentNumber: string;
     fullName: string;
-    rfidStatus: string;
     yearSection: string;
 }
 

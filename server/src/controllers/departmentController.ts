@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
+import { TStudentValidationDTO } from "../types/StudentValidationDTO";
 
 const prisma = new PrismaClient();
 
@@ -58,7 +59,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
     const { name } = req.params;
     const { term_id, status } = req.body;
 
-    let students: any;
+    const students: TStudentValidationDTO[] = [];
 
     const studentSelect: Prisma.studentSelect = {
         id: true,
@@ -71,105 +72,68 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         student_number: true
     }
 
-    switch (status) {
-        case "validated": {
-            const _validatedStudents = await prisma.term_student.findMany({
-                where: {
-                    student: {
-                        course: {
-                            department: {
-                                name: name
-                            }
-                        }
-                    },
-                    term_id: term_id,
-                },
-                select: {
-                    student: {
-                        select: studentSelect
-                    }
-                },
-            });
-
-            students = _validatedStudents.map((validatedStudent) => validatedStudent.student);
-        }
-            break;
-        case "non-validated": {
-            const _validatedStudents = await prisma.term_student.findMany({
-                where: {
-                    student: {
-                        course: {
-                            department: {
-                                name: name
-                            }
-                        }
-                    },
-                    term_id: term_id,
-                },
-                select: {
-                    student: {
-                        select: {
-                            id: true
-                        }
-                    }
-                },
-            });
-
-            const validatedStudents = _validatedStudents.map((termStudent) => termStudent.student.id)
-
-            students = await prisma.student.findMany({
-                where: {
-                    id: {
-                        notIn: validatedStudents
-                    },
+    if (status === "validated" || status === "all") {
+        const _students = await prisma.term_student.findMany({
+            where: {
+                student: {
                     course: {
                         department: {
                             name: name
                         }
                     }
                 },
-                select: studentSelect,
-            });
-        }
-            break;
-        default: {
-            const _validatedStudents = await prisma.term_student.findMany({
-                where: {
-                    student: {
-                        course: {
-                            department: {
-                                name: name
-                            }
-                        }
-                    },
-                    term_id: term_id,
-                },
-                select: {
-                    student: {
-                        select: studentSelect
-                    }
-                },
-            });
+                term_id: term_id,
+            },
+            select: {
+                student: {
+                    select: studentSelect
+                }
+            },
+        });
 
-            const validatedStudents = _validatedStudents.map((termStudent) => termStudent.student.id)
+        const validatedStudents = _students.map((value) => ({ ...value.student, validated: true }))
+        students.push(...validatedStudents);
+    }
 
-            const nonValidatedStudents = await prisma.student.findMany({
-                where: {
-                    id: {
-                        notIn: validatedStudents
-                    },
+    if (status === "non-validated" || status === "all") {
+        const _validatedStudents = await prisma.term_student.findMany({
+            where: {
+                student: {
                     course: {
                         department: {
                             name: name
                         }
                     }
                 },
-                select: studentSelect,
-            });
+                term_id: term_id,
+            },
+            select: {
+                student: {
+                    select: {
+                        id: true
+                    }
+                }
+            },
+        });
 
-            students = [..._validatedStudents, ...nonValidatedStudents];
-        }
-            break;
+        const validatedStudentsId: number[] = _validatedStudents.map((value) => value.student.id);
+
+        const _students = await prisma.student.findMany({
+            where: {
+                id: {
+                    notIn: validatedStudentsId
+                },
+                course: {
+                    department: {
+                        name: name
+                    }
+                }
+            },
+            select: studentSelect,
+        });
+
+        const nonValidatedStudents = _students.map((value) => ({ ...value, validated: false }))
+        students.push(...nonValidatedStudents);
     }
 
     const payload = {

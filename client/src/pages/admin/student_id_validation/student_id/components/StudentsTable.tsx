@@ -15,6 +15,7 @@ type TValidatedStudentTable = {
 }
 
 type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName' | 'studentNumber'> & { first_name: string; middle_name?: string; last_name: string, student_number: string };
+type TStatus = "all" | "validated" | "non-validated";
 
 const mockCourses = [
     {
@@ -29,7 +30,7 @@ const mockCourses = [
 
 const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
     const [students, setStudents] = useState<TStudentTable[]>([]);
-    const [status, setStatus] = useState<"all" | "validated" | "non-validated">("all");
+    const [status, setStatus] = useState<TStatus>("all");
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -63,7 +64,6 @@ const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
                             id: student.id,
                             studentNumber: student.student_number,
                             fullName: `${student.first_name} ${(student.middle_name ?? '')} ${student.last_name}`,
-                            rfidStatus: student.rfidNumber ? 'Linked' : 'Not Linked',
                             yearSection: `${student.year} - ${student.section}`,
                         }
                     );
