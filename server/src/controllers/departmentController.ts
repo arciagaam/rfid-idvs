@@ -56,7 +56,7 @@ const getDepartment = asyncHandler(async (req: Request, res: Response) => {
 
 const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
-    const { term_id, validated } = req.body;
+    const { term_id, status } = req.body;
 
     let students: any;
 
@@ -71,8 +71,8 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         student_number: true
     }
 
-    switch (validated) {
-        case true: {
+    switch (status) {
+        case "validated": {
             const _validatedStudents = await prisma.term_student.findMany({
                 where: {
                     student: {
@@ -94,7 +94,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
             students = _validatedStudents.map((validatedStudent) => validatedStudent.student);
         }
             break;
-        case false: {
+        case "non-validated": {
             const _validatedStudents = await prisma.term_student.findMany({
                 where: {
                     student: {
@@ -132,7 +132,44 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
             });
         }
             break;
-        default: throw new Error("Invalid request");
+        default: {
+            const _validatedStudents = await prisma.term_student.findMany({
+                where: {
+                    student: {
+                        course: {
+                            department: {
+                                name: name
+                            }
+                        }
+                    },
+                    term_id: term_id,
+                },
+                select: {
+                    student: {
+                        select: studentSelect
+                    }
+                },
+            });
+
+            const validatedStudents = _validatedStudents.map((termStudent) => termStudent.student.id)
+
+            const nonValidatedStudents = await prisma.student.findMany({
+                where: {
+                    id: {
+                        notIn: validatedStudents
+                    },
+                    course: {
+                        department: {
+                            name: name
+                        }
+                    }
+                },
+                select: studentSelect,
+            });
+
+            students = [..._validatedStudents, ...nonValidatedStudents];
+        }
+            break;
     }
 
     const payload = {
