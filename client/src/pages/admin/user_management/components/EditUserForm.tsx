@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Form,
     FormControl,
@@ -48,10 +48,9 @@ const EditUserForm = ({ id }: { id: number }) => {
                 });
             }
         }
+
         fetchUser();
-    }, [])
-
-
+    }, [id, editUserForm])
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
         await updateUser(id, values);

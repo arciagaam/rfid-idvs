@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const useAuthentication = () => {
-    const [user, setUser] = useState<TUser | null>(null);
+    const [user, setUser] = useState<Omit<TUser, "roleId"> & { role_id: number } | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({});
 
