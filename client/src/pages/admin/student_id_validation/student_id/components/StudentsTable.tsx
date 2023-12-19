@@ -51,7 +51,8 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
                     },
                     body: JSON.stringify({
                         term_id: termId,
-                        status: status
+                        status: status,
+                        courses: selectedCourses
                     })
                 });
 
@@ -88,7 +89,7 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
         if (slug !== undefined && termId !== undefined) {
             fetchStudents();
         }
-    }, [slug, termId, status]);
+    }, [slug, termId, status, selectedCourses]);
 
     return (
         <>

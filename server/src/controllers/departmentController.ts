@@ -52,7 +52,7 @@ const getDepartment = asyncHandler(async (req: Request, res: Response) => {
 
 const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
-    const { term_id, status } = req.body;
+    const { term_id, status, courses } = req.body;
 
     const students: TStudentValidationDTO[] = [];
 
@@ -67,15 +67,30 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         student_number: true
     }
 
+    const courseSelect: () => Prisma.courseWhereInput = () => {
+        if (courses.length === 0) {
+            return {
+                department: {
+                    name: name
+                }
+            }
+        }
+
+        return {
+            id: {
+                in: courses
+            },
+            department: {
+                name: name
+            }
+        }
+    }
+
     if (status === "validated" || status === "all") {
         const _students = await prisma.term_student.findMany({
             where: {
                 student: {
-                    course: {
-                        department: {
-                            name: name
-                        }
-                    }
+                    course: courseSelect()
                 },
                 term_id: term_id,
             },
@@ -94,11 +109,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         const _validatedStudents = await prisma.term_student.findMany({
             where: {
                 student: {
-                    course: {
-                        department: {
-                            name: name
-                        }
-                    }
+                    course: courseSelect()
                 },
                 term_id: term_id,
             },
@@ -118,11 +129,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
                 id: {
                     notIn: validatedStudentsId
                 },
-                course: {
-                    department: {
-                        name: name
-                    }
-                }
+                course: courseSelect()
             },
             select: studentSelect,
         });
