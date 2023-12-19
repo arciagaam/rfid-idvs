@@ -14,7 +14,20 @@ type TValidatedStudentTable = {
     termId: number;
 }
 
-type TValidatedStudent = Omit<TStudent, 'firstName' | 'middleName' | 'lastName' | 'studentNumber'> & { first_name: string; middle_name?: string; last_name: string, student_number: string };
+type TValidatedStudent =
+    Omit<
+        TStudent,
+        'firstName'
+        | 'middleName'
+        | 'lastName'
+        | 'studentNumber'
+    > & {
+        first_name: string;
+        middle_name?: string;
+        last_name: string;
+        student_number: string;
+        validated: boolean
+    };
 type TStatus = "all" | "validated" | "non-validated";
 
 const mockCourses = [
@@ -65,6 +78,7 @@ const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
                             studentNumber: student.student_number,
                             fullName: `${student.first_name} ${(student.middle_name ?? '')} ${student.last_name}`,
                             yearSection: `${student.year} - ${student.section}`,
+                            status: student.validated ? "Validated" : "Non-validated"
                         }
                     );
                 });

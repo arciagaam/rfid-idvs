@@ -5,6 +5,7 @@ export type TStudentTable = {
     studentNumber: string;
     fullName: string;
     yearSection: string;
+    status: string;
 }
 
 export const studentColumns: ColumnDef<TStudentTable>[] = [
@@ -19,5 +20,9 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
     {
         accessorKey: 'yearSection',
         header: 'Year and Section'
+    },
+    {
+        accessorKey: 'status',
+        header: 'Validation Status'
     },
 ]
