@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Command,
@@ -12,24 +12,28 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { IoIosCheckbox, IoMdSquareOutline } from "react-icons/io";
 
-const CoursesFilter = ({ courses }: { courses?: { id: number, value: string, name: string }[] }) => {
+import { TCourse } from "../.."
+
+type TCourseFilterProps = {
+    courses: TCourse[];
+    selectedValues: number[];
+    setSelectedValues: React.Dispatch<React.SetStateAction<number[]>>;
+}
+
+const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFilterProps) => {
     const [open, setOpen] = useState(false);
-    const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
-    const handleSelectedValue = (value: string) => {
+    const handleSelectedValue = (value: number) => {
         if (selectedValues.includes(value)) {
             setSelectedValues(selectedValues.filter((val) => val !== value));
         } else {
-            setSelectedValues([...selectedValues, value]);
+            setSelectedValues((prev) => ([...prev, value]));
         }
 
         setOpen(false);
     }
-
-    useEffect(() => {
-        console.log(selectedValues);
-    }, [selectedValues]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -54,16 +58,20 @@ const CoursesFilter = ({ courses }: { courses?: { id: number, value: string, nam
                                 <CommandEmpty>No course found.</CommandEmpty>
                                 <CommandGroup>
                                     {courses.map((course) => {
-                                        const isSelected = selectedValues.includes(course.value);
+                                        const isSelected = selectedValues.includes(course.id);
 
                                         return (
                                             <CommandItem
                                                 key={course.value}
                                                 value={course.value}
                                                 className="flex flex-row gap-2"
-                                                onSelect={handleSelectedValue}
+                                                onSelect={() => handleSelectedValue(course.id)}
                                             >
-                                                <input type="checkbox" checked={isSelected}/>
+                                                {
+                                                    isSelected
+                                                        ? <IoIosCheckbox />
+                                                        : <IoMdSquareOutline />
+                                                }
                                                 {course.name}
                                             </CommandItem>
                                         )

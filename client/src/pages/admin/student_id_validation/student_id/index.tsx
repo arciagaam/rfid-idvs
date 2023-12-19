@@ -5,22 +5,19 @@ import { TTerm } from "@/types/TTerm";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { StudentsTable } from "./components/StudentsTable";
+import { TCourse } from "..";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 type TStudentIDProps = {
     slug?: string;
+    courses: TCourse[];
 }
 
-const StudentID = ({ slug }: TStudentIDProps) => {
+const StudentID = ({ slug, courses }: TStudentIDProps) => {
     const [schoolYears, setSchoolYears] = useState<TSchoolYear[]>([]);
     const [selectedSchoolYearId, setSelectedSchoolYearId] = useState<Pick<TSchoolYear, 'id'>['id']>(1);
     const [selectedTermId, setSelectedTermId] = useState<Pick<TTerm, 'id'>['id']>(1);
-    const [courses, setCourses] = useState<{
-        id: number;
-        name: string;
-        value: string;
-    }[]>([]);
 
     useEffect(() => {
         const fetchSchoolYears = async () => {
@@ -42,36 +39,7 @@ const StudentID = ({ slug }: TStudentIDProps) => {
             }
         }
 
-        const fetchDepartmentCourses = async () => {
-            try {
-                const req = await fetch(`${API_URL}/departments/${slug}`, {
-                    credentials: 'include',
-                });
-
-                if (!req.ok) {
-                    throw await req.json();
-                }
-
-                const res = await req.json();
-                const responseData = res.data;
-                const _courses = responseData.courses.map((course: { id: number, name: string }) => {
-                    return {
-                        ...course,
-                        value: course.name
-                    }
-                });
-
-                setCourses(_courses);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
         fetchSchoolYears();
-
-        if (slug !== undefined) {
-            fetchDepartmentCourses();
-        }
     }, [slug]);
 
     if (slug === undefined) {

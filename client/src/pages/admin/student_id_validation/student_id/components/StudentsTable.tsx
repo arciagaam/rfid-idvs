@@ -6,7 +6,6 @@ import { TStudentTable, studentColumns } from "../columns";
 import { DataTable } from '@/components/global/DataTable';
 import { CoursesFilter } from "./CoursesFilter";
 import { ValidationStatusFilter } from "./ValidationStatusFilter";
-// import { FacedetedFilter } from "@/components/global/FacetedFilter";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -39,6 +38,7 @@ type TStatus = "all" | "validated" | "non-validated";
 const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
     const [students, setStudents] = useState<TStudentTable[]>([]);
     const [status, setStatus] = useState<TStatus>("all");
+    const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -95,7 +95,7 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
             <div className="flex gap-5 items-center">
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">Courses</p>
-                    <CoursesFilter courses={courses} />
+                    <CoursesFilter courses={courses} selectedValues={selectedCourses} setSelectedValues={setSelectedCourses} />
                 </div>
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">Validated Status</p>
