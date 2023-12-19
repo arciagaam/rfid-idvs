@@ -131,10 +131,12 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         students.push(...nonValidatedStudents);
     }
 
+    const sortedStudents = students.sort((a, b) => a.id - b.id)
+
     const payload = {
         code: 200,
         message: "Department and student from term successfully retrieved.",
-        data: students
+        data: sortedStudents
     };
 
     res.status(200).json(payload);
