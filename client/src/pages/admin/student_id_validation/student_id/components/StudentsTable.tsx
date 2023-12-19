@@ -6,12 +6,18 @@ import { TStudentTable, studentColumns } from "../columns";
 import { DataTable } from '@/components/global/DataTable';
 import { CoursesFilter } from "./CoursesFilter";
 import { ValidationStatusFilter } from "./ValidationStatusFilter";
+// import { FacedetedFilter } from "@/components/global/FacetedFilter";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 type TValidatedStudentTable = {
     slug: string;
     termId: number;
+    courses: {
+        id: number;
+        name: string;
+        value: string;
+    }[];
 }
 
 type TValidatedStudent =
@@ -30,18 +36,7 @@ type TValidatedStudent =
     };
 type TStatus = "all" | "validated" | "non-validated";
 
-const mockCourses = [
-    {
-        value: 'foo',
-        label: 'Foo'
-    },
-    {
-        value: 'bar',
-        label: 'Bar'
-    },
-]
-
-const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
+const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
     const [students, setStudents] = useState<TStudentTable[]>([]);
     const [status, setStatus] = useState<TStatus>("all");
 
@@ -89,6 +84,7 @@ const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
             }
         }
 
+
         if (slug !== undefined && termId !== undefined) {
             fetchStudents();
         }
@@ -99,7 +95,7 @@ const StudentsTable = ({ slug, termId }: TValidatedStudentTable) => {
             <div className="flex gap-5 items-center">
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">Courses</p>
-                    <CoursesFilter courses={mockCourses} />
+                    <CoursesFilter courses={courses} />
                 </div>
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">Validated Status</p>

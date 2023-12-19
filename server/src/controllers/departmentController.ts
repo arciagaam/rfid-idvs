@@ -27,7 +27,7 @@ const getAllDepartments = asyncHandler(async (req: Request, res: Response) => {
 const getDepartment = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
 
-    const departments = await prisma.department.findMany({
+    const departments = await prisma.department.findFirstOrThrow({
         where: {
             name: name
         },

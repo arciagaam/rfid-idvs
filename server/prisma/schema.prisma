@@ -47,7 +47,7 @@ model course {
     department    department @relation(fields: [department_id], references: [id])
     department_id Int
     students      student[]
-    name          String
+    name          String     @unique
     created_at    DateTime   @default(now())
     updated_at    DateTime   @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }

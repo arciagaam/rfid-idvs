@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Command,
@@ -13,9 +13,23 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-const CoursesFilter = ({ courses }: { courses?: { value: string, label: string }[] }) => {
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
+const CoursesFilter = ({ courses }: { courses?: { id: number, value: string, name: string }[] }) => {
+    const [open, setOpen] = useState(false);
+    const [selectedValues, setSelectedValues] = useState<string[]>([]);
+
+    const handleSelectedValue = (value: string) => {
+        if (selectedValues.includes(value)) {
+            setSelectedValues(selectedValues.filter((val) => val !== value));
+        } else {
+            setSelectedValues([...selectedValues, value]);
+        }
+
+        setOpen(false);
+    }
+
+    useEffect(() => {
+        console.log(selectedValues);
+    }, [selectedValues]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -26,8 +40,8 @@ const CoursesFilter = ({ courses }: { courses?: { value: string, label: string }
                     aria-expanded={open}
                     className="w-[200px] justify-between"
                 >
-                    {value
-                        ? courses?.find((course) => course.value === value)?.label
+                    {selectedValues.length
+                        ? `${selectedValues.length} course${selectedValues.length > 1 ? "s" : ""} selected`
                         : "Select courses..."}
                 </Button>
             </PopoverTrigger>
@@ -39,18 +53,21 @@ const CoursesFilter = ({ courses }: { courses?: { value: string, label: string }
                                 <CommandInput placeholder="Search course..." />
                                 <CommandEmpty>No course found.</CommandEmpty>
                                 <CommandGroup>
-                                    {courses.map((course) => (
-                                        <CommandItem
-                                            key={course.value}
-                                            value={course.value}
-                                            onSelect={(currentValue) => {
-                                                setValue(currentValue === value ? "" : currentValue)
-                                                setOpen(false)
-                                            }}
-                                        >
-                                            {course.label}
-                                        </CommandItem>
-                                    ))}
+                                    {courses.map((course) => {
+                                        const isSelected = selectedValues.includes(course.value);
+
+                                        return (
+                                            <CommandItem
+                                                key={course.value}
+                                                value={course.value}
+                                                className="flex flex-row gap-2"
+                                                onSelect={handleSelectedValue}
+                                            >
+                                                <input type="checkbox" checked={isSelected}/>
+                                                {course.name}
+                                            </CommandItem>
+                                        )
+                                    })}
                                 </CommandGroup>
                             </>
                         ) : (
