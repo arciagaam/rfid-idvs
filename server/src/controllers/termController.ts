@@ -103,13 +103,16 @@ const storeTerm = asyncHandler(async (req: Request, res: Response) => {
                         data: termsArray
                     }
                 }
+            },
+            include: {
+                terms: true
             }
         });
 
         const payload = {
             code: 200,
             message: "Term successfully created.",
-            data: term
+            data: convertObjectKeys(term)
         }
 
         res.status(200).json(payload)

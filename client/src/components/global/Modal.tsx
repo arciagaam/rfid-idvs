@@ -5,7 +5,7 @@ type TModalProps = {
     title: string;
     description: string;
     body: React.ReactNode;
-    footer: React.ReactNode
+    footer: React.ReactNode;
 };
 
 const Modal = ({ ...props }: TModalProps) => {
