@@ -34,8 +34,8 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <div className="fixed min-w-[19rem] w-[19rem] h-screen p-3 flex flex-col bg-[#FAFAFA] gap-5 border-r border-[#1E1E1E15] shadow-2xl z-50">
-            <div className="flex gap-3">
+        <div className="fixed min-w-[19rem] w-[19rem] h-screen p-3 flex flex-col bg-slate-950 gap-5 border-r border-[#1E1E1E15] shadow-2xl z-50 text-white/60">
+            <div className="text-white flex gap-3">
 
                 <Avatar className='h-16 w-16 aspect-square'>
                     <AvatarImage src="https://github.com/shadcn.png" />
@@ -49,11 +49,11 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
             </div>
 
-            <hr />
+            <hr className="border-slate-700" />
 
             {children}
 
-            <div className="flex justify-between mt-auto">
+            <div className="flex justify-between mt-auto text-white">
                 <div className="flex gap-3">
 
                     <Avatar className='h-14 w-14 aspect-square'>
@@ -68,7 +68,7 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
                 </div>
 
-                <DropdownMenu >
+                <DropdownMenu>
                     <DropdownMenuTrigger className='focus-within:outline-none'>
                         <IoMdMore size={20} />
                     </DropdownMenuTrigger>
@@ -90,7 +90,7 @@ const NavigationItem = ({ ...props }: NavLinkProps) => {
         <NavLink
             to={to}
             className={({ isActive }) =>
-                (isActive ? "text-accent-600 bg-accent-100 font-medium" : "bg-none") + " flex items-center flex-row gap-2 w-full p-2 rounded-md"
+                (isActive ? "text-white bg-slate-800 font-medium" : "bg-none") + " flex items-center flex-row gap-2 w-full p-2 rounded-md"
             }
         >{children}</NavLink>
     )
