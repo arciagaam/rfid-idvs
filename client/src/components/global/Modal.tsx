@@ -1,8 +1,15 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
-const Modal = ({...props}) => {
+type TModalProps = {
+    trigger: React.ReactNode;
+    title: string;
+    description: string;
+    body: React.ReactNode;
+    footer: React.ReactNode
+};
 
-    const {trigger, title, description, body, footer} = props;
+const Modal = ({ ...props }: TModalProps) => {
+    const { trigger, title, description, body, footer } = props;
 
     return (
         <Dialog>
@@ -17,7 +24,7 @@ const Modal = ({...props}) => {
                     </DialogDescription>
                 </DialogHeader>
 
-                {body}                
+                {body}
 
                 <DialogFooter>
                     {footer}

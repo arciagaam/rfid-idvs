@@ -13,22 +13,18 @@ const SchoolYearManagement = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const schoolYearData: TSchoolYearTable[] = [];
-
                 const res = await fetch(`${API_URL}/terms`, {
                     credentials: "include"
                 }).then(res => res.json());
 
                 if (res) {
-                    res.data.forEach((schoolYear: TSchoolYear) => {
-                        schoolYearData.push(
-                            {
-                                id: parseInt(schoolYear.id),
-                                schoolYear: `${schoolYear.yearStart} - ${schoolYear.yearEnd}`,
-                                numberOfTerms: schoolYear.terms.length
-                            }
-                        )
-                    });
+                    const schoolYearData: TSchoolYearTable[] = res.data.map((schoolYear: Omit<TSchoolYear, "year_start" | "year_end"> & { yearStart: number; yearEnd: number }) => {
+                        return {
+                            id: schoolYear.id,
+                            schoolYear: `${schoolYear.yearStart} - ${schoolYear.yearEnd}`,
+                            numberOfTerms: schoolYear.terms.length
+                        }
+                    })
 
                     setSchoolYears(schoolYearData)
                 }
@@ -39,7 +35,6 @@ const SchoolYearManagement = () => {
         }
 
         fetchUsers();
-
     }, []);
 
     return (
