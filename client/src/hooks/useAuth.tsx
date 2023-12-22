@@ -4,10 +4,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+type TAuthError = {
+    code: number;
+    message: string;
+};
+
 const useAuthentication = () => {
     const [user, setUser] = useState<Omit<TUser, "roleId"> & { role_id: number } | null>(null);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState({});
+    const [error, setError] = useState<null | TAuthError>(null);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -33,12 +38,12 @@ const useAuthentication = () => {
             const res = await req.json();
 
             setUser(res.user);
-            setError({});
+            setError(null);
 
             return true;
         } catch (e) {
-            if (e instanceof Error) {
-                setError(e);
+            if (e && typeof e === "object") {
+                setError(e as TAuthError);
             }
         } finally {
             setLoading(false);
@@ -65,11 +70,11 @@ const useAuthentication = () => {
 
             await req.json();
 
-            setError({});
+            setError(null);
             setUser(null);
         } catch (e) {
-            if (e instanceof Error) {
-                setError(e);
+            if (e && typeof e === "object") {
+                setError(e as TAuthError);
             }
         } finally {
             setLoading(false);
@@ -93,14 +98,14 @@ const useAuthentication = () => {
                 }
 
                 const res = await req.json();
-                setError({});
+                setError(null);
 
                 if (res.user !== undefined) {
                     setUser(res.user);
                 }
             } catch (e) {
-                if (e instanceof Error) {
-                    setError(e);
+                if (e && typeof e === "object") {
+                    setError(e as TAuthError);
                 }
             } finally {
                 setLoading(false);

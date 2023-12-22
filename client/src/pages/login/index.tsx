@@ -1,46 +1,6 @@
-import { useEffect } from "react";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/providers/auth/useAuthContext";
+import { LoginForm } from "./components/LoginForm";
 
 const Login = () => {
-    const form = useForm({
-        defaultValues: {
-            username: "",
-            password: "",
-            remember_me: false
-        }
-    });
-
-    const { user, login } = useAuth();
-    const navigate = useNavigate();
-
-    const handleFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        const values = form.getValues();
-        await login(values);
-    }
-
-    useEffect(() => {
-        if (user !== null) {
-            if (user.role_id === 1) {
-                return navigate("/admin")
-            }
-
-            if (user.role_id === 2) {
-                return navigate("/")
-            }
-        }
-    }, [user, navigate]);
-
     return (
         <div className="w-full h-screen flex justify-center items-center">
             <div className="flex flex-col items-center gap-8">
@@ -52,65 +12,7 @@ const Login = () => {
                     <p className="text-lg">Enter your details to login</p>
                 </div>
 
-                <Form {...form}>
-                    <form
-                        onSubmit={handleFormSubmit}
-                        className="w-full flex flex-col gap-4"
-                    >
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Enter your username" type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Enter your password" type="password" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        >
-                        </FormField>
-
-                        <div className="flex flex-row justify-between mt-4">
-                            <FormField
-                                control={form.control}
-                                name="remember_me"
-                                render={({ field }) => (
-                                    <FormItem className="flex items-center gap-2 space-y-0">
-                                        <FormControl>
-                                            <Checkbox 
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">Keep me logged in</FormLabel>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            >
-                            </FormField>
-
-                            <Link to="/forgot-password" className="underline text-sm">Forgot Password?</Link>
-                        </div>
-
-                        <Button type="submit" className="w-full">Login</Button>
-                    </form>
-                </Form>
+                <LoginForm />
             </div>
         </div>
     )
