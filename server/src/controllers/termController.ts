@@ -12,6 +12,9 @@ const getAllTerms = asyncHandler(async (req: Request, res: Response) => {
         const terms = await prisma.school_year.findMany({
             include: {
                 terms: true
+            },
+            orderBy: {
+                id: 'desc'
             }
         });
 
@@ -102,11 +105,11 @@ const storeTerm = asyncHandler(async (req: Request, res: Response) => {
                     createMany: {
                         data: termsArray
                     }
-                }
+                },
             },
             include: {
                 terms: true
-            }
+            },
         });
 
         const payload = {

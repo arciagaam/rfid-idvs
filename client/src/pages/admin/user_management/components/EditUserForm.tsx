@@ -15,9 +15,10 @@ import { userSchema } from '@/validators/UserSchema';
 import { z } from 'zod';
 import { TUser } from '@/types/TUser';
 import { getUserByID, updateUser } from '@/api/userAPI';
+import { useModal } from '@/components/global/Modal';
 
 const EditUserForm = ({ id }: { id: number }) => {
-
+    const { setOpen } = useModal();
     const [user, setUser] = useState<TUser>();
 
     const editUserForm = useForm<z.infer<typeof userSchema>>({
@@ -54,6 +55,7 @@ const EditUserForm = ({ id }: { id: number }) => {
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
         await updateUser(id, values);
+        setOpen(false);
     }
 
     return (

@@ -15,8 +15,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { termSchema } from "@/validators/TermSchema";
 import { storeTerm } from "@/api/termAPI";
 import { useSchoolYear } from "../providers/useSchoolYear";
+import { useModal } from "@/components/global/Modal";
 
 const AddSchoolYearForm = () => {
+    const { setOpen } = useModal();
     const { setSchoolYears } = useSchoolYear();
     const addSchoolYearForm = useForm<z.infer<typeof termSchema>>({
         resolver: zodResolver(termSchema),
@@ -37,14 +39,15 @@ const AddSchoolYearForm = () => {
         if (res.data) {
             setSchoolYears((prev) => (
                 [
-                    ...prev,
                     {
                         id: res.data.id,
                         schoolYear: `${res.data.yearStart} - ${res.data.yearEnd}`,
                         numberOfTerms: res.data.terms.length
-                    }
+                    },
+                    ...prev
                 ]
             ))
+            setOpen(false);
         }
     }
 
@@ -60,7 +63,7 @@ const AddSchoolYearForm = () => {
                             <FormItem className='flex-1'>
                                 <FormLabel>Year Start</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter year start" type="number" {...field} />
+                                    <Input placeholder="Enter year start" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -73,7 +76,7 @@ const AddSchoolYearForm = () => {
                             <FormItem className='flex-1'>
                                 <FormLabel>Year End</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter year end" type="number" {...field} />
+                                    <Input placeholder="Enter year end" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Modal } from "@/components/global/Modal";
 import { AddSchoolYearForm } from './AddSchoolYearForm';
+import { useState } from 'react';
 
 type TSchoolYearModalProps = {
     isEditing?: false;
@@ -11,6 +12,8 @@ type TSchoolYearModalProps = {
 };
 
 const SchoolYearModal = ({ isEditing = false, id }: TSchoolYearModalProps) => {
+    const [open, setOpen] = useState(false);
+
     return (
         <Modal
             trigger={isEditing ? <Button className="w-full font-normal items-start justify-start px-2 py-1.5 h-fit" variant={"ghost"}>Edit School Year</Button> : <Button>Add School Year</Button>}
