@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Modal } from "@/components/global/Modal";
 import { AddSchoolYearForm } from './AddSchoolYearForm';
-import { useState } from 'react';
+import { EditSchoolYearForm } from './EditSchoolYearForm';
 
 type TSchoolYearModalProps = {
     isEditing?: false;
@@ -12,8 +12,6 @@ type TSchoolYearModalProps = {
 };
 
 const SchoolYearModal = ({ isEditing = false, id }: TSchoolYearModalProps) => {
-    const [open, setOpen] = useState(false);
-
     return (
         <Modal
             trigger={isEditing ? <Button className="w-full font-normal items-start justify-start px-2 py-1.5 h-fit" variant={"ghost"}>Edit School Year</Button> : <Button>Add School Year</Button>}
@@ -22,7 +20,7 @@ const SchoolYearModal = ({ isEditing = false, id }: TSchoolYearModalProps) => {
 
             description={`${isEditing ? 'Edit' : 'Create'} school year here. Click save when you're done.`}
 
-            body={isEditing && id ? null : <AddSchoolYearForm />}
+            body={isEditing && id ? <EditSchoolYearForm id={id} /> : <AddSchoolYearForm />}
 
             footer={<Button form={isEditing ? 'edit-school-year-form' : 'add-school-year-form'} type="submit">Save changes</Button>}
 

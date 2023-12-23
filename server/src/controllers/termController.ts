@@ -198,7 +198,7 @@ const updateTerm = asyncHandler(async (req: Request, res: Response) => {
         const payload = {
             code: 200,
             message: "Term successfully retrieved.",
-            data: schoolYear,
+            data: convertObjectKeys(schoolYear),
         }
 
         res.status(200).json(payload)
