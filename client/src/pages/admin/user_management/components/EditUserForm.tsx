@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
     Form,
     FormControl,
@@ -13,23 +13,23 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '@/validators/UserSchema';
 import { z } from 'zod';
-import { TUser } from '@/types/TUser';
 import { getUserByID, updateUser } from '@/api/userAPI';
 import { useModal } from '@/components/global/Modal';
+import { useUser } from '../providers/useUser';
 
 const EditUserForm = ({ id }: { id: number }) => {
     const { setOpen } = useModal();
-    const [user, setUser] = useState<TUser>();
+    const { setUsers } = useUser();
 
     const editUserForm = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
         defaultValues: {
-            username: user?.username,
-            email: user?.email,
-            first_name: user?.firstName,
-            middle_name: user?.middleName ?? '',
-            last_name: user?.lastName,
-            role_id: user?.roleId,
+            username: "",
+            email: "",
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            role_id: undefined
         }
     })
 
@@ -38,7 +38,6 @@ const EditUserForm = ({ id }: { id: number }) => {
             const res = await getUserByID(id);
 
             if (res) {
-                setUser(res.data);
                 editUserForm.reset({
                     username: res.data.username,
                     email: res.data.email,
@@ -54,7 +53,30 @@ const EditUserForm = ({ id }: { id: number }) => {
     }, [id, editUserForm])
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
-        await updateUser(id, values);
+        const req = await updateUser(id, values);
+
+        if (!req) return;
+
+        const res = await req.json();
+
+        if (res && res.data) {
+            setUsers((prev) => {
+                return prev.map((user) => {
+                    if (user.id === id) {
+                        return {
+                            ...user,
+                            fullname :`${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
+                            username: res.data.username,
+                            email: res.data.email,
+                            role: res.data.role.name.toUpperCase()
+                        }
+                    }
+
+                    return user;
+                });
+            })
+        }
+
         setOpen(false);
     }
 

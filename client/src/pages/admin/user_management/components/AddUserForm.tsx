@@ -13,8 +13,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '@/validators/UserSchema';
 import { z } from 'zod';
 import { storeUser } from '@/api/userAPI';
+import { useUser } from "../providers/useUser";
+import { useModal } from "@/components/global/Modal";
 
 const AddUserForm = () => {
+    const { setOpen } = useModal();
+    const { setUsers } = useUser();
+
     const addUserForm = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
         defaultValues: {
@@ -28,8 +33,28 @@ const AddUserForm = () => {
     })
 
     const handleFormSubmit = async (values: z.infer<typeof userSchema>) => {
-        await storeUser(values);
+        const req = await storeUser(values);
+
+        if (!req) return;
+
+        const res = await req.json();
+
+        if (res && res.data) {
+            setUsers((prev) => [
+                {
+                    id: res.data.id,
+                    fullname: `${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
+                    username: res.data.username,
+                    email: res.data.email,
+                    role: res.data.role.name.toUpperCase()
+                },
+                ...prev
+            ]);
+        }
+
+        setOpen(false);
     }
+
 
     return (
         <Form {...addUserForm}>

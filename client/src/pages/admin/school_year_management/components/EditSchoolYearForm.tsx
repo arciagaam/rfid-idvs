@@ -71,9 +71,9 @@ const EditSchoolYearForm = ({ id }: { id: number }) => {
                     return schoolYear;
                 })
             })
-
-            setOpen(false);
         }
+
+        setOpen(false);
     }
 
     return (
