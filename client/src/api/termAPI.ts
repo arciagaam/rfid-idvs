@@ -13,9 +13,19 @@ const getTerms = async () => {
     }
 };
 
-const getTermsById = async (id: string | number) => {
+const getTermById = async (id: string | number) => {
     try {
         return await fetch(`${API_URL}/terms/${id}`, {
+            credentials: "include"
+        }).then(res => res.json());
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getSchoolYearWithTermById = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/school-years/${id}`, {
             credentials: "include"
         }).then(res => res.json());
     } catch (error) {
@@ -38,7 +48,7 @@ const storeTerm = async (body: z.infer<typeof termSchema>) => {
     }
 };
 
-const updateTerm = async (id : string | number, body: z.infer<typeof termSchema>) => {
+const updateTerm = async (id: string | number, body: z.infer<typeof termSchema>) => {
     try {
         return await fetch(`${API_URL}/terms/${id}`, {
             headers: {
@@ -69,8 +79,10 @@ const deleteTerm = async (id: string | number) => {
 
 export {
     getTerms,
-    getTermsById,
+    getTermById,
     storeTerm,
     updateTerm,
-    deleteTerm
+    deleteTerm,
+
+    getSchoolYearWithTermById
 }

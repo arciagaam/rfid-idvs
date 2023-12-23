@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
     Form,
     FormControl,
@@ -14,19 +14,10 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { termSchema } from "@/validators/TermSchema";
-import { getTermsById, updateTerm } from "@/api/termAPI";
+import { getSchoolYearWithTermById, updateTerm } from "@/api/termAPI";
 import { useSchoolYear } from "../providers/useSchoolYear";
 import { useModal } from "@/components/global/Modal";
-
-type TEditSchoolYearResponse = {
-    id: number;
-    school_year: {
-        id: number;
-        year_start: number;
-        year_end: number;
-    };
-    term: number;
-}
+import { TSchoolYear } from "@/types/TSchoolYear";
 
 const EditSchoolYearForm = ({ id }: { id: number }) => {
     const { setOpen } = useModal();
@@ -41,20 +32,17 @@ const EditSchoolYearForm = ({ id }: { id: number }) => {
         },
     })
 
-    console.log(id);
-
     useEffect(() => {
         const fetchSchoolYear = async () => {
-            const res = await getTermsById(id);
+            const res = await getSchoolYearWithTermById(id);
 
             if (res) {
-                const data = res.data as TEditSchoolYearResponse;
-                const _schoolYear = data.school_year;
+                const data = res.data as Omit<TSchoolYear, "year_start" | "year_end"> & { yearStart: number; yearEnd: number };
 
                 editSchoolYearForm.reset({
-                    number_of_terms: data.term,
-                    year_start: _schoolYear.year_start,
-                    year_end: _schoolYear.year_end
+                    number_of_terms: data.terms.length,
+                    year_start: data.yearStart,
+                    year_end: data.yearEnd
                 });
             }
         }
@@ -71,28 +59,26 @@ const EditSchoolYearForm = ({ id }: { id: number }) => {
 
         if (res.data) {
             setSchoolYears((prev) => {
-                return prev.reduce((acc, curr) => {
-                    if (curr.id === id) {
-                        return [
-                            {
-                                id: curr.id,
-                                schoolYear: `${res.data.yearStart} - ${res.data.yearEnd}`,
-                                numberOfTerms: res.data.terms.length
-                            },
-                            ...acc
-                        ]
+                return prev.map((schoolYear) => {
+                    if (schoolYear.id === id) {
+                        return {
+                            ...schoolYear,
+                            schoolYear: `${res.data.yearStart} - ${res.data.yearEnd}`,
+                            numberOfTerms: res.data.terms.length
+                        }
                     }
 
-                    return acc;
-                }, prev);
+                    return schoolYear;
+                })
             })
+
             setOpen(false);
         }
     }
 
     return (
         <Form {...editSchoolYearForm}>
-            <form id='add-school-year-form' onSubmit={editSchoolYearForm.handleSubmit(handleFormSubmit)} className="flex flex-col gap-5">
+            <form id='edit-school-year-form' onSubmit={editSchoolYearForm.handleSubmit(handleFormSubmit)} className="flex flex-col gap-5">
 
                 <div className="flex gap-5">
                     <FormField

@@ -38,6 +38,28 @@ const getAllTerms = asyncHandler(async (req: Request, res: Response) => {
     }
 })
 
+const getSchoolYearWithTermById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const terms = await prisma.school_year.findUniqueOrThrow({
+        where: {
+            id: parseInt(id)
+        },
+        include: {
+            terms: true
+        },
+    });
+
+    const payload = {
+        code: 200,
+        message: "School year with term Successfully Retrieved",
+        data: convertObjectKeys(terms)
+    }
+
+    res.status(200).json(payload);
+
+})
+
 const getTerm = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
@@ -142,7 +164,7 @@ const updateTerm = asyncHandler(async (req: Request, res: Response) => {
     for (let i = 0; i < parseInt(number_of_terms); i++) {
         termsArray.push(i + 1);
     }
-    
+
     try {
         const schoolYearTerm = await prisma.school_year.update({
             where: {
@@ -160,7 +182,7 @@ const updateTerm = asyncHandler(async (req: Request, res: Response) => {
 
         const flag = schoolYearTerm.terms.length > number_of_terms ? 0 : 1
         const existingTerms = (await prisma.term.findMany()).map(term => term.term);
-            
+
         if (!flag) {
             const deletedTerms = existingTerms.filter(existing => (!termsArray.includes(existing)));
             await prisma.term.deleteMany({
@@ -174,7 +196,7 @@ const updateTerm = asyncHandler(async (req: Request, res: Response) => {
         } else {
 
             const newTermsData = termsArray.reduce((acc: any, curr: any) => {
-                if(!existingTerms.includes(curr)) {
+                if (!existingTerms.includes(curr)) {
                     return [...acc, curr];
                 }
 
@@ -215,7 +237,7 @@ const updateTerm = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const deleteTerm = asyncHandler(async (req: Request, res: Response) => {
-    //update Term
+    // code here...
 })
 
 export {
@@ -223,5 +245,7 @@ export {
     getTerm,
     storeTerm,
     updateTerm,
-    deleteTerm
+    deleteTerm,
+
+    getSchoolYearWithTermById
 }
