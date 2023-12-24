@@ -4,10 +4,13 @@ import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
 import { MoreHorizontal } from "lucide-react";
+
 import { StudentModal } from "./components/StudentModal";
 
-export type TStudentTable = { 
+export type TStudentTable = {
     id: number,
     studentNumber: string;
     fullName: string;
@@ -34,6 +37,21 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
         header: 'Year and Section'
     },
     {
+        accessorKey: 'rfidStatus',
+        header: 'RFID Status',
+        cell: ({ row }) => {
+            return (
+                <>
+                    {
+                        row.original.rfidStatus
+                            ? (<Badge variant={"default"}>Linked</Badge>)
+                            : (<Badge variant={"destructive"}>Not Linked</Badge>)
+                    }
+                </>
+            )
+        }
+    },
+    {
         id: "actions",
         enableHiding: false,
         header: "Actions",
@@ -51,7 +69,7 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                        <StudentModal id={id} isEditing={true}/>
+                        <StudentModal id={id} isEditing={true} />
                         <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete Student</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

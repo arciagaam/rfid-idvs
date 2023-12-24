@@ -19,7 +19,7 @@ const useStudentProvider = () => {
                             id: student.id,
                             studentNumber: student.studentNumber,
                             fullName: `${student.firstName} ${(student.middleName ?? '')} ${student.lastName}`,
-                            rfidStatus: student.rfidNumber ? 'Linked' : 'Not Linked',
+                            rfidStatus: student.rfidNumber ? true : false,
                             departmentCourse: `${student.course.department.name} - ${student.course.name}`,
                             yearSection: `${student.year} - ${student.section}`,
                         }
