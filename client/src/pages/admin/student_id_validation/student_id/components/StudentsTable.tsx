@@ -88,8 +88,6 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
         if (slug !== undefined && termId !== undefined) {
             fetchStudents();
         }
-
-        console.log(termId);
     }, [slug, termId, status, selectedCourses]);
 
     useEffect(() => {
