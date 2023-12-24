@@ -1,17 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { faker } from '@faker-js/faker';
 import tableSeeder from "./seederWrapper";
 
 import defaultUserData from './../data/defaultUserData';
 import defaultRoleData from './../data/defaultRoleData';
 
 // To be changed
-import courses from "../data/defaultCourseData";
 import departments from "../data/defaultDepartmentData";
 import schoolYears from "../data/mockSchoolYearData";
-
-// To be removed
-import mockStudents from "../data/mockStudentData";
 
 const prisma = new PrismaClient();
 
@@ -55,39 +50,66 @@ async function run() {
     await tableSeeder('department', async () => {
         for await (const department of departments) {
             await prisma.department.create({
-                data: department,
+                data: {
+                    name: department.abr,
+                    courses: {
+                        createMany: {
+                            data: department.courses
+                        }
+                    }
+                },
             });
         }
 
         // Change on production
-        await tableSeeder('course', async () => {
-            for await (const course of courses) {
-                await prisma.course.create({
-                    data: course
-                });
-            }
+        // await tableSeeder('course', async () => {
+        //     for (const course of courses) {
+        //         for await (const innerCourse of course.courses) {
+        //             await prisma.course.create({
+        //                 data: {
+        //                     name: innerCourse.name,
+        //                     department_id: course.department_id
+        //                 }
+        //             });
+        //         }
+        //     }
 
-            // Remove on production
-            await tableSeeder('student', async () => {
-                for await (const student of mockStudents) {
-                    const { id } = await prisma.student.create({
-                        data: student
-                    });
+        //     // Remove on production
+        //     await tableSeeder('student', async () => {
+        //         for await (const student of mockStudents) {
+        //             const { id } = await prisma.student.create({
+        //                 data: student
+        //             });
 
-                    // Remove if you want to test the validation of RFID
-                    // from scratch
-                    await prisma.term_student.create({
-                        data: {
-                            student_id: id,
-                            term_id: faker.helpers.arrayElement([1, 2, 3, 4, 5, 6])
-                        }
-                    })
-                }
-            });
-        });
-
+        //             // Remove if you want to test the validation of RFID
+        //             // from scratch
+        //             await prisma.term_student.create({
+        //                 data: {
+        //                     student_id: id,
+        //                     term_id: faker.helpers.arrayElement([1, 2, 3, 4, 5, 6])
+        //                 }
+        //             })
+        //         }
+        //     });
+        // });
     });
 
+    // await tableSeeder('student', async () => {
+    //     for await (const student of mockStudents) {
+    //         const { id } = await prisma.student.create({
+    //             data: student
+    //         });
+
+    //         // Remove if you want to test the validation of RFID
+    //         // from scratch
+    //         // await prisma.term_student.create({
+    //         //     data: {
+    //         //         student_id: id,
+    //         //         term_id: faker.helpers.arrayElement([1, 2, 3, 4, 5, 6])
+    //         //     }
+    //         // })
+    //     }
+    // });
 }
 
 run()

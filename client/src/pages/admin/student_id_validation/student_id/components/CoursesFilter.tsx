@@ -42,14 +42,14 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] justify-between"
+                    className="w-[256px] justify-between"
                 >
                     {selectedValues.length
                         ? `${selectedValues.length} course${selectedValues.length > 1 ? "s" : ""} selected`
                         : "Select courses..."}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="w-[256px] p-0">
                 <Command>
                     {
                         courses && courses.length ? (
@@ -64,14 +64,16 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
                                             <CommandItem
                                                 key={course.value}
                                                 value={course.value}
-                                                className="flex flex-row gap-2"
+                                                className="flex flex-row gap-2 cursor-pointer"
                                                 onSelect={() => handleSelectedValue(course.id)}
                                             >
-                                                {
-                                                    isSelected
-                                                        ? <IoIosCheckbox />
-                                                        : <IoMdSquareOutline />
-                                                }
+                                                <div className="aspect-square w-4">
+                                                    {
+                                                        isSelected
+                                                            ? <IoIosCheckbox />
+                                                            : <IoMdSquareOutline />
+                                                    }
+                                                </div>
                                                 {course.name}
                                             </CommandItem>
                                         )

@@ -6,6 +6,7 @@
     "dev": "ts-node-dev --respawn ./app.ts",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "ts-node ./src/seeders/dbSeeder.ts",
+    "db:seed_mock": "ts-node ./src/seeders/studentSeeder.ts",
     "db:fresh": "prisma migrate reset && npx ts-node ./src/seeders/dbSeeder.ts",
     "db:push": "prisma db push"
   },

@@ -129,7 +129,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
                 id: {
                     notIn: validatedStudentsId
                 },
-                course: courseSelect()
+                course: courseSelect(),
             },
             select: studentSelect,
         });
@@ -139,6 +139,8 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
     }
 
     const sortedStudents = students.sort((a, b) => a.id - b.id)
+
+    console.log(sortedStudents);
 
     const payload = {
         code: 200,
