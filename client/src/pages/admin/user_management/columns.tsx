@@ -1,10 +1,11 @@
 import { DataTableColumnHeader } from "@/components/global/DataTable";
 import { Button } from "@/components/ui/button";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
 import { UserModal } from "./components/UserModal";
+import { DeleteUserModal } from "./components/DeleteUserModal";
 
 export type TUserTable = {
     id: number;
@@ -51,7 +52,10 @@ export const userColumns: ColumnDef<TUserTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <UserModal id={id} isEditing={true}/>
-                        <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete User</DropdownMenuItem>
+                        <DeleteUserModal id={id} />
+                        {/*
+                            <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete User</DropdownMenuItem>
+                        */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

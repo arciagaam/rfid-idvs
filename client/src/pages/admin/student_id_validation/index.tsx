@@ -48,6 +48,7 @@ const StudentIDValidation = () => {
             fetchDepartmentCourses();
         }
     }, [slug]);
+
     return (
         <>
             <div className="flex flex-col gap-6 w-full justify-between">

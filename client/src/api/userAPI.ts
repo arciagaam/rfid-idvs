@@ -39,7 +39,7 @@ const storeUser = async (body: z.infer<typeof userSchema>) => {
     }
 }
 
-const updateUser = async (id : string | number, body: z.infer<typeof userSchema>) => {
+const updateUser = async (id: string | number, body: z.infer<typeof userSchema>) => {
     try {
         return await fetch(`${API_URL}/users/${id}`, {
             headers: {
@@ -54,4 +54,15 @@ const updateUser = async (id : string | number, body: z.infer<typeof userSchema>
     }
 }
 
-export { getUsers, getUserByID, storeUser, updateUser }
+const deleteUser = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/users/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export { getUsers, getUserByID, storeUser, updateUser, deleteUser }

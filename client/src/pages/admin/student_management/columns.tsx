@@ -44,8 +44,8 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
                 <>
                     {
                         row.original.rfidStatus
-                            ? (<Badge variant={"default"}>Linked</Badge>)
-                            : (<Badge variant={"destructive"}>Not Linked</Badge>)
+                            ? (<Badge className="text-center" variant={"default"}>Linked</Badge>)
+                            : (<Badge className="text-center" variant={"destructive"}>Not Linked</Badge>)
                     }
                 </>
             )

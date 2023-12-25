@@ -19,7 +19,7 @@ const mockStudentGenerator: () => Omit<TMockStudent, "student_number"> = () => (
     }
 );
 
-const mockStudents: TMockStudent[] = new Array(200).fill(null).map((_, index) => {
+const mockStudents: TMockStudent[] = new Array(1000).fill(null).map((_, index) => {
     const _student = mockStudentGenerator();
 
     return {

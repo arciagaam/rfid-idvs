@@ -99,7 +99,7 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
     });
 
     const payload = {
-        code: 400,
+        code: 200,
         message: "User successfully updated.",
         data: user
     }
@@ -117,7 +117,7 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     });
 
     const payload = {
-        code: 400,
+        code: 200,
         message: "User successfully deleted.",
         data: {}
     };
