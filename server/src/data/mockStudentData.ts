@@ -24,7 +24,7 @@ const mockStudents: TMockStudent[] = new Array(200).fill(null).map((_, index) =>
 
     return {
         ..._student,
-        student_number: index + 1
+        student_number: `${index + 1}`
     }
 });
 

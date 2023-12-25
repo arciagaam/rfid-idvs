@@ -5,5 +5,3 @@ export const termSchema = z.object({
     year_end: z.coerce.number(),
     number_of_terms: z.coerce.number()
 });
-
-// number_of_terms: z.array(z.number())

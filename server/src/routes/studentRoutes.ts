@@ -6,17 +6,17 @@ import { deleteStudent, getAllStudents, getStudent, storeStudent, updateStudent 
 
 const router = express.Router();
 
-router.use(verifyToken);
+router.use(verifyToken, admin);
 
 router
     .route('/')
     .get(getAllStudents)
-    .post(validateRequestBody(userSchema), storeStudent);
+    .post(storeStudent);
 
 router
     .route('/:id')
     .get(getStudent)
-    .put(admin, validateRequestBody(userSchema), updateStudent)
-    .delete(admin, deleteStudent);
+    .put(updateStudent)
+    .delete(deleteStudent);
 
 export default router;

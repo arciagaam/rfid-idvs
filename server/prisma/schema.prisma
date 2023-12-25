@@ -58,7 +58,7 @@ model student {
     validation     validation_history[]
     course         course               @relation(fields: [course_id], references: [id])
     course_id      Int
-    student_number Int                  @unique
+    student_number String               @unique
     rfid_number    String?              @unique
     first_name     String
     middle_name    String?

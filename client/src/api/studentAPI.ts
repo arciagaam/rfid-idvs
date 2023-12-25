@@ -1,5 +1,5 @@
-// import { termSchema } from "@/validators/StudentSchema";
-// import { z } from "zod";
+import { studentSchema } from "@/validators/StudentSchema";
+import { z } from "zod";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -15,7 +15,7 @@ const getStudents = async () => {
 
 const getStudentById = async (id: string | number) => {
     try {
-        return await fetch(`${API_URL}/terms/${id}`, {
+        return await fetch(`${API_URL}/students/${id}`, {
             credentials: "include"
         }).then(res => res.json());
     } catch (error) {
@@ -23,22 +23,37 @@ const getStudentById = async (id: string | number) => {
     }
 };
 
-// const storeStudent = async (body: z.infer<typeof termSchema>) => {
+const storeStudent = async (body: z.infer<typeof studentSchema>) => {
+    try {
+        return await fetch(`${API_URL}/students`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(body)
+        });
+    } catch (error) {
+        console.error(error)
+    }
+};
+
+// const linkStudentRFID = async (id: string | number, body: z.infer<typeof studentSchema>) => {
 //     try {
-//         return await fetch(`${API_URL}/terms`, {
+//         return await fetch(`${API_URL}/students/${id}`, {
 //             headers: {
 //                 'Content-Type': 'application/json'
 //             },
 //             method: 'POST',
 //             credentials: 'include',
 //             body: JSON.stringify(body)
-//         });
+//         })
 //     } catch (error) {
 //         console.error(error)
 //     }
-// };
-// 
-// const updateStudent = async (id: string | number, body: z.infer<typeof termSchema>) => {
+// }
+
+// const updateStudent = async (id: string | number, body: z.infer<typeof studentSchema>) => {
 //     try {
 //         return await fetch(`${API_URL}/terms/${id}`, {
 //             headers: {
@@ -70,7 +85,9 @@ const getStudentById = async (id: string | number) => {
 export {
     getStudents,
     getStudentById,
-    //     storeStudent,
-    //     updateStudent,
-    //     deleteStudent,
+    storeStudent,
+    // updateStudent,
+    // deleteStudent,
+
+    // linkStudentRFID
 }
