@@ -38,6 +38,35 @@ const storeStudent = async (body: z.infer<typeof studentSchema>) => {
     }
 };
 
+const updateStudent = async (id: string | number, body: z.infer<typeof studentSchema>) => {
+    try {
+        return await fetch(`${API_URL}/students/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'PUT',
+            credentials: 'include',
+            body: JSON.stringify(body)
+        });
+    } catch (error) {
+        console.error(error)
+    }
+};
+
+// const deleteStudent = async (id: string | number) => {
+//     try {
+//         return await fetch(`${API_URL}/terms/${id}`, {
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             method: 'DELETE',
+//             credentials: 'include',
+//         });
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+
 // const linkStudentRFID = async (id: string | number, body: z.infer<typeof studentSchema>) => {
 //     try {
 //         return await fetch(`${API_URL}/students/${id}`, {
@@ -53,40 +82,11 @@ const storeStudent = async (body: z.infer<typeof studentSchema>) => {
 //     }
 // }
 
-// const updateStudent = async (id: string | number, body: z.infer<typeof studentSchema>) => {
-//     try {
-//         return await fetch(`${API_URL}/terms/${id}`, {
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             method: 'PUT',
-//             credentials: 'include',
-//             body: JSON.stringify(body)
-//         });
-//     } catch (error) {
-//         console.error(error)
-//     }
-// };
-// 
-// const deleteStudent = async (id: string | number) => {
-//     try {
-//         return await fetch(`${API_URL}/terms/${id}`, {
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             method: 'DELETE',
-//             credentials: 'include',
-//         });
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
-
 export {
     getStudents,
     getStudentById,
     storeStudent,
-    // updateStudent,
+    updateStudent,
     // deleteStudent,
 
     // linkStudentRFID

@@ -65,7 +65,7 @@ const EditUserForm = ({ id }: { id: number }) => {
                     if (user.id === id) {
                         return {
                             ...user,
-                            fullname :`${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
+                            fullname: `${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
                             username: res.data.username,
                             email: res.data.email,
                             role: res.data.role.name.toUpperCase()
@@ -75,9 +75,9 @@ const EditUserForm = ({ id }: { id: number }) => {
                     return user;
                 });
             })
-        }
 
-        setOpen(false);
+            setOpen(false);
+        }
     }
 
     return (

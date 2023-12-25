@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Modal } from "@/components/global/Modal";
 import { AddStudentForm } from './AddStudentForm';
 import { useCourses } from '../hooks/useCourses';
+import { EditStudentForm } from './EditStudentForm';
 
 type TStudentModalProps = {
     isEditing?: false;
@@ -22,7 +23,7 @@ const StudentModal = ({ isEditing = false, id }: TStudentModalProps) => {
 
             description={`${isEditing ? 'Edit' : 'Create'} student here. Click save when you're done.`}
 
-            body={isEditing && id ? null : <AddStudentForm courses={courses} />}
+            body={isEditing && id ? <EditStudentForm id={id} courses={courses} /> : <AddStudentForm courses={courses} />}
 
             footer={<Button form={isEditing ? 'edit-student-form' : 'add-student-form'} type="submit">Save changes</Button>}
 
