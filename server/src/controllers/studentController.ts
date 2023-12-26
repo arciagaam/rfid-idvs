@@ -140,7 +140,7 @@ const updateStudent = asyncHandler(
             });
 
             const payload = {
-                code: 400,
+                code: 200,
                 message: "Student successfully updated.",
                 data: student
             }
@@ -169,7 +169,7 @@ const deleteStudent = asyncHandler(
             });
 
             const payload = {
-                code: 400,
+                code: 200,
                 message: "Student successfully deleted.",
                 data: {}
             };

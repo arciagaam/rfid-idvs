@@ -16,19 +16,20 @@ model role {
 }
 
 model user {
-  id             Int      @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   role_id        Int
-  username       String   @unique
-  email          String   @unique
-  password       String   @db.Text
+  username       String    @unique
+  email          String    @unique
+  password       String    @db.Text
   first_name     String
   middle_name    String?
   last_name      String
   remember_token String?
-  refresh_token  String?  @db.Text
-  created_at     DateTime @default(now())
-  updated_at     DateTime @default(now())
-  role           role     @relation(fields: [role_id], references: [id])
+  refresh_token  String?   @db.Text
+  deleted_at     DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @default(now())
+  role           role      @relation(fields: [role_id], references: [id])
 
   @@index([role_id], map: "user_role_id_fkey")
 }
@@ -70,6 +71,7 @@ model student {
   is_active      Boolean              @default(true)
   created_at     DateTime             @default(now())
   updated_at     DateTime             @default(now())
+  deleted_at     DateTime?
   course         course               @relation(fields: [course_id], references: [id])
   terms          term_student[]
   validation     validation_history[]
@@ -105,7 +107,7 @@ model term_student {
   term_id    Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  student    student  @relation(fields: [student_id], references: [id])
+  student    student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
   term       term     @relation(fields: [term_id], references: [id])
 
   @@index([student_id], map: "term_student_student_id_fkey")

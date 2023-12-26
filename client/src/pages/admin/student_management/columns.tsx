@@ -1,7 +1,7 @@
 import { DataTableColumnHeader } from "@/components/global/DataTable";
 import { ColumnDef } from "@tanstack/react-table"
 
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { MoreHorizontal } from "lucide-react";
 
 import { StudentModal } from "./components/StudentModal";
 import { RFIDModal } from "./components/RFIDModal";
+import { DeleteStudentModal } from "./components/DeleteStudentModal";
 
 export type TStudentTable = {
     id: number,
@@ -72,7 +73,7 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
 
                         <StudentModal id={id} isEditing={true} />
                         <RFIDModal status={rfidStatus} id={id} />
-                        <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete Student</DropdownMenuItem>
+                        <DeleteStudentModal id={id} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

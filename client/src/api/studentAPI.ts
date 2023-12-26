@@ -54,19 +54,19 @@ const updateStudent = async (id: string | number, body: z.infer<typeof studentSc
     }
 };
 
-// const deleteStudent = async (id: string | number) => {
-//     try {
-//         return await fetch(`${API_URL}/terms/${id}`, {
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             method: 'DELETE',
-//             credentials: 'include',
-//         });
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
+const deleteStudent = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/students/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            credentials: 'include',
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 const studentRFID = async (id: string | number, body: z.infer<typeof RFIDSchema>, action: 'link' | 'unlink' = 'link') => {
     try {
@@ -88,7 +88,7 @@ export {
     getStudentById,
     storeStudent,
     updateStudent,
-    // deleteStudent,
+    deleteStudent,
 
     studentRFID
 }
