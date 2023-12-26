@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal } from "lucide-react";
 
 import { StudentModal } from "./components/StudentModal";
+import { RFIDModal } from "./components/RFIDModal";
 
 export type TStudentTable = {
     id: number,
@@ -70,11 +71,7 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <StudentModal id={id} isEditing={true} />
-                        {
-                            rfidStatus
-                                ? <DropdownMenuItem>Unlink RFID</DropdownMenuItem>
-                                : <DropdownMenuItem>Link RFID</DropdownMenuItem>
-                        }
+                        <RFIDModal status={rfidStatus} id={id} />
                         <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete Student</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

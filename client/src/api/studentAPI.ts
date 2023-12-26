@@ -1,3 +1,4 @@
+import { RFIDSchema } from "@/validators/RFIDSchema";
 import { studentSchema } from "@/validators/StudentSchema";
 import { z } from "zod";
 
@@ -67,20 +68,20 @@ const updateStudent = async (id: string | number, body: z.infer<typeof studentSc
 //     }
 // }
 
-// const linkStudentRFID = async (id: string | number, body: z.infer<typeof studentSchema>) => {
-//     try {
-//         return await fetch(`${API_URL}/students/${id}`, {
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             method: 'POST',
-//             credentials: 'include',
-//             body: JSON.stringify(body)
-//         })
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
+const studentRFID = async (id: string | number, body: z.infer<typeof RFIDSchema>, action: 'link' | 'unlink' = 'link') => {
+    try {
+        return await fetch(`${API_URL}/students/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({ ...body, action: action })
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 export {
     getStudents,
@@ -89,5 +90,5 @@ export {
     updateStudent,
     // deleteStudent,
 
-    // linkStudentRFID
+    studentRFID
 }

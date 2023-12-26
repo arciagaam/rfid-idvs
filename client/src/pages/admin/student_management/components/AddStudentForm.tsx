@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
     Form,
     FormControl,
@@ -10,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input';
 
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { studentSchema } from "@/validators/StudentSchema";
 
@@ -29,6 +31,7 @@ type TAddUserFormProps = {
 const AddStudentForm = ({ courses }: TAddUserFormProps) => {
     const { setOpen } = useModal();
     const { setStudents } = useStudent();
+    const [page, setPage] = useState(1);
 
     const addStudentForm = useForm<z.infer<typeof studentSchema>>({
         resolver: zodResolver(studentSchema),
@@ -43,9 +46,26 @@ const AddStudentForm = ({ courses }: TAddUserFormProps) => {
             province: "",
             year: 1,
             section: "",
-            course_id: 1
+            course_id: 1,
+            rfid_number: ""
         },
     })
+
+    const handleNextPage = () => {
+        setPage((prev) => {
+            if (prev + 1 > 2) return 1;
+
+            return prev + 1
+        })
+    };
+
+    const handlePrevPage = () => {
+        setPage((prev) => {
+            if (prev - 1 < 1) return 2;
+
+            return prev - 1;
+        })
+    };
 
     const handleFormSubmit = async (values: z.infer<typeof studentSchema>) => {
         const req = await storeStudent(values);
@@ -74,156 +94,175 @@ const AddStudentForm = ({ courses }: TAddUserFormProps) => {
     return (
         <Form {...addStudentForm}>
             <form id='add-student-form' onSubmit={addStudentForm.handleSubmit(handleFormSubmit)} className="flex flex-col gap-5">
+                {
+                    page === 1
+                        ? <StudentInformationForm addStudentForm={addStudentForm} courses={courses} />
+                        : page === 2
+                            ? <RFIDForm addStudentForm={addStudentForm} />
+                            : null
+                }
+            </form>
+        </Form>
+    )
+}
 
+const StudentInformationForm = ({ addStudentForm, courses }: {
+    addStudentForm: UseFormReturn<z.infer<typeof studentSchema>>, courses: {
+        id: number;
+        name: string;
+    }[]
+}) => {
+    return (
+        <>
+            <FormField
+                control={addStudentForm.control}
+                name="student_number"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Student Number</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter student number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <div className="flex gap-5">
                 <FormField
                     control={addStudentForm.control}
-                    name="student_number"
+                    name="first_name"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Student Number</FormLabel>
+                        <FormItem className='flex-1'>
+                            <FormLabel>First Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter student number" {...field} />
+                                <Input placeholder="Enter first name" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
-                <div className="flex gap-5">
-                    <FormField
-                        control={addStudentForm.control}
-                        name="first_name"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>First Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter first name" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={addStudentForm.control}
-                        name="middle_name"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>Middle Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter middle name" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={addStudentForm.control}
-                        name="last_name"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>Last Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter last name" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
                 <FormField
                     control={addStudentForm.control}
-                    name="address_line_1"
+                    name="middle_name"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Address Line 1</FormLabel>
+                        <FormItem className='flex-1'>
+                            <FormLabel>Middle Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter address line 1" {...field} />
+                                <Input placeholder="Enter middle name" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={addStudentForm.control}
-                    name="address_line_2"
+                    name="last_name"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Address Line 2</FormLabel>
+                        <FormItem className='flex-1'>
+                            <FormLabel>Last Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter address line 2" {...field} />
+                                <Input placeholder="Enter last name" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
+            </div>
 
-                <div className="flex gap-5">
-                    <FormField
-                        control={addStudentForm.control}
-                        name="city"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>City</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter city" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={addStudentForm.control}
-                        name="province"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>Province</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter province" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+            <FormField
+                control={addStudentForm.control}
+                name="address_line_1"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Address Line 1</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter address line 1" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
-                <div className="flex gap-5">
-                    <FormField
-                        control={addStudentForm.control}
-                        name="year"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>Year</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter year" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={addStudentForm.control}
-                        name="section"
-                        render={({ field }) => (
-                            <FormItem className='flex-1'>
-                                <FormLabel>Section</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter section" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+            <FormField
+                control={addStudentForm.control}
+                name="address_line_2"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Address Line 2</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter address line 2" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
 
+            <div className="flex gap-5">
                 <FormField
                     control={addStudentForm.control}
-                    name="course_id"
+                    name="city"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Course</FormLabel>
-                            {/*
+                        <FormItem className='flex-1'>
+                            <FormLabel>City</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter city" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={addStudentForm.control}
+                    name="province"
+                    render={({ field }) => (
+                        <FormItem className='flex-1'>
+                            <FormLabel>Province</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter province" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+
+            <div className="flex gap-5">
+                <FormField
+                    control={addStudentForm.control}
+                    name="year"
+                    render={({ field }) => (
+                        <FormItem className='flex-1'>
+                            <FormLabel>Year</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter year" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={addStudentForm.control}
+                    name="section"
+                    render={({ field }) => (
+                        <FormItem className='flex-1'>
+                            <FormLabel>Section</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter section" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+
+            <FormField
+                control={addStudentForm.control}
+                name="course_id"
+                render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                        <FormLabel>Course</FormLabel>
+                        {/*
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" size="sm" className="h-8 border-dashed">Select a course</Button>
@@ -248,31 +287,35 @@ const AddStudentForm = ({ courses }: TAddUserFormProps) => {
                                 </PopoverContent>
                             </Popover>
                             */}
-                            <Select onValueChange={field.onChange} defaultValue={"1"}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a course" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {
-                                        courses.map((course) => {
-                                            return (
-                                                <SelectItem key={course.id} value={`${course.id}`}>{course.name}</SelectItem>
-                                            )
-                                        })
-                                    }
-                                </SelectContent>
-                            </Select>
+                        <Select onValueChange={field.onChange} defaultValue={"1"}>
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a course" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                {
+                                    courses.map((course) => {
+                                        return (
+                                            <SelectItem key={course.id} value={`${course.id}`}>{course.name}</SelectItem>
+                                        )
+                                    })
+                                }
+                            </SelectContent>
+                        </Select>
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+        </>
+    )
+}
 
-            </form>
-
-        </Form>
+const RFIDForm = ({ addStudentForm }: { addStudentForm: UseFormReturn<z.infer<typeof studentSchema>> }) => {
+    return (
+        <>
+        </>
     )
 }
 
