@@ -67,7 +67,6 @@ const StudentIDValidation = () => {
                     </TabsContent>
                 </Tabs>
             </div>
-
         </>
     )
 }
