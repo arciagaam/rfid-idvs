@@ -55,39 +55,65 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const refreshUser = asyncHandler(async (req: Request, res: Response) => {
-        const token = req.cookies.jwt;
+    const token = req.cookies.jwt;
 
-        if (!token) {
-            return res.status(200).json({});
-        }
-
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
-
-            if (!isUserId(decoded)) throw new Error("Unauthorized access.");
-
-            const user = await prisma.user.findUniqueOrThrow({
-                where: { id: decoded.id },
-                select: {
-                    id: true,
-                    email: true,
-                    role_id: true,
-                    username: true,
-                    first_name: true,
-                    middle_name: true,
-                    last_name: true
-                }
-            });
-
-            res.status(200).json({ code: 200, user: user });
-        } catch (error) {
-            res.cookie('jwt', '', {
-                httpOnly: true,
-                expires: new Date(0)
-            })
-        }
+    if (!token) {
+        return res.status(200).json({});
     }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
+
+        if (!isUserId(decoded)) throw new Error("Unauthorized access.");
+
+        const user = await prisma.user.findUniqueOrThrow({
+            where: { id: decoded.id },
+            select: {
+                id: true,
+                email: true,
+                role_id: true,
+                username: true,
+                first_name: true,
+                middle_name: true,
+                last_name: true
+            }
+        });
+
+        res.status(200).json({ code: 200, user: user });
+    } catch (error) {
+        res.cookie('jwt', '', {
+            httpOnly: true,
+            expires: new Date(0)
+        })
+    }
+}
 );
+
+const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
+    const token = req.cookies.jwt;
+
+    if (!token) {
+        return res.status(200).json({});
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
+
+    if (!isUserId(decoded)) throw new Error("Unauthorized access.");
+
+    const user = await prisma.user.findUniqueOrThrow({
+        where: { id: decoded.id },
+        select: {
+            id: true,
+            email: true,
+            username: true,
+            first_name: true,
+            middle_name: true,
+            last_name: true
+        }
+    });
+
+    res.status(200).json({ code: 200, message: "User successfully retrieved.", data: user });
+})
 
 const logoutUser = asyncHandler(
     async (req: Request, res: Response) => {
@@ -100,4 +126,4 @@ const logoutUser = asyncHandler(
     }
 );
 
-export { authenticateUser, refreshUser, logoutUser }
+export { authenticateUser, refreshUser, logoutUser, getCurrentUser }

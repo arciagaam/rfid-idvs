@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-import { NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
+import { Link, NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
 
@@ -73,7 +73,9 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
                         <IoMdMore size={20} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="gap-4">
-                        <DropdownMenuItem>Manage Account</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link to={"account"}>Manage Account</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout} className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Logout</DropdownMenuItem>
                     </DropdownMenuContent>

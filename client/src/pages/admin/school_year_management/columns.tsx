@@ -1,9 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table"
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { SchoolYearModal } from "./components/SchoolYearModal";
+import { DeleteSchoolYearModal } from "./components/DeleteSchoolYearModal";
 
 export type TSchoolYearTable = { 
     id: number;
@@ -39,7 +40,10 @@ export const schoolYearColumns: ColumnDef<TSchoolYearTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <SchoolYearModal id={id} isEditing={true}/>
-                        <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete School Year</DropdownMenuItem>
+                        <DeleteSchoolYearModal id={id} />
+                        {/*
+                            <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete School Year</DropdownMenuItem>
+                        */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

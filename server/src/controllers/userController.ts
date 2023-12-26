@@ -110,6 +110,11 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
 const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
+    if (parseInt(id) === 1) {
+        res.status(401);
+        throw new Error("Cannot delete the admin account.");
+    }
+
     await prisma.user.delete({
         where: {
             id: parseInt(id)

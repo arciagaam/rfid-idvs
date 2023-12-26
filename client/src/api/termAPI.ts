@@ -77,6 +77,17 @@ const deleteTerm = async (id: string | number) => {
     }
 }
 
+const deleteSchoolYear = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/school-years/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        }).then(res => res.json());
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 export {
     getTerms,
     getTermById,
@@ -84,5 +95,6 @@ export {
     updateTerm,
     deleteTerm,
 
-    getSchoolYearWithTermById
+    getSchoolYearWithTermById,
+    deleteSchoolYear
 }

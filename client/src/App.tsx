@@ -20,6 +20,7 @@ import { StudentIDValidation } from "./pages/admin/student_id_validation"
 // User pages
 import { Dashboard as UserDashboard } from "./pages/user/dashboard"
 import { StudentIDValidation as UserStudentIDValidation } from "./pages/user/student_id_validation"
+import { ManageAccount } from "./pages/common/manage_account"
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                     <Route path="/" element={<UserLayout />}>
                         <Route path="dashboard" element={<UserDashboard />} />
                         <Route path="departments/:slug" element={<UserStudentIDValidation />} />
+                        <Route path="account" element={<ManageAccount />} />
                     </Route>
 
                     <Route path="/admin" element={<AdminLayout />}>
@@ -40,6 +42,7 @@ function App() {
                         <Route path="student-management" element={<StudentManagement />} />
                         <Route path="school-year-management" element={<SchoolYearManagement />} />
                         <Route path="departments/:slug" element={<StudentIDValidation />} />
+                        <Route path="account" element={<ManageAccount />} />
                     </Route>
                 </Route>
             </Route>
