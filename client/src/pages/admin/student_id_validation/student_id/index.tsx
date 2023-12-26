@@ -33,7 +33,14 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
                 const res = await req.json();
                 const responseData = res.data;
 
-                setSchoolYears(responseData);
+                if (responseData) {
+                    const first = responseData[0];
+
+                    setSchoolYears(responseData);
+                    setSelectedSchoolYearId(first.id)
+                    setSelectedTermId(first.terms[0].id)
+                }
+
             } catch (error) {
                 console.error(error);
             }
@@ -98,6 +105,7 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
                     </Select>
                 </div>
             </div>
+
             <StudentsTable slug={slug} termId={selectedTermId} courses={courses} />
         </div>
     )

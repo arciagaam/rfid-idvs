@@ -9,24 +9,20 @@ const DeleteSchoolYearForm = ({ id }: { id: string | number }) => {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const req = await deleteSchoolYear(id);
+        const res = await deleteSchoolYear(id);
 
-        if (!req) return;
+        if (!res) return;
 
-        const res = await req.json();
+        setSchoolYears((prev) => {
+            return prev.filter((year) => year.id !== id);
+        })
 
-        if (res && res.data) {
-            setSchoolYears((prev) => {
-                return prev.filter((year) => year.id !== id);
-            })
-
-            setOpen(false);
-        }
+        setOpen(false);
     }
 
     return (
         <form id='delete-user-form' onSubmit={handleFormSubmit} className="flex flex-col gap-5">
-            <p>Are you sure you want to delete the user?</p>
+            <p>Are you sure you want to delete the school year?</p>
         </form>
     )
 }

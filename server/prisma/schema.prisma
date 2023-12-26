@@ -1,115 +1,125 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model role {
-    id         Int      @id @default(autoincrement())
-    users      user[]
-    name       String   @db.VarChar(191)
-    created_at DateTime @default(now())
-    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  users      user[]
 }
 
 model user {
-    id             Int      @id @default(autoincrement())
-    role           role     @relation(fields: [role_id], references: [id])
-    role_id        Int
-    username       String   @unique
-    email          String   @unique
-    password       String   @db.Text()
-    first_name     String
-    middle_name    String?
-    last_name      String
-    remember_token String?
-    refresh_token  String?  @db.Text()
-    created_at     DateTime @default(now())
-    updated_at     DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id             Int      @id @default(autoincrement())
+  role_id        Int
+  username       String   @unique
+  email          String   @unique
+  password       String   @db.Text
+  first_name     String
+  middle_name    String?
+  last_name      String
+  remember_token String?
+  refresh_token  String?  @db.Text
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now())
+  role           role     @relation(fields: [role_id], references: [id])
+
+  @@index([role_id], map: "user_role_id_fkey")
 }
 
 model department {
-    id         Int      @id @default(autoincrement())
-    courses    course[]
-    name       String   @db.VarChar(191)
-    created_at DateTime @default(now())
-    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  courses    course[]
 }
 
 model course {
-    id            Int        @id @default(autoincrement())
-    department    department @relation(fields: [department_id], references: [id])
-    department_id Int
-    students      student[]
-    name          String     @unique
-    created_at    DateTime   @default(now())
-    updated_at    DateTime   @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id            Int        @id @default(autoincrement())
+  department_id Int
+  name          String     @unique
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now())
+  department    department @relation(fields: [department_id], references: [id])
+  students      student[]
+
+  @@index([department_id], map: "course_department_id_fkey")
 }
 
 model student {
-    id             Int                  @id @default(autoincrement())
-    terms          term_student[]
-    validation     validation_history[]
-    course         course               @relation(fields: [course_id], references: [id])
-    course_id      Int
-    student_number String               @unique
-    rfid_number    String?              @unique
-    first_name     String
-    middle_name    String?
-    last_name      String
-    address_line_1 String               @db.Text()
-    address_line_2 String?              @db.Text()
-    city           String
-    province       String
-    year           Int
-    section        String?
-    is_active      Boolean              @default(true)
-    created_at     DateTime             @default(now())
-    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id             Int                  @id @default(autoincrement())
+  course_id      Int
+  student_number String               @unique
+  rfid_number    String?              @unique
+  first_name     String
+  middle_name    String?
+  last_name      String
+  address_line_1 String               @db.Text
+  address_line_2 String?              @db.Text
+  city           String
+  province       String
+  year           Int
+  section        String?
+  is_active      Boolean              @default(true)
+  created_at     DateTime             @default(now())
+  updated_at     DateTime             @default(now())
+  course         course               @relation(fields: [course_id], references: [id])
+  terms          term_student[]
+  validation     validation_history[]
+
+  @@index([course_id], map: "student_course_id_fkey")
 }
 
 model term {
-    id             Int                  @id @default(autoincrement())
-    students       term_student[]
-    validation     validation_history[]
-    school_year    school_year          @relation(fields: [school_year_id], references: [id])
-    school_year_id Int
-    term           Int
-    created_at     DateTime             @default(now())
-    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id             Int                  @id @default(autoincrement())
+  school_year_id Int
+  term           Int
+  created_at     DateTime             @default(now())
+  updated_at     DateTime             @default(now())
+  school_year    school_year          @relation(fields: [school_year_id], references: [id], onDelete: Cascade)
+  students       term_student[]
+  validation     validation_history[]
+
+  @@index([school_year_id], map: "term_school_year_id_fkey")
 }
 
 model school_year {
-    id         Int      @id @default(autoincrement())
-    terms      term[]
-    year_start Int      @unique
-    year_end   Int
-    created_at DateTime @default(now())
-    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id         Int      @id @default(autoincrement())
+  year_start Int      @unique
+  year_end   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  terms      term[]
 }
 
-// Pivot table for Term and Student table
 model term_student {
-    id         Int      @id @default(autoincrement())
-    student    student  @relation(fields: [student_id], references: [id])
-    student_id Int
-    term       term     @relation(fields: [term_id], references: [id])
-    term_id    Int
-    created_at DateTime @default(now())
-    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+  id         Int      @id @default(autoincrement())
+  student_id Int
+  term_id    Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  student    student  @relation(fields: [student_id], references: [id])
+  term       term     @relation(fields: [term_id], references: [id])
+
+  @@index([student_id], map: "term_student_student_id_fkey")
+  @@index([term_id], map: "term_student_term_id_fkey")
 }
 
 model validation_history {
-    id         Int      @id @default(autoincrement())
-    student    student  @relation(fields: [student_id], references: [id])
-    student_id Int
-    term       term     @relation(fields: [term_id], references: [id])
-    term_id    Int
-    created_at DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  student_id Int
+  term_id    Int
+  created_at DateTime @default(now())
+  student    student  @relation(fields: [student_id], references: [id])
+  term       term     @relation(fields: [term_id], references: [id])
+
+  @@index([student_id], map: "validation_history_student_id_fkey")
+  @@index([term_id], map: "validation_history_term_id_fkey")
 }
