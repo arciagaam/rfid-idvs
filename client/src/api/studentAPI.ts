@@ -83,12 +83,27 @@ const studentRFID = async (id: string | number, body: z.infer<typeof RFIDSchema>
     }
 }
 
+const triggerModal = async (modal: string, isOpen: boolean, termId: number | null = null) => {
+    try {
+        return await fetch(`${API_URL}/students/trigger`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({modal, isOpen, termId})
+        })
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export {
     getStudents,
     getStudentById,
     storeStudent,
     updateStudent,
     deleteStudent,
-
-    studentRFID
+    studentRFID,
+    triggerModal,
 }

@@ -7,13 +7,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RFIDSchema } from '@/validators/RFIDSchema';
 
-import { studentRFID } from '@/api/studentAPI';
+import { studentRFID, triggerModal } from '@/api/studentAPI';
 
 import { useStudent } from "../providers/useStudent";
 
 import io from 'socket.io-client'
 import { Form } from '@/components/ui/form';
 
+let timeout: ReturnType<typeof setTimeout>
 
 type TRFIDFormProps = {
     id: number;
@@ -34,12 +35,30 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
     })
 
     useEffect(() => {
+        const withTimeoutOpenModal = () => {
+            timeout = setTimeout(async () => {
+                await triggerModal('link_rfid', true)
+                openModal();
+            }, 10000);
+        }
+        const openModal = async () => {
+            await triggerModal('link_rfid', true)
+        }
+
+        withTimeoutOpenModal();
+        openModal();
+
+        return () => clearTimeout(timeout)
+    }, [])
+
+    useEffect(() => {
         linkStudentForm.reset({
             id: id,
             rfid_number: tappedRfid
         });
 
     }, [id, tappedRfid, linkStudentForm]);
+
 
     useEffect(() => {
         const socket = io(import.meta.env.VITE_SOCKET_API_URL)

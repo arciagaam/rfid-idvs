@@ -8,6 +8,8 @@ import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 import { convertObjectKeys } from "../helpers/helpers";
 
 const prisma = new PrismaClient();
+let currentTermId: number = 0;
+let currentOpenModal: string | null = null;
 
 const selectStudentDTO: () => Prisma.studentSelect = () => {
     return {
@@ -186,9 +188,30 @@ const deleteStudent = asyncHandler(
     }
 )
 
+// let timeout: ReturnType<typeof setTimeout>
+
+
+const triggerModal = asyncHandler(async (req: any, res: Response) => {
+    const { modal, isOpen, termId } = req.body;
+    req.app.set('currentTermId', termId);
+
+    if (isOpen) {
+        req.app.set('currentActiveModal', modal);
+        req.app.set('modalIsOpen', true);
+    } else {
+        req.app.set('currentActiveModal', null);
+        req.app.set('modalIsOpen', false);
+    }
+
+    // clearTimeout(timeout);
+    // timeout = setTimeout(() => {
+    //     req.app.set('modalIsOpen', false);
+
+    // }, 60000);
+});
+
 const linkRfid = asyncHandler(async (req: Request, res: Response) => {
     const { id, rfid_number } = req.body;
-
     await prisma.student.update({
         where: {
             id: parseInt(id)
@@ -229,9 +252,30 @@ const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
     };
 
     res.status(200).json(payload);
+});
 
+const validateStudent = asyncHandler(async (req: Request, res: Response, rfidNumber: string) => {
 
+    const student = await prisma.student.findFirstOrThrow({
+        where: {
+            rfid_number: rfidNumber
+        }
+    });
 
+    await prisma.term_student.create({
+        data: {
+            student_id: student.id,
+            term_id: currentTermId,
+        }
+    })
+
+    const payload = {
+        code: 200,
+        message: "Student validated.",
+        data: {}
+    };
+
+    res.status(200).json(payload);
 })
 
 
@@ -243,5 +287,7 @@ export {
     updateStudent,
     deleteStudent,
     linkRfid,
-    unlinkRfid
+    unlinkRfid,
+    validateStudent,
+    triggerModal
 };

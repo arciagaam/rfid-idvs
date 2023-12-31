@@ -7,7 +7,7 @@ import { studentColumns } from "../columns";
 import { DataTable } from '@/components/global/DataTable';
 import { CoursesFilter } from "./CoursesFilter";
 import { ValidationStatusFilter } from "./ValidationStatusFilter";
-import { LinkRFIDModal } from "./LinkRFIDModal";
+import { ValidateStudentModal } from "./ValidateStudentModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -109,7 +109,7 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
                 </div>
             </div>
 
-            <DataTable columns={studentColumns} data={students} additionalColumns={<LinkRFIDModal />} />
+            <DataTable columns={studentColumns} data={students} additionalColumns={<ValidateStudentModal term_id={termId} />} />
         </>
     )
 }

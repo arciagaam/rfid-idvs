@@ -50,13 +50,14 @@ app.use(cookieParser());
 
 app.set('port', 3000)
 app.set('socket_port', 8000)
+app.set('modalIsOpen', false)
+app.set('currentActiveModal', null)
+app.set('currentTermId', null)
 
 app.use('/api', routes);
 
 // Error handle middleware
 app.use(errorHandler);
-
-
 
 socketServer.listen(app.get('socket_port'), () => {
     console.log(colors.yellow('==========================='))
