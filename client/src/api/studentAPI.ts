@@ -70,7 +70,7 @@ const deleteStudent = async (id: string | number) => {
 
 const studentRFID = async (id: string | number, body: z.infer<typeof RFIDSchema>, action: 'link' | 'unlink' = 'link') => {
     try {
-        return await fetch(`${API_URL}/students/${id}`, {
+        return await fetch(`${API_URL}/students/${action}/${id}`, {
             headers: {
                 'Content-Type': 'application/json'
             },

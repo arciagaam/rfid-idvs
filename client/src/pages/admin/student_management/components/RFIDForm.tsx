@@ -1,7 +1,4 @@
-import { useEffect } from 'react'
-import {
-    Form,
-} from "@/components/ui/form"
+import { useEffect, useState } from 'react'
 import { IoMdWifi } from "react-icons/io";
 import { Badge } from '@/components/ui/badge';
 
@@ -10,42 +7,51 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RFIDSchema } from '@/validators/RFIDSchema';
 
-import { getStudentById, studentRFID } from '@/api/studentAPI';
+import { studentRFID } from '@/api/studentAPI';
 
 import { useStudent } from "../providers/useStudent";
-import { useModal } from "@/components/global/Modal";
+
+import io from 'socket.io-client'
+import { Form } from '@/components/ui/form';
+
 
 type TRFIDFormProps = {
     id: number;
     status: boolean;
 };
 
-const RFIDForm = ({ id, status }: TRFIDFormProps) => {
-    const { setOpen } = useModal();
-    const { setStudents } = useStudent();
 
-    const editStudentForm = useForm<z.infer<typeof RFIDSchema>>({
+const RFIDForm = ({ id, status }: TRFIDFormProps) => {
+    const { setStudents } = useStudent();
+    const [tappedRfid, setTappedRfid] = useState('');
+
+    const linkStudentForm = useForm<z.infer<typeof RFIDSchema>>({
         resolver: zodResolver(RFIDSchema),
         defaultValues: {
-            student_number: "",
+            id: id,
             rfid_number: "",
         },
     })
 
     useEffect(() => {
-        const fetchStudent = async () => {
-            const res = await getStudentById(id);
+        linkStudentForm.reset({
+            id: id,
+            rfid_number: tappedRfid
+        });
 
-            if (res && res.data) {
-                editStudentForm.reset({
-                    student_number: res.data.student_number,
-                    rfid_number: res.data.rfid_number
-                });
-            }
+    }, [id, tappedRfid, linkStudentForm]);
+
+    useEffect(() => {
+        const socket = io(import.meta.env.VITE_SOCKET_API_URL)
+
+        socket.on('new_rfid_tap', (rfidData: string) => {
+            setTappedRfid(rfidData)
+        })
+
+        return () => {
+            socket.disconnect()
         }
-
-        fetchStudent();
-    }, [id, editStudentForm]);
+    }, [])
 
     const handleFormSubmit = async (values: z.infer<typeof RFIDSchema>) => {
         const req = await studentRFID(id, values, status ? "unlink" : "link");
@@ -60,11 +66,8 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                     if (student.id === id) {
                         return {
                             ...student,
-                            studentNumber: res.data.student_number,
-                            fullName: `${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
-                            rfidStatus: res.data.rfid_number ? true : false,
-                            departmentCourse: `${res.data.course.department.name} - ${res.data.course.name}`,
-                            yearSection: `${res.data.year} - ${res.data.section}`,
+                            rfidStatus: res.data.rfidStatus,
+                            rfidNumber: res.data.rfidNumber,
                         }
                     }
 
@@ -72,20 +75,32 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 })
             })
 
-            setOpen(false);
+            setTappedRfid("");
         }
     }
 
     return (
-        <Form {...editStudentForm}>
-            <form id='link-rfid-student-form' onSubmit={editStudentForm.handleSubmit(handleFormSubmit)} className="flex flex-col h-fit">
+        <Form {...linkStudentForm}>
+            <form id='link-rfid-student-form' onSubmit={linkStudentForm.handleSubmit(handleFormSubmit)} className="flex flex-col h-fit">
                 <div className="flex items-center gap-2">
                     <p>RFID Status:</p>
                     <Badge variant={status ? "default" : "destructive"}>{status ? "Linked" : "Unlinked"}</Badge>
                 </div>
-                <div className="flex justify-center items-center h-fit">
-                    <IoMdWifi size={"50%"} />
-                </div>
+                {
+                    status ?
+                    null
+                    : 
+                    <>
+                        <div className="flex justify-center items-center h-fit">
+                            <IoMdWifi size={"50%"} />
+                        </div>
+
+                        <div className="flex gap-2">
+                            <h2>RFID Number:</h2>
+                            <p>{tappedRfid}</p>
+                        </div>
+                    </>
+                }
             </form>
         </Form>
     )

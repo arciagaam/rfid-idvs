@@ -186,10 +186,62 @@ const deleteStudent = asyncHandler(
     }
 )
 
+const linkRfid = asyncHandler(async (req: Request, res: Response) => {
+    const { id, rfid_number } = req.body;
+
+    await prisma.student.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: { rfid_number },
+    });
+
+    const payload = {
+        code: 200,
+        message: "RFID Successfully linked to this student",
+        data: {
+            rfidStatus: true,
+            rfidNumber: rfid_number
+        }
+    };
+
+    res.status(200).json(payload);
+})
+
+const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.body;
+
+    await prisma.student.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: { rfid_number: null },
+    });
+
+    const payload = {
+        code: 200,
+        message: "RFID Successfully unlinked to this student",
+        data: {
+            rfidStatus: false,
+            rfidNumber: null
+        }
+    };
+
+    res.status(200).json(payload);
+
+
+
+})
+
+
+
 export {
     getAllStudents,
     getStudent,
     storeStudent,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    linkRfid,
+    unlinkRfid
 };

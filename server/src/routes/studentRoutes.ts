@@ -2,7 +2,7 @@ import express from 'express';
 import { admin, verifyToken } from '../middlewares/auth';
 import { validateRequestBody } from '../middlewares/validateRequestBody';
 import { userSchema } from '../schemas/userSchema';
-import { deleteStudent, getAllStudents, getStudent, storeStudent, updateStudent } from '../controllers/studentController';
+import { deleteStudent, getAllStudents, getStudent, storeStudent, updateStudent, linkRfid, unlinkRfid } from '../controllers/studentController';
 
 const router = express.Router();
 
@@ -14,9 +14,20 @@ router
     .post(storeStudent);
 
 router
+    .route('/link/:id')
+    .post(linkRfid)
+
+router
+    .route('/unlink/:id')
+    .post(unlinkRfid)
+
+router
     .route('/:id')
     .get(getStudent)
     .put(updateStudent)
     .delete(deleteStudent);
+
+router.route('/:id/link')
+    .post()
 
 export default router;

@@ -26,7 +26,6 @@ const getAllSchoolYears = asyncHandler(async (req: Request, res: Response) => {
 
 const deleteSchoolYear = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    console.log(id);
 
     await prisma.school_year.delete({
         where: {

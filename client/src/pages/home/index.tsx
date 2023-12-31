@@ -9,6 +9,8 @@ const Home = () => {
     const { user } = useAuth();
 
     useEffect(() => {
+
+        
         if (user !== null) {
             if (user.role_id === 1) {
                 return navigate("/admin")

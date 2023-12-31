@@ -90,7 +90,6 @@ function FacedetedFilter<TData, TValue>({
                                     <CommandItem
                                         key={option.value}
                                         onSelect={() => {
-                                            console.log(option.value);
                                             if (isSelected) {
                                                 selectedValues.delete(option.value)
                                             } else {
