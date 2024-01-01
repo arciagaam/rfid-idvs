@@ -1,5 +1,5 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { generateToken } from "../utils/generateToken";
+import { generateToken, sendResponseCookie } from "../utils/generateToken";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
@@ -62,7 +62,7 @@ const updateAccount = asyncHandler(async (req: Request, res: Response) => {
         }
     });
 
-    generateToken(res, user);
+    sendResponseCookie(res, generateToken(user))
     res.status(200).json({ code: 200, user: user });
 });
 

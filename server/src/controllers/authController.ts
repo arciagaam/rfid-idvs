@@ -1,5 +1,5 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { generateToken, generateRefreshToken } from "../utils/generateToken";
+import { generateToken, generateRefreshToken, sendResponseCookie } from "../utils/generateToken";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
@@ -29,7 +29,7 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
         });
 
         if (user && (bcrypt.compareSync(password, user.password))) {
-            generateToken(res, user);
+            sendResponseCookie(res, generateToken(user));
             const refreshToken = generateRefreshToken(user);
 
             await prisma.user.update({
@@ -107,8 +107,7 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
             user: user
         };
 
-        generateToken(res, user);
-
+        sendResponseCookie(res, generateToken(user));
         res.status(200).json(payload);
     } catch (error) {
         const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
@@ -143,9 +142,8 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
                     user: userPayload
                 };
 
-                generateToken(res, userPayload);
-
-                res.status(200).json(payload);
+                sendResponseCookie(res, generateToken(userPayload));
+                return res.status(200).json(payload);
             } catch (error) {
                 // do nothing...
             }
