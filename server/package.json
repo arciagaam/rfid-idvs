@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn ./app.ts",
+    "generate:token": "ts-node ./src/utils/generateBase64.ts",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "ts-node ./src/seeders/dbSeeder.ts",
     "db:seed_mock": "ts-node ./src/seeders/studentSeeder.ts",

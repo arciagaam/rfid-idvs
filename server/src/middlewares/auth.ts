@@ -1,5 +1,6 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import asyncHandler from './asyncHandler';
+import { generateToken, generateRefreshToken } from '../utils/generateToken';
 import { NextFunction, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { TUser } from '../types/UserDTO';
@@ -18,8 +19,8 @@ const isUserId = (value: unknown): value is JWTToken => {
     return (value as JWTToken).id !== undefined;
 }
 
-const verifyToken = asyncHandler(
-    async (req: RequestWithUser, res: Response, next: NextFunction) => {
+const verifyToken = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
+        console.log("\n\n\nVERIFY TOKEN, MIDDLEWARE");
         const token = req.cookies.jwt;
 
         if (!token) {
@@ -37,6 +38,32 @@ const verifyToken = asyncHandler(
 
             next();
         } catch (error) {
+            const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
+            console.log(decoded);
+
+            const user = await prisma.user.findUniqueOrThrow({
+                where: { id: decoded.id }
+            })
+
+            console.log("Decoded user", user);
+
+            if (user.refresh_token) {
+                try {
+                    jwt.verify(user.refresh_token, process.env.JWT_REFRESH_SECRET as Secret);
+
+                    req.user = user;
+                    generateToken(res, token);
+
+                    next();
+                } catch (error) {
+                    // do nothing...
+                }
+            }
+
+            res.cookie('jwt', '', {
+                httpOnly: true,
+                expires: new Date(0)
+            })
             res.status(401).json({ message: "Not authorized, token failed." });
         }
     }

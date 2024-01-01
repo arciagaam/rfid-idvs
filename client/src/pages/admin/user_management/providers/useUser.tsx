@@ -12,8 +12,6 @@ const useUserProvider = () => {
             const usersTableData: TUserTable[] = [];
             const res = await getUsers();
 
-            console.log(res);
-
             if (res) {
                 res.data.forEach((user: TUser) => {
                     usersTableData.push(
