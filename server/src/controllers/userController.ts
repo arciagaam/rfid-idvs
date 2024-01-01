@@ -6,9 +6,6 @@ import { TUserDTOWithPassword, TUserDTOWithoutPassword } from "../types/UserDTO"
 
 import { hashSync } from "bcrypt";
 
-//helpers
-import { convertObjectKeys } from "../helpers/helpers";
-
 const prisma = new PrismaClient();
 
 const selectUserWithRoleDTO: () => Prisma.userSelect = () => (
@@ -39,7 +36,7 @@ const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const payload = {
         code: 200,
         message: "Users successfully retrieved.",
-        data: convertObjectKeys(users)
+        data: users
     };
 
     res.status(200).json(payload);
@@ -58,7 +55,7 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
     const payload = {
         code: 200,
         message: "User successfully retrieved.",
-        data: convertObjectKeys(user)
+        data: user
     };
 
     res.status(200).json(payload);

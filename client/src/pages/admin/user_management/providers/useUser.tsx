@@ -11,14 +11,15 @@ const useUserProvider = () => {
         const fetchUsers = async () => {
             const usersTableData: TUserTable[] = [];
             const res = await getUsers();
-            
-            if(res) {
 
+            console.log(res);
+
+            if (res) {
                 res.data.forEach((user: TUser) => {
                     usersTableData.push(
                         {
                             id: user.id,
-                            fullname :`${user.firstName} ${(user.middleName ?? '')} ${user.lastName}`,
+                            fullname: `${user.first_name} ${(user.middle_name ?? '')} ${user.last_name}`,
                             username: user.username,
                             email: user.email,
                             role: user.role.name.toUpperCase()

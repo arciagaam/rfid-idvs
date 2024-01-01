@@ -7,6 +7,7 @@ import departmentRoutes from './departmentRoutes';
 import schoolYearRoutes from './schoolYearRoutes';
 import courseRoutes from './courseRoutes';
 import rfidRoutes from './rfidRoutes';
+import accountRoutes from './accountRoutes';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use('/departments', departmentRoutes)
 router.use('/school-years', schoolYearRoutes)
 router.use('/courses', courseRoutes)
 router.use('/rfid', rfidRoutes)
+router.use('/account', accountRoutes)
 
 export default router;

@@ -41,10 +41,10 @@ const EditUserForm = ({ id }: { id: number }) => {
                 editUserForm.reset({
                     username: res.data.username,
                     email: res.data.email,
-                    first_name: res.data.firstName,
-                    middle_name: res.data.middleName ?? '',
-                    last_name: res.data.lastName,
-                    role_id: res.data.roleId,
+                    first_name: res.data.first_name,
+                    middle_name: res.data.middle_name ?? '',
+                    last_name: res.data.last_name,
+                    role_id: res.data.role_id,
                 });
             }
         }

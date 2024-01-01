@@ -10,7 +10,7 @@ type TAuthError = {
 };
 
 const useAuthentication = () => {
-    const [user, setUser] = useState<Omit<TUser, "roleId"> & { role_id: number } | null>(null);
+    const [user, setUser] = useState<TUser | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | TAuthError>(null);
 
@@ -83,6 +83,10 @@ const useAuthentication = () => {
         return false;
     }
 
+    const update = (updatedUser: TUser) => {
+        setUser(updatedUser);
+    }
+
     useEffect(() => {
         const refresh = async () => {
             setLoading(true);
@@ -130,7 +134,8 @@ const useAuthentication = () => {
         loading,
         error,
         login,
-        logout
+        logout,
+        update
     }
 }
 

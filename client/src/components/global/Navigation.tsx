@@ -20,17 +20,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 
-import { Link, NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
+import { Navigate, Link, NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 const NavigationBar = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
 
     const handleLogout = async () => {
         await logout();
         navigate("/home");
+    }
+
+    if (!user) {
+        return <Navigate to="/login" replace />
     }
 
     return (
@@ -44,7 +48,7 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
                 <div className="flex flex-col">
                     <h2 className='font-bold'>Laguna State Polytechnic University</h2>
-                    <p>Admin</p>
+                    <p>{`${user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)}`}</p>
                 </div>
 
             </div>
@@ -62,8 +66,12 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
                     </Avatar>
 
                     <div className="flex flex-col">
-                        <h3>John Doe</h3>
-                        <p>johndoe@email.com</p>
+                        <h3>{user.first_name} {user.last_name}</h3>
+                        {
+                            user.email
+                                ? (<p>{user.email}</p>)
+                                : null
+                        }
                     </div>
 
                 </div>
