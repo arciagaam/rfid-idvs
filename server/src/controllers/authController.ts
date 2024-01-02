@@ -149,44 +149,6 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
                 // do nothing...
             }
         }
-        // const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
-
-        //const user = await prisma.user.findUniqueOrThrow({
-        //    where: { id: decoded.id },
-        //    select: {
-        //        id: true,
-        //        email: true,
-        //        role_id: true,
-        //        username: true,
-        //        first_name: true,
-        //        middle_name: true,
-        //        last_name: true,
-        //        role: {
-        //            select: {
-        //                name: true
-        //            }
-        //        },
-        //        refresh_token: true
-        //    }
-        //})
-
-        // if (user.refresh_token) {
-        //     try {
-        //         const { refresh_token, ...userPayload } = user;
-
-        //         jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET as Secret);
-
-        //         const payload = {
-        //             code: 200,
-        //             user: userPayload
-        //         };
-
-        //         sendResponseCookie(res, generateToken(userPayload));
-        //         return res.status(200).json(payload);
-        //     } catch (error) {
-        //         // do nothing...
-        //     }
-        // }
 
         res.cookie('jwt', '', {
             httpOnly: true,

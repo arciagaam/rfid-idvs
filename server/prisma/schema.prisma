@@ -25,7 +25,6 @@ model user {
     middle_name    String?
     last_name      String
     remember_token String?   @db.Text
-    refresh_token  String?   @db.Text
     image          String?   @db.Text
     deleted_at     DateTime?
     created_at     DateTime  @default(now())
