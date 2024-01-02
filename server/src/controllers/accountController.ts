@@ -1,14 +1,24 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { generateToken, sendResponseCookie } from "../utils/generateToken";
+
 import asyncHandler from "../middlewares/asyncHandler";
 import { Request, Response } from 'express';
+import { generateToken, sendResponseCookie } from "../utils/generateToken";
+
 import { PrismaClient } from '@prisma/client';
-import { isUserId } from './authController';
-import { hashSync } from 'bcrypt'
-import { accountSchema } from '../schemas/accountSchema';
+
 import { z } from 'zod';
+import { accountSchema } from '../schemas/accountSchema';
+import { isUserId } from './authController';
+
+import { v4 } from 'uuid';
+import path from 'path';
+import { hashSync } from 'bcrypt'
+import { convertBase64toBlob, storeFile, mimeToExtension } from '../helpers/helpers';
+
 
 const prisma = new PrismaClient();
+
+export const USER_IMAGE_STORAGE_PATH = path.join(__dirname, "..", "public", "images", "users")
 
 const updateAccount = asyncHandler(async (req: Request, res: Response) => {
     const token = req.cookies.jwt;
@@ -30,7 +40,17 @@ const updateAccount = asyncHandler(async (req: Request, res: Response) => {
         if (key === "confirm_password") return;
 
         if (key === "image") {
-            console.log(body[key]);
+            const base64 = body[key];
+            if (base64 === undefined) return;
+
+            const blob = convertBase64toBlob(base64);
+
+            const fileName = `${v4()}.${mimeToExtension(blob.type)}`;
+            const filePath = `${USER_IMAGE_STORAGE_PATH}/${fileName}`;
+            storeFile(filePath, blob);
+
+            Object.assign(updateData, { [key]: fileName });
+
             return;
         }
 
