@@ -79,7 +79,8 @@ const updateAccount = asyncHandler(async (req: Request, res: Response) => {
                 select: {
                     name: true
                 }
-            }
+            },
+            image: true
         }
     });
 

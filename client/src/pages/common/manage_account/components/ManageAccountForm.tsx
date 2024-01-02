@@ -17,11 +17,13 @@ import { Separator } from '@/components/ui/separator';
 import { updateAccount } from '@/api/accountAPI';
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { toBase64 } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageAccountForm = () => {
     const { update } = useAuth();
+    const { toast } = useToast();
 
     const [image, setImage] = useState<File | null>(null);
     const manageAccountForm = useForm<z.infer<typeof accountSchema>>({
@@ -53,6 +55,11 @@ const ManageAccountForm = () => {
         if (res && res.user) {
             update(res.user);
             await fetchUser();
+
+            toast({
+                title: "Update successful",
+                description: "Account has been successfully updated.",
+            })
         }
     }
 
