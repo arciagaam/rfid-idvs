@@ -57,6 +57,7 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
                     first_name: user.first_name,
                     middle_name: user.middle_name,
                     last_name: user.last_name,
+                    image: user.image
                 }
             }
 
@@ -104,7 +105,8 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
                     select: {
                         name: true
                     }
-                }
+                },
+                image: true
             }
         });
 
@@ -135,6 +137,7 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
                                 name: true
                             }
                         },
+                        image: true
                     }
                 })
 
@@ -183,7 +186,8 @@ const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
                 select: {
                     name: true
                 }
-            }
+            },
+            image: true
         }
     });
 

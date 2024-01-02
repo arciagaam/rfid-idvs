@@ -37,30 +37,6 @@ const verifyToken = asyncHandler(async (req: RequestWithUser, res: Response, nex
 
         next();
     } catch (error) {
-        // const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
-
-        // const user = await prisma.user.findUniqueOrThrow({
-        //     where: { id: decoded.id }
-        // })
-
-        // if (user.remember_token) {
-        //     try {
-        //         jwt.verify(user., process.env.JWT_REFRESH_SECRET as Secret);
-
-        //         req.user = user;
-        //         req.cookies.jwt = generateToken(user);
-
-        //         return next();
-        //     } catch (error) {
-        //         await prisma.user.update({
-        //             where: { id: decoded.id },
-        //             data: {
-        //                 remember_token: null
-        //             }
-        //         });
-        //     }
-        // }
-
         res.cookie('jwt', '', {
             httpOnly: true,
             expires: new Date(0)

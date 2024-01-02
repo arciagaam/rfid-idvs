@@ -19,10 +19,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-
 import { Navigate, Link, NavLink, NavLinkProps, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
+
+const PROFILE_PATH = `${import.meta.env.VITE_PUBLIC_URL}/images/users`;
 
 const NavigationBar = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
@@ -61,8 +62,8 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
                 <div className="flex gap-3">
 
                     <Avatar className='h-14 w-14 aspect-square'>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={`${PROFILE_PATH}/${user.image}`} />
+                        <AvatarFallback className="uppercase text-black">{`${user.first_name.charAt(0) + user.last_name.charAt(0)}`}</AvatarFallback>
                     </Avatar>
 
                     <div className="flex flex-col">
