@@ -7,8 +7,11 @@ import routes from './src/routes';
 import { errorHandler } from './src/middlewares/errorHandler';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
 
 let connectionLogged = false
+
+export const USER_IMAGE_STORAGE_PATH = path.join(__dirname, "public", "images", "users")
 
 const app = express();
 
@@ -47,6 +50,7 @@ app.use(cors(
 ));
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static('public'))
 
 app.set('port', 3000)
 app.set('socket_port', 8000)

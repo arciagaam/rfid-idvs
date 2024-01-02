@@ -11,14 +11,11 @@ import { accountSchema } from '../schemas/accountSchema';
 import { isUserId } from './authController';
 
 import { v4 } from 'uuid';
-import path from 'path';
 import { hashSync } from 'bcrypt'
-import { convertBase64toBlob, storeFile, mimeToExtension } from '../helpers/helpers';
-
+import { convertBase64toBuffer, storeFile, getBase64FileType } from '../helpers/helpers';
+import { USER_IMAGE_STORAGE_PATH } from '../../app';
 
 const prisma = new PrismaClient();
-
-export const USER_IMAGE_STORAGE_PATH = path.join(__dirname, "..", "public", "images", "users")
 
 const updateAccount = asyncHandler(async (req: Request, res: Response) => {
     const token = req.cookies.jwt;
@@ -43,11 +40,10 @@ const updateAccount = asyncHandler(async (req: Request, res: Response) => {
             const base64 = body[key];
             if (base64 === undefined) return;
 
-            const blob = convertBase64toBlob(base64);
+            const buffer = convertBase64toBuffer(base64);
+            const fileName = `${v4()}.${getBase64FileType(base64)}`;
 
-            const fileName = `${v4()}.${mimeToExtension(blob.type)}`;
-            const filePath = `${USER_IMAGE_STORAGE_PATH}/${fileName}`;
-            storeFile(filePath, blob);
+            storeFile(USER_IMAGE_STORAGE_PATH, fileName, buffer);
 
             Object.assign(updateData, { [key]: fileName });
 

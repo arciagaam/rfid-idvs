@@ -52,18 +52,31 @@ export function convertBase64toBlob(base64Data: string) {
     return new Blob([arrayBuffer], { type: contentType });
 }
 
-export function storeFile(path: string, blob: Blob) {
-    const writeStream = fs.createWriteStream(path);
-    writeStream.on('finish', () => {
-        console.log('File saved successfully!');
-    });
-    writeStream.on('error', (err) => {
-        console.error('Error saving file:', err);
-    });
-    writeStream.write(blob);
-    writeStream.end();
+export function storeFile(dest: string, name: string, buffer: Buffer) {
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+    }
+
+    try {
+        fs.writeFileSync(`${dest}/${name}`, buffer);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export function getBase64FileType(base64: string) {
+    try {
+        return base64.substring("data:image/".length, base64.indexOf(";base64"));
+    } catch (error) {
+        return "";
+    }
 }
 
 export function mimeToExtension(mime: string) {
     return "." + mime.split('/')[1];
+}
+
+export function convertBase64toBuffer(base64Value: string) {
+    const base64 = base64Value.split(',')[1];
+    return Buffer.from(base64, "base64");
 }
