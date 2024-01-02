@@ -1,8 +1,9 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { generateToken, generateRefreshToken, sendResponseCookie } from "../utils/generateToken";
+import { generateToken, sendResponseCookie } from "../utils/generateToken";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient();
@@ -29,17 +30,19 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
         });
 
         if (user && (bcrypt.compareSync(password, user.password))) {
+            const rememberToken = randomBytes(64).toString('base64');
             sendResponseCookie(res, generateToken(user));
-            const refreshToken = generateRefreshToken(user);
 
-            await prisma.user.update({
-                where: {
-                    id: user.id
-                },
-                data: {
-                    refresh_token: refreshToken
-                }
-            })
+            if (remember_me) {
+                await prisma.user.update({
+                    where: {
+                        id: user.id
+                    },
+                    data: {
+                        remember_token: rememberToken
+                    }
+                })
+            }
 
             const payload = {
                 code: 200,
@@ -55,6 +58,12 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
                     middle_name: user.middle_name,
                     last_name: user.last_name,
                 }
+            }
+
+            if (remember_me) {
+                Object.assign(payload.user, {
+                    remember_token: rememberToken
+                });
             }
 
             res.status(200).json(payload);
@@ -73,11 +82,8 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const refreshUser = asyncHandler(async (req: Request, res: Response) => {
+    const { remember_token } = req.body as { remember_token: string | null | undefined };
     const token = req.cookies.jwt;
-
-    if (!token) {
-        return res.status(200).json({});
-    }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as Secret);
@@ -110,50 +116,83 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
         sendResponseCookie(res, generateToken(user));
         res.status(200).json(payload);
     } catch (error) {
-        const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
-
-        const user = await prisma.user.findUniqueOrThrow({
-            where: { id: decoded.id },
-            select: {
-                id: true,
-                email: true,
-                role_id: true,
-                username: true,
-                first_name: true,
-                middle_name: true,
-                last_name: true,
-                role: {
-                    select: {
-                        name: true
-                    }
-                },
-                refresh_token: true
-            }
-        })
-
-        if (user.refresh_token) {
+        if (remember_token && remember_token.length > 0) {
             try {
-                const { refresh_token, ...userPayload } = user;
-
-                jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET as Secret);
+                const user = await prisma.user.findFirstOrThrow({
+                    where: {
+                        remember_token: remember_token
+                    },
+                    select: {
+                        id: true,
+                        email: true,
+                        role_id: true,
+                        username: true,
+                        first_name: true,
+                        middle_name: true,
+                        last_name: true,
+                        role: {
+                            select: {
+                                name: true
+                            }
+                        },
+                    }
+                })
 
                 const payload = {
                     code: 200,
-                    user: userPayload
+                    user: user
                 };
 
-                sendResponseCookie(res, generateToken(userPayload));
+                sendResponseCookie(res, generateToken(user));
                 return res.status(200).json(payload);
             } catch (error) {
                 // do nothing...
             }
         }
+        // const decoded = jwt.decode(token) as jwt.JwtPayload & { id: number };
+
+        //const user = await prisma.user.findUniqueOrThrow({
+        //    where: { id: decoded.id },
+        //    select: {
+        //        id: true,
+        //        email: true,
+        //        role_id: true,
+        //        username: true,
+        //        first_name: true,
+        //        middle_name: true,
+        //        last_name: true,
+        //        role: {
+        //            select: {
+        //                name: true
+        //            }
+        //        },
+        //        refresh_token: true
+        //    }
+        //})
+
+        // if (user.refresh_token) {
+        //     try {
+        //         const { refresh_token, ...userPayload } = user;
+
+        //         jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET as Secret);
+
+        //         const payload = {
+        //             code: 200,
+        //             user: userPayload
+        //         };
+
+        //         sendResponseCookie(res, generateToken(userPayload));
+        //         return res.status(200).json(payload);
+        //     } catch (error) {
+        //         // do nothing...
+        //     }
+        // }
 
         res.cookie('jwt', '', {
             httpOnly: true,
             expires: new Date(0)
         })
-        res.status(401).json({ message: "Not authorized, token failed." });
+        return res.status(401).json({ message: "Not authorized, token failed." });
     }
 });
 
@@ -198,7 +237,7 @@ const logoutUser = asyncHandler(async (req: Request, res: Response) => {
         await prisma.user.update({
             where: { id: decoded.id },
             data: {
-                refresh_token: null
+                remember_token: null
             }
         })
     } catch (error) {

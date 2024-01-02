@@ -1,6 +1,7 @@
 import { TUser } from "@/types/TUser";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useLocalStorage } from "./useLocalStorage";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,6 +14,7 @@ const useAuthentication = () => {
     const [user, setUser] = useState<TUser | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | TAuthError>(null);
+    const [rememberMe, setRememberMe] = useLocalStorage('remember_me');
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -38,6 +40,11 @@ const useAuthentication = () => {
             const res = await req.json();
 
             setUser(res.user);
+
+            if (res.user && res.user.remember_token) {
+                setRememberMe(res.user.remember_token)
+            }
+
             setError(null);
 
             return true;
@@ -71,6 +78,7 @@ const useAuthentication = () => {
             await req.json();
 
             setError(null);
+            setRememberMe(null);
             setUser(null);
         } catch (e) {
             if (e && typeof e === "object") {
@@ -94,7 +102,13 @@ const useAuthentication = () => {
             try {
                 const req = await fetch(API_URL + "/authenticate/refresh", {
                     method: "post",
-                    credentials: "include"
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        remember_token: rememberMe
+                    })
                 });
 
                 if (!req.ok) {
@@ -117,7 +131,7 @@ const useAuthentication = () => {
         };
 
         refresh();
-    }, []);
+    }, [rememberMe]);
 
     useEffect(() => {
         if (locationRef.current !== location.pathname) {
