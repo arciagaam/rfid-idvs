@@ -29,6 +29,11 @@ const updateAccount = asyncHandler(async (req: Request, res: Response) => {
     keys.forEach(async (key) => {
         if (key === "confirm_password") return;
 
+        if (key === "image") {
+            console.log(body[key]);
+            return;
+        }
+
         if (key === "password") {
             if (body[key] === undefined) return;
             const value = body[key] as string;

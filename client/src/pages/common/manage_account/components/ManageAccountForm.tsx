@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import {
     Form,
     FormControl,
@@ -16,11 +16,14 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { updateAccount } from '@/api/accountAPI';
 import { useAuth } from '@/providers/auth/useAuthContext';
+import { toBase64 } from '@/lib/utils';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageAccountForm = () => {
     const { update } = useAuth();
+
+    const [image, setImage] = useState<File | null>(null);
     const manageAccountForm = useForm<z.infer<typeof accountSchema>>({
         resolver: zodResolver(accountSchema),
         defaultValues: {
@@ -31,7 +34,36 @@ const ManageAccountForm = () => {
             password: "",
             confirm_password: ""
         }
-    })
+    });
+
+    const handleFormSubmit = async (values: z.infer<typeof accountSchema>) => {
+        const payload = values;
+
+        if (image) {
+            const base64 = await toBase64(image);
+            Object.assign(payload, { image: base64 });
+        }
+
+        const req = await updateAccount(payload as typeof values & { image: string });
+
+        if (!req) return;
+
+        const res = await req.json();
+
+        if (res && res.user) {
+            update(res.user);
+            await fetchUser();
+        }
+    }
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const target = event.target;
+        const file = target.files?.[0];
+
+        if (file === undefined) return
+
+        setImage(file);
+    }
 
     const fetchUser = useCallback(async () => {
         try {
@@ -61,19 +93,6 @@ const ManageAccountForm = () => {
     useEffect(() => {
         fetchUser();
     }, [manageAccountForm, fetchUser])
-
-    const handleFormSubmit = async (values: z.infer<typeof accountSchema>) => {
-        const req = await updateAccount(values);
-
-        if (!req) return;
-
-        const res = await req.json();
-
-        if (res && res.user) {
-            update(res.user);
-            await fetchUser();
-        }
-    }
 
     return (
         <Form {...manageAccountForm}>
@@ -140,6 +159,19 @@ const ManageAccountForm = () => {
                             )}
                         />
                     </div>
+
+                    <FormField
+                        name="image"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Profile Picture</FormLabel>
+                                <FormControl>
+                                    <Input accept="image/jpg, image/jpeg, image/png, image/webp" type="file" className="w-full cursor-pointer" {...field} onChange={handleFileChange} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </div>
 
                 <div className="flex flex-col gap-5">

@@ -5,6 +5,7 @@ export const accountSchema = z.object({
     first_name: z.string().min(1, { message: "First name is required." }),
     middle_name: z.string().optional(),
     last_name: z.string().min(1, { message: "Last name is required." }),
+    image: z.string().optional(),
     password: z.string().optional(),
     confirm_password: z.string().optional()
 }).refine((values) => {
