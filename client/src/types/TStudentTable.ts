@@ -4,4 +4,5 @@ export type TStudentTable = {
     fullName: string;
     yearSection: string;
     status: string;
+    validated_at: string;
 }

@@ -97,11 +97,13 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
             select: {
                 student: {
                     select: studentSelect
-                }
+                },
+                created_at: true
             },
         });
 
-        const validatedStudents = _students.map((value) => ({ ...value.student, validated: true }))
+        const validatedStudents = _students.map((value) => ({ ...value.student, validated: true, validated_at: value.created_at }))
+        
         students.push(...validatedStudents);
     }
 
@@ -118,7 +120,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
                     select: {
                         id: true
                     }
-                }
+                },
             },
         });
 
@@ -139,6 +141,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
     }
 
     const sortedStudents = students.sort((a, b) => a.id - b.id)
+
 
     const payload = {
         code: 200,
