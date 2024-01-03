@@ -5,7 +5,6 @@ import { TStudentTable } from "@/types/TStudentTable";
 
 import { DataTable } from '@/components/global/DataTable';
 import { CoursesFilter } from "../../student_id/components/CoursesFilter"; 
-import { ValidationStatusFilter } from "../../student_id/components/ValidationStatusFilter"; 
 import { validationHistoryColumns } from "../columns";
 
 
