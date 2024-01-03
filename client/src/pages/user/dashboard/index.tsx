@@ -1,8 +1,7 @@
+import { Dashboard as CommonDashboard } from "@/pages/admin/dashboard";
 const Dashboard = () => {
     return (
-        <div>
-            <p>User dashboard</p>
-        </div>
+        <CommonDashboard />
     )
 };
 

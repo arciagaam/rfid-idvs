@@ -61,8 +61,13 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
             <div className="flex justify-between mt-auto text-white w-full">
                 <div className="flex gap-3 flex-1 overflow-hidden">
                     <Avatar className='h-14 w-14 aspect-square'>
-                        <AvatarImage src={`${PROFILE_PATH}/${user.image}`} />
-                        <AvatarFallback className="uppercase text-black">{`${user.first_name.charAt(0) + user.last_name.charAt(0)}`}</AvatarFallback>
+                        {
+                            user.image ? (
+                                <AvatarImage src={`${PROFILE_PATH}/${user.image}`} />
+                            ) : (
+                                <AvatarFallback className="uppercase text-black">{`${user.first_name.charAt(0) + user.last_name.charAt(0)}`}</AvatarFallback>
+                            )
+                        }
                     </Avatar>
 
                     <div className="flex flex-col truncate">

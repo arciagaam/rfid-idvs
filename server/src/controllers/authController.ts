@@ -157,7 +157,9 @@ const refreshUser = asyncHandler(async (req: Request, res: Response) => {
             httpOnly: true,
             expires: new Date(0)
         })
-        return res.status(401).json({ message: "Not authorized, token failed." });
+
+        // Return nothing...
+        return res.status(200).json({});
     }
 });
 

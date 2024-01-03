@@ -1,17 +1,18 @@
 import express from 'express';
+
+import authRoutes from './authRoutes';
+import forgotPasswordRoutes from './forgotPasswordRoutes';
+
 import userRoutes from './userRoutes';
 import studentRoutes from './studentRoutes';
 import termRoutes from './termRoutes';
-import authRoutes from './authRoutes';
 import departmentRoutes from './departmentRoutes';
 import schoolYearRoutes from './schoolYearRoutes';
 import courseRoutes from './courseRoutes';
 import rfidRoutes from './rfidRoutes';
 import accountRoutes from './accountRoutes';
-import forgotPasswordRoutes from './forgotPasswordRoutes';
+import dashboardRoutes from './dashboardRoutes';
 
-import { Request, Response } from 'express';
-import { sendMail } from '../utils/mail';
 
 const router = express.Router();
 
@@ -20,6 +21,9 @@ router.get('/', (req: any, res) => {
 });
 
 router.use('/authenticate', authRoutes)
+router.use('/forgot-password', forgotPasswordRoutes)
+
+router.use('/dashboard', dashboardRoutes)
 router.use('/users', userRoutes)
 router.use('/students', studentRoutes)
 router.use('/terms', termRoutes)
@@ -28,16 +32,5 @@ router.use('/school-years', schoolYearRoutes)
 router.use('/courses', courseRoutes)
 router.use('/rfid', rfidRoutes)
 router.use('/account', accountRoutes)
-router.use('/forgot-password', forgotPasswordRoutes)
-
-// router.use('/test', async (req: Request, res: Response) => {
-//     await sendMail({
-//         to: "meynard.trinidad44@gmail.com",
-//         subject: "Test Email from NodeJS Nodemailer using GMail account.",
-//         text: "This is a test message. Do not reply.",
-//     }, (info) => {
-//         res.send(info.messageId);
-//     });
-// })
 
 export default router;
