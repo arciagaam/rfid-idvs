@@ -232,14 +232,18 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-5 xl:flex-row">
-                <div className="flex-[2] items-center justify-center w-full">
-                    <Pie data={data} />
-                </div>
-                <div className="flex-1 flex flex-col justify-center gap-5 xl:gap-10">
+            <div className="flex flex-col xl:gap-5">
+                <div className="grid xl:grid-cols-3 gap-5 xl:gap-5">
                     <DashboardCard title={"Total Student"} content={graphData.total.toString()} icon={<PiStudent size={40} />} />
-                    <DashboardCard title={"Total Validated Student"} content={graphData.validated.toString()} icon={<PiStudent size={40} />} />
-                    <DashboardCard title={"Total Non-Validated Student"} content={graphData.non_validated.toString()} icon={<PiStudent size={40} />} />
+                    <DashboardCard color={"bg-emerald-500"} title={"Total Validated Student"} content={graphData.validated.toString()} icon={<PiStudent size={40} />} />
+                    <DashboardCard color={"bg-rose-500"} title={"Total Non-Validated Student"} content={graphData.non_validated.toString()} icon={<PiStudent size={40} />} />
+                </div>
+
+                <div className="grid xl:grid-cols-3 gap-5">
+                    <div className="aspect-square gap-5 rounded-md border border-slate-200 bg-white p-5 text-sm ring-offset-white dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950">
+                        <Pie data={data} />
+                        <p className="font-bold text-center mt-5">Validated/Non-Validated Students</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -251,13 +255,19 @@ type TDashboardCard = {
     content: string;
     icon: React.ReactNode;
     className?: string;
+    color?: `bg-${string}-${number}`;
 }
 
-const DashboardCard = ({ title, content, icon, className }: TDashboardCard) => {
+const DashboardCard = ({ title, content, icon, className, color }: TDashboardCard) => {
     return (
-        <div className={twMerge("flex flex-col justify-between h-fit w-full rounded-md border border-slate-200 bg-white p-5 text-sm ring-offset-white dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950", className)}>
+        <div className={twMerge("flex flex-col justify-between h-full w-full rounded-md border border-slate-200 bg-white p-5 text-sm ring-offset-white dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950", className)}>
             <div className="flex flex-row items-center justify-between">
-                <p className="text-lg">{title}</p>
+                <div className="flex flex-row gap-2 items-center">
+                    <span className={twMerge("relative w-2 h-fit aspect-square rounded-full bg-slate-950", color)}>
+                        <span className={twMerge("absolute inset-0 w-2 h-fit aspect-square rounded-full animate-ping bg-slate-950", color)}></span>
+                    </span>
+                    <p className="text-lg">{title}</p>
+                </div>
                 {icon}
             </div>
             <strong className="font-bold text-6xl">{content}</strong>
