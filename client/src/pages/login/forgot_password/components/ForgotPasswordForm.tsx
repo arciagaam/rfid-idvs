@@ -74,13 +74,15 @@ const ForgotPasswordForm = () => {
 
 const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
     const handleSendCode = async () => {
-        console.log("Sending code...");
+        const value = form.getValues('email');
+        console.log(value);
 
         nextPage();
     }
 
     const handleValidateCode = async () => {
-        console.log("Validating code...");
+        const value = form.getValues('reset_code');
+        console.log(value);
 
         nextPage();
     }
@@ -89,6 +91,7 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
         case 1: return (
             <>
                 <FormField
+                    key={"f1"}
                     control={form.control}
                     name="email"
                     render={({ field }) => (
@@ -111,6 +114,7 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
         case 2: return (
             <>
                 <FormField
+                    key={"f2"}
                     control={form.control}
                     name="reset_code"
                     render={({ field }) => (
@@ -134,6 +138,7 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
         case 3: return (
             <>
                 <FormField
+                    key={"f3"}
                     control={form.control}
                     name="password"
                     render={({ field }) => (
@@ -149,6 +154,7 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
                 </FormField>
 
                 <FormField
+                    key={"f4"}
                     control={form.control}
                     name="confirm_password"
                     render={({ field }) => (
