@@ -42,8 +42,8 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
         <div className="fixed min-w-[19rem] w-[19rem] h-screen p-3 flex flex-col bg-slate-950 gap-5 border-r border-[#1E1E1E15] shadow-2xl z-50 text-white/60">
             <div className="text-white flex gap-3">
 
-                <Avatar className='h-16 w-16 aspect-square'>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                <Avatar className='h-16 w-16 aspect-square bg-white overflow-clip'>
+                    <AvatarImage src="/images/logo.png" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 

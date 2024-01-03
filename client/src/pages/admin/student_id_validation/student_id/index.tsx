@@ -6,6 +6,7 @@ import { TTerm } from "@/types/TTerm";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { StudentsTable } from "./components/StudentsTable";
 import { TCourse } from "..";
+import { useLocation } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -19,10 +20,12 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
     const [selectedSchoolYearId, setSelectedSchoolYearId] = useState<Pick<TSchoolYear, 'id'>['id']>(1);
     const [selectedTermId, setSelectedTermId] = useState<Pick<TTerm, 'id'>['id']>(1);
 
+    const location = useLocation();
+
     useEffect(() => {
         const fetchSchoolYears = async () => {
             try {
-                const req = await fetch(`${API_URL}/school-years`, {
+                const req = await fetch(`${API_URL}/school-years?department=${location.pathname.split('/')[3]}`, {
                     credentials: 'include'
                 });
 
@@ -35,7 +38,7 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
 
                 if (responseData) {
                     const first = responseData[0];
-
+                    
                     setSchoolYears(responseData);
                     setSelectedSchoolYearId(first.id)
                     setSelectedTermId(first.terms[0].id)

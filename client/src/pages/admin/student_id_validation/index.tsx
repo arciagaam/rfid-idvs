@@ -63,7 +63,7 @@ const StudentIDValidation = () => {
                         <StudentID slug={slug} courses={courses} />
                     </TabsContent>
                     <TabsContent value="validation_history">
-                        <ValidationHistory />
+                        <ValidationHistory slug={slug} courses={courses}/>
                     </TabsContent>
                 </Tabs>
             </div>
