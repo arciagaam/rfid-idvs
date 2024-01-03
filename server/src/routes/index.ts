@@ -8,6 +8,7 @@ import schoolYearRoutes from './schoolYearRoutes';
 import courseRoutes from './courseRoutes';
 import rfidRoutes from './rfidRoutes';
 import accountRoutes from './accountRoutes';
+import forgotPasswordRoutes from './forgotPasswordRoutes';
 
 import { Request, Response } from 'express';
 import { sendMail } from '../utils/mail';
@@ -27,15 +28,16 @@ router.use('/school-years', schoolYearRoutes)
 router.use('/courses', courseRoutes)
 router.use('/rfid', rfidRoutes)
 router.use('/account', accountRoutes)
+router.use('/forgot-password', forgotPasswordRoutes)
 
-router.use('/test', async (req: Request, res: Response) => {
-    await sendMail({
-        to: "meynard.trinidad44@gmail.com",
-        subject: "Test Email from NodeJS Nodemailer using GMail account.",
-        text: "This is a test message. Do not reply.",
-    }, (info) => {
-        res.send(info.messageId);
-    });
-})
+// router.use('/test', async (req: Request, res: Response) => {
+//     await sendMail({
+//         to: "meynard.trinidad44@gmail.com",
+//         subject: "Test Email from NodeJS Nodemailer using GMail account.",
+//         text: "This is a test message. Do not reply.",
+//     }, (info) => {
+//         res.send(info.messageId);
+//     });
+// })
 
 export default router;

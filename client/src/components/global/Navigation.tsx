@@ -58,27 +58,25 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
             {children}
 
-            <div className="flex justify-between mt-auto text-white">
-                <div className="flex gap-3">
-
+            <div className="flex justify-between mt-auto text-white w-full">
+                <div className="flex gap-3 flex-1 overflow-hidden">
                     <Avatar className='h-14 w-14 aspect-square'>
                         <AvatarImage src={`${PROFILE_PATH}/${user.image}`} />
                         <AvatarFallback className="uppercase text-black">{`${user.first_name.charAt(0) + user.last_name.charAt(0)}`}</AvatarFallback>
                     </Avatar>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col truncate">
                         <h3>{user.first_name} {user.last_name}</h3>
                         {
                             user.email
-                                ? (<p>{user.email}</p>)
+                                ? (<p className='truncate'>{user.email}</p>)
                                 : null
                         }
                     </div>
-
                 </div>
 
                 <DropdownMenu>
-                    <DropdownMenuTrigger className='focus-within:outline-none'>
+                    <DropdownMenuTrigger className='focus-within:outline-none flex justify-center items-center'>
                         <IoMdMore size={20} />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="gap-4">

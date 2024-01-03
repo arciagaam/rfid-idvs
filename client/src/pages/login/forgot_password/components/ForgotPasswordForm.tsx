@@ -18,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { forgotPasswordSchema } from "@/validators/ForgotPasswordSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
+import { sendCode, sendMail, changePassword } from '@/api/forgotPasswordAPI';
 
 type TPageForm = {
     page: number;
@@ -41,7 +42,9 @@ const ForgotPasswordForm = () => {
     const navigate = useNavigate();
 
     const handleFormSubmit = async (values: z.infer<typeof forgotPasswordSchema>) => {
-        // go to next page
+        await changePassword(values);
+
+        navigate('/login', { replace: true });
     }
 
     const handleNextPage = () => {
@@ -67,24 +70,52 @@ const ForgotPasswordForm = () => {
                 className="w-full flex flex-col gap-4"
             >
                 <PageForm page={page} form={forgotPasswordForm} nextPage={handleNextPage} prevPage={handlePrevPage} />
+                <Link to={'/login'}>Back to Login</Link>
             </form>
         </Form>
     )
 }
 
 const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
-    const handleSendCode = async () => {
-        const value = form.getValues('email');
-        console.log(value);
+    const [loading, setLoading] = useState(false);
 
+    const handleSendCode = async () => {
+        setLoading(true);
+
+        const email = form.getValues('email');
+        await sendMail({ email: email });
+
+        setLoading(false);
         nextPage();
     }
 
     const handleValidateCode = async () => {
-        const value = form.getValues('reset_code');
-        console.log(value);
+        setLoading(true);
 
-        nextPage();
+        const { email, reset_code } = form.getValues();
+        const req = await sendCode({
+            email: email,
+            reset_code: reset_code
+        });
+        setLoading(false);
+
+        if (req && req.ok) {
+            const res = await req.json();
+
+            if (!res) {
+                form.setError("reset_code", {
+                    message: "Invalid code. Please try again"
+                })
+
+                return;
+            }
+
+            nextPage();
+        } else {
+            form.setError("reset_code", {
+                message: "Invalid code. Please try again"
+            })
+        }
     }
 
     switch (page) {
@@ -107,7 +138,7 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
                 </FormField>
 
                 <div className="flex flex-row gap-5">
-                    <Button key={1} onClick={handleSendCode} type="button" className="w-full">Send Code</Button>
+                    <Button key={1} onClick={handleSendCode} type="button" className="w-full" disabled={loading}>Send Code</Button>
                 </div>
             </>
         )
@@ -130,8 +161,8 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
                 </FormField>
 
                 <div className="flex flex-row gap-5">
-                    <Button key={2} onClick={prevPage} type="button" className="w-full" variant={"outline"}>Previous</Button>
-                    <Button key={3} onClick={handleValidateCode} type="button" className="w-full">Next</Button>
+                    <Button key={2} onClick={prevPage} type="button" className="w-full" disabled={loading} variant={"outline"}>Previous</Button>
+                    <Button key={3} onClick={handleValidateCode} type="button" className="w-full" disabled={loading}>Next</Button>
                 </div>
             </>
         )
@@ -170,8 +201,8 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
                 </FormField>
 
                 <div className="flex flex-row gap-5">
-                    <Button key={4} onClick={prevPage} type="button" className="w-full" variant={"outline"}>Previous</Button>
-                    <Button key={5} type="submit" className="w-full">Reset Password</Button>
+                    <Button key={4} onClick={prevPage} type="button" className="w-full" disabled={loading} variant={"outline"}>Previous</Button>
+                    <Button key={5} type="submit" className="w-full" disabled={loading}>Reset Password</Button>
                 </div>
             </>
         )

@@ -128,7 +128,7 @@ model validation_history {
 
 model forgot_password {
     id         Int      @id @default(autoincrement())
-    email      String
+    email      String   @unique
     reset_code String
     created_at DateTime @default(now())
     updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
