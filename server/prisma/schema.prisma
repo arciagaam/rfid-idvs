@@ -11,7 +11,7 @@ model role {
     id         Int      @id @default(autoincrement())
     name       String
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     users      user[]
 }
 
@@ -28,7 +28,7 @@ model user {
     image          String?   @db.Text
     deleted_at     DateTime?
     created_at     DateTime  @default(now())
-    updated_at     DateTime  @default(now())
+    updated_at     DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     role           role      @relation(fields: [role_id], references: [id])
 
     @@index([role_id], map: "user_role_id_fkey")
@@ -38,7 +38,7 @@ model department {
     id         Int      @id @default(autoincrement())
     name       String
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     courses    course[]
 }
 
@@ -47,7 +47,7 @@ model course {
     department_id Int
     name          String     @unique
     created_at    DateTime   @default(now())
-    updated_at    DateTime   @default(now())
+    updated_at    DateTime   @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     department    department @relation(fields: [department_id], references: [id])
     students      student[]
 
@@ -70,7 +70,7 @@ model student {
     section        String?
     is_active      Boolean              @default(true)
     created_at     DateTime             @default(now())
-    updated_at     DateTime             @default(now())
+    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     deleted_at     DateTime?
     course         course               @relation(fields: [course_id], references: [id])
     terms          term_student[]
@@ -84,7 +84,7 @@ model term {
     school_year_id Int
     term           Int
     created_at     DateTime             @default(now())
-    updated_at     DateTime             @default(now())
+    updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     school_year    school_year          @relation(fields: [school_year_id], references: [id], onDelete: Cascade)
     students       term_student[]
     validation     validation_history[]
@@ -97,7 +97,7 @@ model school_year {
     year_start Int      @unique
     year_end   Int
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     terms      term[]
 }
 
@@ -106,7 +106,7 @@ model term_student {
     student_id Int
     term_id    Int
     created_at DateTime @default(now())
-    updated_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     student    student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
     term       term     @relation(fields: [term_id], references: [id])
 
@@ -124,4 +124,12 @@ model validation_history {
 
     @@index([student_id], map: "validation_history_student_id_fkey")
     @@index([term_id], map: "validation_history_term_id_fkey")
+}
+
+model forgot_password {
+    id         Int      @id @default(autoincrement())
+    email      String
+    reset_code String
+    created_at DateTime @default(now())
+    updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 }
