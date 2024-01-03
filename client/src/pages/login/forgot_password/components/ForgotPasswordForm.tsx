@@ -70,7 +70,7 @@ const ForgotPasswordForm = () => {
                 className="w-full flex flex-col gap-4"
             >
                 <PageForm page={page} form={forgotPasswordForm} nextPage={handleNextPage} prevPage={handlePrevPage} />
-                <Link to={'/login'}>Back to Login</Link>
+                <Link to="/login" className="underline text-sm">Back to login</Link>
             </form>
         </Form>
     )
