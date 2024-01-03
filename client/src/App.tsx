@@ -8,6 +8,7 @@ import { ProtectedLayout } from "./layout/ProtectedLayout"
 // Pages
 import { Home } from "./pages/home"
 import { Login } from "./pages/login"
+import { ForgotPassword } from "./pages/login/forgot_password"
 
 // Admin pages
 import { Dashboard } from "./pages/admin/dashboard"
@@ -28,6 +29,7 @@ function App() {
             <Route element={<RootLayout />}>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
 
                 <Route element={<ProtectedLayout />}>
                     <Route path="/" element={<UserLayout />}>

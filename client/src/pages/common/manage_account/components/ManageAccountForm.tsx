@@ -17,13 +17,12 @@ import { Separator } from '@/components/ui/separator';
 import { updateAccount } from '@/api/accountAPI';
 import { useAuth } from '@/providers/auth/useAuthContext';
 import { toBase64 } from '@/lib/utils';
-import { useToast } from '@/components/ui/use-toast';
+import toast from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ManageAccountForm = () => {
     const { update } = useAuth();
-    const { toast } = useToast();
 
     const [image, setImage] = useState<File | null>(null);
     const manageAccountForm = useForm<z.infer<typeof accountSchema>>({
@@ -46,20 +45,20 @@ const ManageAccountForm = () => {
             Object.assign(payload, { image: base64 });
         }
 
-        const req = await updateAccount(payload as typeof values & { image: string });
+        try {
+            const req = await updateAccount(payload as typeof values & { image: string });
 
-        if (!req) return;
+            if (!req) return;
 
-        const res = await req.json();
+            const res = await req.json();
 
-        if (res && res.user) {
-            update(res.user);
-            await fetchUser();
-
-            toast({
-                title: "Update successful",
-                description: "Account has been successfully updated.",
-            })
+            if (res && res.user) {
+                update(res.user);
+                await fetchUser();
+                toast.success("Account successfully updated.");
+            }
+        } catch (error) {
+            toast.error("Error occured. Please try again.");
         }
     }
 
