@@ -38,7 +38,7 @@ type TValidatedStudent =
 type TStatus = "all" | "validated" | "non-validated";
 
 const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
-    const [students, setStudents] = useState<TStudentTable[]>([]);
+    const [students, setStudents] = useState<Omit<TStudentTable, 'validated_at'>[]>([]);
     const [status, setStatus] = useState<TStatus>("all");
     const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
 
@@ -65,7 +65,7 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
                 const res = await req.json();
                 const responseData = res.data as TValidatedStudent[];
 
-                const studentTableData: TStudentTable[] = [];
+                const studentTableData: Omit<TStudentTable, 'validated_at'>[] = [];
 
                 responseData.forEach((termStudentData) => {
                     const student = termStudentData;
@@ -109,7 +109,7 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
                 </div>
             </div>
 
-            <DataTable columns={studentColumns} data={students} additionalColumns={<ValidateStudentModal term_id={termId} />} />
+            <DataTable columns={studentColumns} data={students} additionalColumns={<ValidateStudentModal setStudents={setStudents} term_id={termId} />} />
         </>
     )
 }

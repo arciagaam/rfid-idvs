@@ -50,7 +50,7 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
         }
 
         fetchSchoolYears();
-    }, [slug]);
+    }, [slug, location.pathname]);
 
     if (slug === undefined) {
         return (

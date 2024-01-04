@@ -193,6 +193,7 @@ const deleteStudent = asyncHandler(
 
 const triggerModal = asyncHandler(async (req: any, res: Response) => {
     const { modal, isOpen, termId } = req.body;
+    console.log(modal, isOpen, termId);
     req.app.set('currentTermId', termId);
 
     if (isOpen) {

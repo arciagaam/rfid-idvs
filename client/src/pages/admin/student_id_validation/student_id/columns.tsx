@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { TStudentTable } from "@/types/TStudentTable"
 
-export const studentColumns: ColumnDef<TStudentTable>[] = [
+export const studentColumns: ColumnDef<Omit<TStudentTable, 'validated_at'>>[] = [
     {
         accessorKey: 'studentNumber',
         header: 'Student Number'

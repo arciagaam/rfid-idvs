@@ -91,7 +91,7 @@ const triggerModal = async (modal: string, isOpen: boolean, termId: number | nul
             },
             method: 'POST',
             credentials: 'include',
-            body: JSON.stringify({modal, isOpen, termId})
+            body: JSON.stringify({ modal, isOpen, termId })
         })
     } catch (error) {
         console.error(error);
