@@ -2,6 +2,7 @@ import { triggerModal } from '@/api/studentAPI';
 import { useModal } from '@/components/global/Modal';
 import { TStudentTable } from '@/types/TStudentTable';
 import { useEffect } from 'react'
+import toast from 'react-hot-toast';
 import io from 'socket.io-client'
 
 let timeout: ReturnType<typeof setTimeout>
@@ -20,6 +21,11 @@ type TValidateRFID = {
         student_number: string;
         validated: boolean;
     }
+}
+
+type TValidateRFIDError = {
+    code: number;
+    message: string;
 }
 
 const ValidateStudentTrigger = ({ term_id, setStudents }: { term_id: number, setStudents: React.Dispatch<React.SetStateAction<Omit<TStudentTable, 'validated_at'>[]>> }) => {
@@ -65,6 +71,13 @@ const ValidateStudentTrigger = ({ term_id, setStudents }: { term_id: number, set
                 })
 
                 setOpen(false);
+                toast.success("Student validated.");
+            }
+        })
+
+        socket.on('validate_rfid_tap_error', (res: TValidateRFIDError) => {
+            if (res) {
+                toast.error(res.message);
             }
         })
 

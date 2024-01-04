@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 const prisma = new PrismaClient();
+
+const errorHasCode = (value: unknown): value is { code: number } => {
+    return (value as { code: number }).code !== undefined;
+}
 
 const tapRfid = asyncHandler(async (req: any, res: Response) => {
     const { rfidData } = req.body;
@@ -33,7 +38,10 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
             });
 
             if (checkValidation) {
-                throw new Error('Student is already verified')
+                throw {
+                    code: 400,
+                }
+                // throw Error('Student is already verified')
             }
 
             await prisma.term_student.create({
@@ -55,6 +63,24 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
             req.io.emit("validate_rfid_tap", payload);
             res.status(200).json(payload);
         } catch (error) {
+            if (errorHasCode(error)) {
+                const payload = {
+                    code: prismaErrorHandler(error) ?? error.code,
+                }
+
+                switch (payload.code) {
+                    case 404: Object.assign(payload, { message: "RFID is not registered." });
+                        break;
+                    case 400: Object.assign(payload, { message: "Student is already validated." });
+                        break;
+                    default: Object.assign(payload, { message: "Unknown error." });
+                        break;
+                }
+
+                req.io.emit("validate_rfid_tap_error", payload)
+                return res.status(payload.code ?? 400).json(payload);
+            }
+
             console.log(error);
             res.status(400).json({});
         }
