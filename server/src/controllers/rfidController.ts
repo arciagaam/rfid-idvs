@@ -11,7 +11,6 @@ const errorHasCode = (value: unknown): value is { code: number } => {
 const tapRfid = asyncHandler(async (req: any, res: Response) => {
     const { rfidData } = req.body;
     console.log(req.app.get('modalIsOpen'), req.app.get('currentActiveModal'), rfidData)
-
     if (req.app.get('currentActiveModal') === 'validate') {
         try {
             const student = await prisma.student.findFirstOrThrow({
@@ -51,17 +50,29 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 }
             })
 
+            const term = await prisma.term.findFirst({
+                where: {
+                    id: req.app.get('currentTermId')
+                },
+                include: {
+                    school_year: true
+                }
+            });
+
             const payload = {
                 code: 200,
                 message: "Student validated.",
                 data: {
                     ...student,
+                    term: term,
                     validated: true
                 }
             };
 
+            console.log(payload)
+
             req.io.emit("validate_rfid_tap", payload);
-            res.status(200).json(payload);
+            return res.status(200).json(payload);
         } catch (error) {
             if (errorHasCode(error)) {
                 const payload = {
@@ -82,11 +93,11 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
             }
 
             console.log(error);
-            res.status(400).json({});
+            return res.status(400).json({});
         }
     } else {
         req.io.emit('new_rfid_tap', rfidData)
-        res.status(200)
+        return res.status(200).json({})
     }
 
 });
