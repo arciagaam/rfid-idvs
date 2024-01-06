@@ -212,7 +212,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         },
         data: { rfid_number },
     });
-
+    
     const payload = {
         code: 200,
         message: "RFID Successfully linked to this student",
@@ -222,6 +222,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         }
     };
 
+    console.log('link', payload)
     res.status(200).json(payload);
 })
 
@@ -244,6 +245,8 @@ const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
             rfidNumber: null
         }
     };
+
+    console.log('unlink', payload)
 
     res.status(200).json(payload);
 });

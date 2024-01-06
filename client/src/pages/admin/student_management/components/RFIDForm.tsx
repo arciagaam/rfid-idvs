@@ -74,7 +74,6 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
 
     const handleFormSubmit = async (values: z.infer<typeof RFIDSchema>) => {
         const req = await studentRFID(id, values, status ? "unlink" : "link");
-
         if (!req) return;
 
         const res = await req.json();
@@ -94,7 +93,7 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 })
             })
 
-            setTappedRfid("");
+            // setTappedRfid("");
         }
     }
 
