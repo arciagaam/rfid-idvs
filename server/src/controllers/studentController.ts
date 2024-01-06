@@ -222,7 +222,6 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         }
     };
 
-    console.log('link', payload)
     res.status(200).json(payload);
 })
 
@@ -245,8 +244,6 @@ const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
             rfidNumber: null
         }
     };
-
-    console.log('unlink', payload)
 
     res.status(200).json(payload);
 });

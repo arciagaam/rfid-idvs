@@ -14,6 +14,9 @@ import { useStudent } from "../providers/useStudent";
 import io from 'socket.io-client'
 import { Form } from '@/components/ui/form';
 
+import toast from 'react-hot-toast';
+
+
 let timeout: ReturnType<typeof setTimeout>
 
 type TRFIDFormProps = {
@@ -94,6 +97,8 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
             })
 
             setTappedRfid("");
+            toast.success(res.message)
+
         }
     }
 
@@ -106,18 +111,18 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 </div>
                 {
                     status ?
-                    null
-                    : 
-                    <>
-                        <div className="flex justify-center items-center h-fit">
-                            <IoMdWifi size={"75%"} />
-                        </div>
+                        null
+                        :
+                        <>
+                            <div className="flex justify-center items-center h-fit">
+                                <IoMdWifi size={"75%"} />
+                            </div>
 
-                        <div className="flex gap-2">
-                            <h2>RFID Number:</h2>
-                            <p>{tappedRfid}</p>
-                        </div>
-                    </>
+                            <div className="flex gap-2">
+                                <h2>RFID Number:</h2>
+                                <p>{tappedRfid}</p>
+                            </div>
+                        </>
                 }
             </form>
         </Form>
