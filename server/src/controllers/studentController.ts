@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
@@ -188,10 +188,7 @@ const deleteStudent = asyncHandler(
     }
 )
 
-// let timeout: ReturnType<typeof setTimeout>
-
-
-const triggerModal = asyncHandler(async (req: any, res: Response) => {
+const triggerModal = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
     const { modal, isOpen, termId } = req.body;
     console.log(modal, isOpen, termId);
     req.app.set('currentTermId', termId);
@@ -204,11 +201,7 @@ const triggerModal = asyncHandler(async (req: any, res: Response) => {
         req.app.set('modalIsOpen', false);
     }
 
-    // clearTimeout(timeout);
-    // timeout = setTimeout(() => {
-    //     req.app.set('modalIsOpen', false);
-
-    // }, 60000);
+    next();
 });
 
 const linkRfid = asyncHandler(async (req: Request, res: Response) => {

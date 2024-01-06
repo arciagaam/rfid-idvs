@@ -24,7 +24,7 @@ type TRFIDFormProps = {
 
 const RFIDForm = ({ id, status }: TRFIDFormProps) => {
     const { setStudents } = useStudent();
-    const [tappedRfid, setTappedRfid] = useState("3");
+    const [tappedRfid, setTappedRfid] = useState("");
 
     const linkStudentForm = useForm<z.infer<typeof RFIDSchema>>({
         resolver: zodResolver(RFIDSchema),
