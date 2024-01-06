@@ -20,6 +20,13 @@ type TValidateRFID = {
         section: string,
         student_number: string;
         validated: boolean;
+        term: {
+            school_year: {
+                year_start: string,
+                year_end: string,
+            },
+            term: number,
+        }
     }
 }
 
@@ -71,7 +78,9 @@ const ValidateStudentTrigger = ({ term_id, setStudents }: { term_id: number, set
                 })
 
                 setOpen(false);
-                toast.success("Student validated.");
+                toast.success(`${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name} is validated for Term ${res.data.term.term}, School Year ${res.data.term.school_year.year_start} - ${res.data.term.school_year.year_end}.`, {
+                    duration: 6000
+                });
             }
         })
 
