@@ -53,7 +53,7 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
             <PopoverContent className="w-[256px] p-0">
                 <Command>
                     {
-                        courses && courses.length ? (
+                        courses && courses.length > 0 ? (
                             <>
                                 <CommandInput placeholder="Search course..." />
                                 <CommandEmpty>No course found.</CommandEmpty>

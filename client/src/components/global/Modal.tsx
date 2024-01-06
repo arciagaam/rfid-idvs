@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { createContext, useContext, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type TModalContext = {
     open: boolean;
@@ -51,6 +52,7 @@ type TModalProps = {
     description: string;
     body: React.ReactNode;
     footer: React.ReactNode;
+    className?: string;
 };
 
 const Modal = ({ ...props }: TModalProps) => {
@@ -62,7 +64,7 @@ const Modal = ({ ...props }: TModalProps) => {
 }
 
 const Root = ({ ...props }: TModalProps) => {
-    const { trigger, title, description, body, footer } = props;
+    const { trigger, title, description, body, footer, className } = props;
     const { open, setOpen } = useModal();
 
     return (
@@ -70,7 +72,7 @@ const Root = ({ ...props }: TModalProps) => {
             <DialogTrigger onClick={() => setOpen(!open)} asChild>
                 {trigger}
             </DialogTrigger>
-            <DialogContent onInteractOutside={(e) => { e.preventDefault() }} className="max-w-[80vw] max-h-[80vh] overflow-auto">
+            <DialogContent onInteractOutside={(e) => { e.preventDefault() }} className={twMerge("max-w-[80vw] max-h-[80vh] overflow-auto", className)}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>

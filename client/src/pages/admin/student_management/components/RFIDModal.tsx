@@ -19,6 +19,8 @@ const RFIDModal = ({ status, id }: TRFIDModalProps) => {
             body={<RFIDForm id={id} status={status} />}
 
             footer={<Button form={'link-rfid-student-form'} type="submit">{status ? "Unlink" : "Link"} RFID</Button>}
+
+            className='w-96'
         />
     )
 }

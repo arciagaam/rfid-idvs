@@ -112,11 +112,22 @@ const Dashboard = () => {
             }
         }
 
+        fetchSchoolYears();
+        fetchDepartments();
+    }, []);
+
+    useEffect(() => {
         const fetchCourses = async () => {
             try {
                 const req = await fetch(`${API_URL}/courses`, {
-                    method: "get",
-                    credentials: "include"
+                    method: 'post',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': "application/json"
+                    },
+                    body: JSON.stringify({
+                        department_ids: selectedDepartments,
+                    })
                 });
 
                 if (!req.ok) {
@@ -132,10 +143,8 @@ const Dashboard = () => {
             }
         }
 
-        fetchSchoolYears();
-        fetchDepartments();
         fetchCourses();
-    }, []);
+    }, [selectedDepartments])
 
     useEffect(() => {
         const fetchDashboard = async () => {

@@ -111,7 +111,7 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                     : 
                     <>
                         <div className="flex justify-center items-center h-fit">
-                            <IoMdWifi size={"50%"} />
+                            <IoMdWifi size={"75%"} />
                         </div>
 
                         <div className="flex gap-2">

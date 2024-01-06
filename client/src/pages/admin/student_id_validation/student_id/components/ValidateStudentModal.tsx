@@ -10,11 +10,13 @@ const ValidateStudentModal = ({ term_id, setStudents }: { term_id: number, setSt
 
             title={`Validate`}
 
-            description={`Validate student. Click done once finished.`}
+            description={`Validate student. The modal will automatically close once the validation is finished.`}
 
             body={<ValidateStudentTrigger term_id={term_id} setStudents={setStudents} />}
 
             footer={<Button type="submit">Done</Button>}
+
+            className="w-96"
         />
     )
 };
