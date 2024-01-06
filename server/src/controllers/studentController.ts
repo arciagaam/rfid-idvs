@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import asyncHandler from "../middlewares/asyncHandler";
@@ -191,7 +191,7 @@ const deleteStudent = asyncHandler(
 // let timeout: ReturnType<typeof setTimeout>
 
 
-const triggerModal = asyncHandler(async (req: any, res: Response) => {
+const triggerModal = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
     const { modal, isOpen, termId } = req.body;
     console.log(modal, isOpen, termId);
     req.app.set('currentTermId', termId);
@@ -203,6 +203,8 @@ const triggerModal = asyncHandler(async (req: any, res: Response) => {
         req.app.set('currentActiveModal', null);
         req.app.set('modalIsOpen', false);
     }
+
+    next();
 
     // clearTimeout(timeout);
     // timeout = setTimeout(() => {
@@ -219,7 +221,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         },
         data: { rfid_number },
     });
-
+    
     const payload = {
         code: 200,
         message: "RFID Successfully linked to this student",
@@ -229,6 +231,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         }
     };
 
+    console.log('link', payload)
     res.status(200).json(payload);
 })
 
@@ -251,6 +254,8 @@ const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
             rfidNumber: null
         }
     };
+
+    console.log('unlink', payload)
 
     res.status(200).json(payload);
 });
