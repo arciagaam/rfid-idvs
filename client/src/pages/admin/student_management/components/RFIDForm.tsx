@@ -93,7 +93,7 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 })
             })
 
-            // setTappedRfid("");
+            setTappedRfid("");
         }
     }
 
