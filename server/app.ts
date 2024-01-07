@@ -41,7 +41,9 @@ app.use((req: any, res: Response, next: NextFunction) => {
     return next();
 })
 
-app.use(json());
+app.use(json({
+    limit: "5mb"
+}));
 app.use(cors(
     {
         origin: 'http://localhost:3001',

@@ -25,7 +25,13 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                     rfid_number: true,
                     year: true,
                     section: true,
-                    student_number: true
+                    student_number: true,
+                    course: {
+                        select: {
+                            id: true,
+                            name: true,
+                        }
+                    },
                 }
             });
 

@@ -88,7 +88,7 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
                 </div>
 
                 <div className="flex flex-col">
-                    <p className="text-sm font-medium">Term</p>
+                    <p className="text-sm font-medium">Semester</p>
                     <Select
                         value={`${selectedTermId}`}
                         onValueChange={(value: string) => {
@@ -96,7 +96,7 @@ const StudentID = ({ slug, courses }: TStudentIDProps) => {
                         }}
                     >
                         <SelectTrigger className="h-8 w-[128px]">
-                            <SelectValue placeholder={"Select Term"} />
+                            <SelectValue placeholder={"Select Semester"} />
                         </SelectTrigger>
                         <SelectContent side="top">
                             {schoolYears.find((schoolYear) => schoolYear.id === selectedSchoolYearId)?.terms.map((term) => (

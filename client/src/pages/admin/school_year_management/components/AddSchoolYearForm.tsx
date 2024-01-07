@@ -89,9 +89,9 @@ const AddSchoolYearForm = () => {
                     name="number_of_terms"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Number of Terms</FormLabel>
+                            <FormLabel>Number of Semesters</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter number of terms..." {...field} />
+                                <Input placeholder="Enter number of semesters" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

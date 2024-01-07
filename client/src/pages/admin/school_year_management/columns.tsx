@@ -19,7 +19,7 @@ export const schoolYearColumns: ColumnDef<TSchoolYearTable>[] = [
     },
     {
         accessorKey: 'numberOfTerms',
-        header: 'Number of Terms'
+        header: 'Number of Semesters'
     },
     {
         id: "actions",
