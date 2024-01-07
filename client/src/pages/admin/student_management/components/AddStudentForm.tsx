@@ -20,6 +20,7 @@ import { storeStudent } from '@/api/studentAPI';
 
 import { useStudent } from "../providers/useStudent";
 import { useModal } from "@/components/global/Modal";
+import { FormLabelHelper } from "@/components/global/FormLabelHelper";
 
 type TAddUserFormProps = {
     courses: {
@@ -147,7 +148,7 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                     name="middle_name"
                     render={({ field }) => (
                         <FormItem className='flex-1'>
-                            <FormLabel>Middle Name</FormLabel>
+                            <FormLabel>Middle Name <FormLabelHelper /></FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter middle name" {...field} />
                             </FormControl>
@@ -189,7 +190,7 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                 name="address_line_2"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Address Line 2</FormLabel>
+                        <FormLabel>Address Line 2 <FormLabelHelper /></FormLabel>
                         <FormControl>
                             <Input placeholder="Enter address line 2" {...field} />
                         </FormControl>
@@ -204,9 +205,9 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                     name="city"
                     render={({ field }) => (
                         <FormItem className='flex-1'>
-                            <FormLabel>City</FormLabel>
+                            <FormLabel>Municipality</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter city" {...field} />
+                                <Input placeholder="Enter municipality" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -246,7 +247,7 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                     name="section"
                     render={({ field }) => (
                         <FormItem className='flex-1'>
-                            <FormLabel>Section</FormLabel>
+                            <FormLabel>Section <FormLabelHelper /></FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter section" {...field} />
                             </FormControl>

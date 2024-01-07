@@ -1,8 +1,8 @@
 import express from 'express';
-import { admin, verifyToken, verifyBearerToken } from '../middlewares/auth';
+import { admin, verifyToken } from '../middlewares/auth';
 import { validateRequestBody } from '../middlewares/validateRequestBody';
 import { userSchema } from '../schemas/userSchema';
-import { deleteUser, getAllUsers, getUser, storeUser, updateUser } from '../controllers/userController';
+import { deleteUser, getAllUsers, getUser, resetPasswordUser, storeUser, updateUser } from '../controllers/userController';
 
 const router = express.Router();
 
@@ -12,6 +12,10 @@ router
     .route('/')
     .get(getAllUsers)
     .post(validateRequestBody(userSchema), storeUser);
+
+router
+    .route('/:id/reset')
+    .post(resetPasswordUser)
 
 router
     .route('/:id')

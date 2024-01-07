@@ -65,4 +65,24 @@ const deleteUser = async (id: string | number) => {
     }
 }
 
-export { getUsers, getUserByID, storeUser, updateUser, deleteUser }
+const resetUserPassword = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/users/${id}/reset`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export {
+    getUsers,
+    getUserByID,
+    storeUser,
+    updateUser,
+    deleteUser,
+    resetUserPassword
+}
+
+

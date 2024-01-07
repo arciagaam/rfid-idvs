@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { getUserByID, updateUser } from '@/api/userAPI';
 import { useModal } from '@/components/global/Modal';
 import { useUser } from '../providers/useUser';
+import { FormLabelHelper } from '@/components/global/FormLabelHelper';
 
 const EditUserForm = ({ id }: { id: number }) => {
     const { setOpen } = useModal();
@@ -133,7 +134,7 @@ const EditUserForm = ({ id }: { id: number }) => {
                         name="middle_name"
                         render={({ field }) => (
                             <FormItem className='flex-1'>
-                                <FormLabel>Middle Name</FormLabel>
+                                <FormLabel>Middle Name <FormLabelHelper /></FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter middle name" {...field} />
                                 </FormControl>

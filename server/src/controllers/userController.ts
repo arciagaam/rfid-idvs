@@ -127,10 +127,42 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(payload);
 })
 
+const resetPasswordUser = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: parseInt(id)
+        },
+        select: selectUserWithRoleDTO()
+    });
+
+    if (user) {
+        await prisma.user.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                password: hashSync(user.username, 12)
+            },
+            select: selectUserWithRoleDTO()
+        });
+    }
+
+    const payload = {
+        code: 200,
+        message: "User successfully updated.",
+        data: user
+    }
+
+    res.status(200).json(payload)
+})
+
 export {
     getAllUsers,
     getUser,
     storeUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    resetPasswordUser
 };

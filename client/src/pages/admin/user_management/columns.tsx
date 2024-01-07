@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react";
 import { UserModal } from "./components/UserModal";
 import { DeleteUserModal } from "./components/DeleteUserModal";
+import { ResetPasswordUserModal } from "./components/ResetPasswordUserModal";
 
 export type TUserTable = {
     id: number;
@@ -52,6 +53,7 @@ export const userColumns: ColumnDef<TUserTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <UserModal id={id} isEditing={true}/>
+                        <ResetPasswordUserModal id={id} />
                         <DeleteUserModal id={id} />
                         {/*
                             <DropdownMenuItem className="focus:bg-red-100 focus:text-red-500 text-red-500 bg-red-50">Delete User</DropdownMenuItem>

@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { storeUser } from '@/api/userAPI';
 import { useUser } from "../providers/useUser";
 import { useModal } from "@/components/global/Modal";
+import { FormLabelHelper } from "@/components/global/FormLabelHelper";
 
 const AddUserForm = () => {
     const { setOpen } = useModal();
@@ -109,7 +110,7 @@ const AddUserForm = () => {
                         name="middle_name"
                         render={({ field }) => (
                             <FormItem className='flex-1'>
-                                <FormLabel>Middle Name</FormLabel>
+                                <FormLabel>Middle Name <FormLabelHelper /></FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter middle name" {...field} />
                                 </FormControl>
