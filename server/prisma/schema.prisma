@@ -37,6 +37,7 @@ model user {
 model department {
     id         Int      @id @default(autoincrement())
     name       String
+    full_name  String
     created_at DateTime @default(now())
     updated_at DateTime @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
     courses    course[]
@@ -85,6 +86,7 @@ model term {
     term           Int
     created_at     DateTime             @default(now())
     updated_at     DateTime             @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
+    deleted_at     DateTime?
     school_year    school_year          @relation(fields: [school_year_id], references: [id], onDelete: Cascade)
     students       term_student[]
     validation     validation_history[]

@@ -11,6 +11,7 @@ const getAllDepartments = asyncHandler(async (req: Request, res: Response) => {
         select: {
             id: true,
             name: true,
+            full_name: true,
             courses: true
         }
     });
@@ -52,7 +53,7 @@ const getDepartment = asyncHandler(async (req: Request, res: Response) => {
 
 const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) => {
     const { name } = req.params;
-    const { term_id, status, courses } = req.body;
+    const { term_id, status, courses, date } = req.body;
 
     const students: TStudentValidationDTO[] = [];
 
@@ -86,12 +87,24 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         }
     }
 
+    const dateFilter = () => {
+        if (date) {
+            return {
+                lte: new Date(new Date(date).setHours(23, 59, 59, 9)),
+                gte: new Date(date),
+            }
+        }
+
+        return {};
+    }
+
     if (status === "validated" || status === "all") {
         const _students = await prisma.term_student.findMany({
             where: {
                 student: {
                     course: courseSelect()
                 },
+                created_at: dateFilter(),
                 term_id: term_id,
             },
             select: {
@@ -103,7 +116,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         });
 
         const validatedStudents = _students.map((value) => ({ ...value.student, validated: true, validated_at: value.created_at }))
-        
+
         students.push(...validatedStudents);
     }
 
@@ -141,7 +154,6 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
     }
 
     const sortedStudents = students.sort((a, b) => a.id - b.id)
-
 
     const payload = {
         code: 200,

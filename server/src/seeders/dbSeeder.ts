@@ -52,6 +52,7 @@ async function run() {
             await prisma.department.create({
                 data: {
                     name: department.abr,
+                    full_name: department.name,
                     courses: {
                         createMany: {
                             data: department.courses

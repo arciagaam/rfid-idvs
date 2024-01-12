@@ -80,3 +80,9 @@ export function convertBase64toBuffer(base64Value: string) {
     const base64 = base64Value.split(',')[1];
     return Buffer.from(base64, "base64");
 }
+
+export function storeCorrectDate(date: Date) {
+    return new Date(
+        Date.parse(date.toUTCString()) - date.getTimezoneOffset() * 60000
+    );
+}

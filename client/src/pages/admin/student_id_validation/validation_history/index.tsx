@@ -88,7 +88,7 @@ const ValidationHistory = ({ slug, courses }: TStudentIDProps) => {
                 </div>
 
                 <div className="flex flex-col">
-                    <p className="text-sm font-medium">Term</p>
+                    <p className="text-sm font-medium">Semester</p>
                     <Select
                         value={`${selectedTermId}`}
                         onValueChange={(value: string) => {

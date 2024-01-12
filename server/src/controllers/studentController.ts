@@ -5,7 +5,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 
 //helpers
-import { convertObjectKeys } from "../helpers/helpers";
+import { convertObjectKeys, storeCorrectDate } from "../helpers/helpers";
 
 const prisma = new PrismaClient();
 let currentTermId: number = 0;
@@ -249,7 +249,6 @@ const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const validateStudent = asyncHandler(async (req: Request, res: Response, rfidNumber: string) => {
-
     const student = await prisma.student.findFirstOrThrow({
         where: {
             rfid_number: rfidNumber
@@ -260,6 +259,8 @@ const validateStudent = asyncHandler(async (req: Request, res: Response, rfidNum
         data: {
             student_id: student.id,
             term_id: currentTermId,
+            created_at: storeCorrectDate(new Date()),
+            updated_at: storeCorrectDate(new Date())
         }
     })
 

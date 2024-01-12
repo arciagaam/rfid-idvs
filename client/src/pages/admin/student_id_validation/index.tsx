@@ -17,6 +17,7 @@ export type TCourse = {
 const StudentIDValidation = () => {
     const { slug } = useParams();
     const [courses, setCourses] = useState<TCourse[]>([]);
+    const [departmentName, setDepartmentName] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchDepartmentCourses = async () => {
@@ -38,6 +39,7 @@ const StudentIDValidation = () => {
                     }
                 });
 
+                setDepartmentName(res.data.full_name);
                 setCourses(_courses);
             } catch (error) {
                 console.error(error);
@@ -52,7 +54,7 @@ const StudentIDValidation = () => {
     return (
         <>
             <div className="flex flex-col gap-6 w-full justify-between">
-                <h2 className='text-lg font-bold'>ID Validation - {slug !== undefined ? slug.toUpperCase() : "Invalid Department"}</h2>
+                <h2 className='text-lg font-bold'>ID Validation - {departmentName ? departmentName : "Invalid Department"}</h2>
 
                 <Tabs defaultValue="student_id">
                     <TabsList>

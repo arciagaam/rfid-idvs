@@ -1,7 +1,8 @@
 import { department } from "@prisma/client";
 
-type TDepartments = Omit<department, 'id' | 'created_at' | 'updated_at'> & {
+type TDepartments = Omit<department, 'id' | 'full_name' | 'created_at' | 'updated_at'> & {
     abr: string;
+    name: string;
     courses: {
         // abr: string;
         name: string;

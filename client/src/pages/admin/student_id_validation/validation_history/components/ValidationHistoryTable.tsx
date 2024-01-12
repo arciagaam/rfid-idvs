@@ -4,8 +4,9 @@ import { TStudent } from "@/types/TStudent";
 import { TStudentTable } from "@/types/TStudentTable";
 
 import { DataTable } from '@/components/global/DataTable';
-import { CoursesFilter } from "../../student_id/components/CoursesFilter"; 
+import { CoursesFilter } from "../../student_id/components/CoursesFilter";
 import { validationHistoryColumns } from "../columns";
+import { DatePicker } from "@/components/ui/date-picker";
 
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -39,8 +40,8 @@ type TValidatedStudent =
 
 const ValidationHistoryTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
     const [students, setStudents] = useState<TStudentTable[]>([]);
-
     const [selectedCourses, setSelectedCourses] = useState<number[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -54,7 +55,8 @@ const ValidationHistoryTable = ({ slug, termId, courses }: TValidatedStudentTabl
                     body: JSON.stringify({
                         term_id: termId,
                         status: 'validated',
-                        courses: selectedCourses
+                        courses: selectedCourses,
+                        date: selectedDate?.toString()
                     })
                 });
 
@@ -69,7 +71,8 @@ const ValidationHistoryTable = ({ slug, termId, courses }: TValidatedStudentTabl
 
                 responseData.forEach((termStudentData) => {
                     const student = termStudentData;
-                    const validatedDate = new Date(student.validated_at).toLocaleString()
+                    const validatedDate = new Date(student.validated_at).toLocaleDateString();
+
                     studentTableData.push(
                         {
                             id: student.id,
@@ -91,7 +94,7 @@ const ValidationHistoryTable = ({ slug, termId, courses }: TValidatedStudentTabl
         if (slug !== undefined && termId !== undefined) {
             fetchStudents();
         }
-    }, [slug, termId, status, selectedCourses]);
+    }, [slug, termId, selectedCourses, selectedDate]);
 
     useEffect(() => {
         setSelectedCourses([]);
@@ -103,6 +106,10 @@ const ValidationHistoryTable = ({ slug, termId, courses }: TValidatedStudentTabl
                 <div className="flex flex-col">
                     <p className="text-sm font-medium">Courses</p>
                     <CoursesFilter courses={courses} selectedValues={selectedCourses} setSelectedValues={setSelectedCourses} />
+                </div>
+                <div className="flex flex-col">
+                    <p className="text-sm font-medium">Date</p>
+                    <DatePicker date={selectedDate} setDate={setSelectedDate} />
                 </div>
             </div>
 

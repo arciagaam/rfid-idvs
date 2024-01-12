@@ -112,7 +112,7 @@ const NavigationItem = ({ ...props }: NavLinkProps) => {
 
 const NavigationItemGroup = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Accordion type="single" collapsible>
+        <Accordion type="single" defaultValue='item-1'>
             <AccordionItem value="item-1" className='p-2 border-none'>
                 <AccordionTrigger className='p-0 hover:no-underline font-normal'>
                     <span className="flex flex-row gap-2 items-center">
@@ -121,7 +121,7 @@ const NavigationItemGroup = ({ children }: { children: React.ReactNode }) => {
                     </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                    <div className="flex flex-col gap-2 pt-2">
+                    <div className="flex flex-col gap-2 pt-2 pl-4">
                         {children}
                     </div>
                 </AccordionContent>
