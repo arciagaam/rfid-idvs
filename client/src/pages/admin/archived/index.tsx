@@ -1,4 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Students } from "./students";
+import { Users } from './users';
 
 const Archived = () => {
     return (
@@ -11,10 +13,10 @@ const Archived = () => {
                     <TabsTrigger value="students">Students</TabsTrigger>
                 </TabsList>
                 <TabsContent value="users">
-                    <p>Users</p>
+                    <Users />
                 </TabsContent>
                 <TabsContent value="students">
-                    <p>Students</p>
+                    <Students />
                 </TabsContent>
             </Tabs>
         </div>
