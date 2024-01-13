@@ -17,6 +17,7 @@ import { StudentManagement } from "./pages/admin/student_management"
 import { SchoolYearManagement } from "./pages/admin/school_year_management"
 import { UserLayout } from "./layout/UserLayout"
 import { StudentIDValidation } from "./pages/admin/student_id_validation"
+import { Archived } from "./pages/admin/archived"
 
 // User pages
 import { Dashboard as UserDashboard } from "./pages/user/dashboard"
@@ -43,6 +44,7 @@ function App() {
                         <Route path="user-management" element={<UserManagement />} />
                         <Route path="student-management" element={<StudentManagement />} />
                         <Route path="school-year-management" element={<SchoolYearManagement />} />
+                        <Route path="archived" element={<Archived />} />
                         <Route path="departments/:slug" element={<StudentIDValidation />} />
                         <Route path="account" element={<ManageAccount />} />
                     </Route>

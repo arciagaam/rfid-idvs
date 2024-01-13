@@ -14,6 +14,16 @@ const getStudents = async () => {
     }
 };
 
+const getArchivedStudents = async () => {
+    try {
+        return await fetch(`${API_URL}/students/archived`, {
+            credentials: "include"
+        }).then(res => res.json());
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 const getStudentById = async (id: string | number) => {
     try {
         return await fetch(`${API_URL}/students/${id}`, {
@@ -68,6 +78,20 @@ const deleteStudent = async (id: string | number) => {
     }
 }
 
+const restoreStudent = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/students/${id}/restore`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            credentials: 'include',
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const studentRFID = async (id: string | number, body: z.infer<typeof RFIDSchema>, action: 'link' | 'unlink' = 'link') => {
     try {
         return await fetch(`${API_URL}/students/${action}/${id}`, {
@@ -100,10 +124,12 @@ const triggerModal = async (modal: string, isOpen: boolean, termId: number | nul
 
 export {
     getStudents,
+    getArchivedStudents,
     getStudentById,
     storeStudent,
     updateStudent,
     deleteStudent,
+    restoreStudent,
     studentRFID,
     triggerModal,
 }

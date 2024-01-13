@@ -5,6 +5,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import { TUserDTOWithPassword, TUserDTOWithoutPassword } from "../types/UserDTO";
 
 import { hashSync } from "bcrypt";
+import { storeCorrectDate } from "../helpers/helpers";
 
 const prisma = new PrismaClient();
 
@@ -30,6 +31,28 @@ const selectUserWithRoleDTO: () => Prisma.userSelect = () => (
 
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
+        where: {
+            deleted_at: null
+        },
+        select: selectUserWithRoleDTO()
+    });
+
+    const payload = {
+        code: 200,
+        message: "Users successfully retrieved.",
+        data: users
+    };
+
+    res.status(200).json(payload);
+})
+
+const getAllArchivedUsers = asyncHandler(async (req: Request, res: Response) => {
+    const users = await prisma.user.findMany({
+        where: {
+            deleted_at: {
+                not: null
+            }
+        },
         select: selectUserWithRoleDTO()
     });
 
@@ -47,7 +70,8 @@ const getUser = asyncHandler(async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUniqueOrThrow({
         where: {
-            id: parseInt(id)
+            id: parseInt(id),
+            deleted_at: null
         },
         select: selectUserWithRoleDTO()
     });
@@ -89,7 +113,8 @@ const updateUser = asyncHandler(async (req: Request, res: Response) => {
 
     const user = await prisma.user.update({
         where: {
-            id: parseInt(id)
+            id: parseInt(id),
+            deleted_at: null
         },
         data: body,
         select: selectUserWithRoleDTO()
@@ -112,9 +137,12 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
         throw new Error("Cannot delete the admin account.");
     }
 
-    await prisma.user.delete({
+    await prisma.user.update({
         where: {
             id: parseInt(id)
+        },
+        data: {
+            deleted_at: storeCorrectDate(new Date())
         }
     });
 
@@ -127,12 +155,34 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(payload);
 })
 
+const restoreUser = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const user = await prisma.user.update({
+        where: {
+            id: parseInt(id)
+        },
+        data: {
+            deleted_at: null
+        },
+        select: selectUserWithRoleDTO()
+    });
+
+    const payload = {
+        code: 200,
+        message: "User successfully restored.",
+        data: user
+    };
+
+    res.status(200).json(payload);
+})
 const resetPasswordUser = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const user = await prisma.user.findUniqueOrThrow({
         where: {
-            id: parseInt(id)
+            id: parseInt(id),
+            deleted_at: null
         },
         select: selectUserWithRoleDTO()
     });
@@ -140,7 +190,8 @@ const resetPasswordUser = asyncHandler(async (req: Request, res: Response) => {
     if (user) {
         await prisma.user.update({
             where: {
-                id: parseInt(id)
+                id: parseInt(id),
+                deleted_at: null
             },
             data: {
                 password: hashSync(user.username, 12)
@@ -160,9 +211,11 @@ const resetPasswordUser = asyncHandler(async (req: Request, res: Response) => {
 
 export {
     getAllUsers,
+    getAllArchivedUsers,
     getUser,
     storeUser,
     updateUser,
     deleteUser,
+    restoreUser,
     resetPasswordUser
 };

@@ -10,7 +10,8 @@ import {
     IoCalendarClearOutline,
     IoGridOutline,
     IoPeopleOutline,
-    IoSchoolOutline
+    IoSchoolOutline,
+    IoTrashBinOutline
 } from "react-icons/io5";
 
 const AdminLayout = () => {
@@ -71,6 +72,10 @@ const AdminLayout = () => {
                 <NavigationItem to="school-year-management">
                     <IoCalendarClearOutline />
                     <span>School Year Management</span>
+                </NavigationItem>
+                <NavigationItem to="archived">
+                    <IoTrashBinOutline />
+                    <span>Archived</span>
                 </NavigationItem>
                 <NavigationItemGroup>
                     {

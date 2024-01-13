@@ -44,149 +44,206 @@ const selectStudentDTO: () => Prisma.studentSelect = () => {
     }
 }
 
-const getAllStudents = asyncHandler(
-    async (req: Request, res: Response) => {
-        try {
-            const students = await prisma.student.findMany({
-                select: selectStudentDTO(),
-            });
+const getAllStudents = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const students = await prisma.student.findMany({
+            where: {
+                deleted_at: null
+            },
+            select: selectStudentDTO(),
+        });
 
-            const payload = {
-                code: 200,
-                message: "Students successfully retrieved.",
-                data: convertObjectKeys(students)
-            };
+        const payload = {
+            code: 200,
+            message: "Students successfully retrieved.",
+            data: convertObjectKeys(students)
+        };
 
-            res.status(200).json(payload);
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error",
-            };
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error",
+        };
 
-            res.status(400).json(payload);
-        }
+        res.status(400).json(payload);
     }
-)
+})
 
-const getStudent = asyncHandler(
-    async (req: Request, res: Response) => {
-        const { id } = req.params;
-
-        try {
-            const student = await prisma.student.findUniqueOrThrow({
-                where: {
-                    id: parseInt(id)
-                },
-                select: selectStudentDTO()
-            });
-
-            const payload = {
-                code: 200,
-                message: "Student successfully retrieved.",
-                data: student
-            };
-
-            res.status(200).json(payload);
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error",
-            }
-
-            res.status(400).json(payload);
-        }
-    }
-)
-
-const storeStudent = asyncHandler(
-    async (req: Request, res: Response) => {
-        const body = req.body as any;
-
-        try {
-            const student = await prisma.student.create({
-                data: body,
-                select: selectStudentDTO()
-            });
-
-            const payload = {
-                code: 200,
-                message: "Student successfully created.",
-                data: student
-            };
-
-            res.status(200).json(payload);
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error"
-            }
-
-            res.status(400).json(payload);
-        }
-    }
-)
-
-const updateStudent = asyncHandler(
-    async (req: Request, res: Response) => {
-        const { id } = req.params;
-        const body = req.body as any;
-
-        try {
-            const student = await prisma.student.update({
-                where: {
-                    id: parseInt(id)
-                },
-                select: selectStudentDTO(),
-                data: body,
-            });
-
-            const payload = {
-                code: 200,
-                message: "Student successfully updated.",
-                data: student
-            }
-
-            res.status(200).json(payload)
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error"
-            }
-
-            res.status(400).json(payload);
-        }
-    }
-)
-
-const deleteStudent = asyncHandler(
-    async (req: Request, res: Response) => {
-        const { id } = req.params;
-
-        try {
-            await prisma.student.delete({
-                where: {
-                    id: parseInt(id)
+const getAllArchivedStudents = asyncHandler(async (req: Request, res: Response) => {
+    try {
+        const students = await prisma.student.findMany({
+            where: {
+                deleted_at: {
+                    not: null
                 }
-            });
+            },
+            select: selectStudentDTO(),
+        });
 
-            const payload = {
-                code: 200,
-                message: "Student successfully deleted.",
-                data: {}
-            };
+        const payload = {
+            code: 200,
+            message: "Students successfully retrieved.",
+            data: convertObjectKeys(students)
+        };
 
-            res.status(200).json(payload);
-        } catch (e) {
-            const payload = {
-                code: prismaErrorHandler(e),
-                message: e instanceof Error ? e.message : "Unknown error"
-            }
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error",
+        };
 
-            res.status(400).json(payload);
-        }
+        res.status(400).json(payload);
     }
-)
+})
+
+const getStudent = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const student = await prisma.student.findUniqueOrThrow({
+            where: {
+                id: parseInt(id),
+                deleted_at: null
+            },
+            select: selectStudentDTO()
+        });
+
+        const payload = {
+            code: 200,
+            message: "Student successfully retrieved.",
+            data: student
+        };
+
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error",
+        }
+
+        res.status(400).json(payload);
+    }
+})
+
+const storeStudent = asyncHandler(async (req: Request, res: Response) => {
+    const body = req.body as any;
+
+    try {
+        const student = await prisma.student.create({
+            data: body,
+            select: selectStudentDTO()
+        });
+
+        const payload = {
+            code: 200,
+            message: "Student successfully created.",
+            data: student
+        };
+
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error"
+        }
+
+        res.status(400).json(payload);
+    }
+})
+
+const updateStudent = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const body = req.body as any;
+
+    try {
+        const student = await prisma.student.update({
+            where: {
+                id: parseInt(id),
+                deleted_at: null
+            },
+            select: selectStudentDTO(),
+            data: body,
+        });
+
+        const payload = {
+            code: 200,
+            message: "Student successfully updated.",
+            data: student
+        }
+
+        res.status(200).json(payload)
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error"
+        }
+
+        res.status(400).json(payload);
+    }
+})
+
+const deleteStudent = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        await prisma.student.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                deleted_at: storeCorrectDate(new Date())
+            }
+        });
+
+        const payload = {
+            code: 200,
+            message: "Student successfully deleted.",
+            data: {}
+        };
+
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error"
+        }
+
+        res.status(400).json(payload);
+    }
+});
+
+const restoreStudent = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const student = await prisma.student.update({
+            where: {
+                id: parseInt(id)
+            },
+            data: {
+                deleted_at: null
+            },
+            select: selectStudentDTO()
+        });
+
+        const payload = {
+            code: 200,
+            message: "Student successfully restored.",
+            data: student
+        };
+
+        res.status(200).json(payload);
+    } catch (e) {
+        const payload = {
+            code: prismaErrorHandler(e),
+            message: e instanceof Error ? e.message : "Unknown error"
+        }
+
+        res.status(400).json(payload);
+    }
+});
 
 const triggerModal = asyncHandler(async (req: any, res: Response, next: NextFunction) => {
     const { modal, isOpen, termId } = req.body;
@@ -212,7 +269,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
         },
         data: { rfid_number },
     });
-    
+
     const payload = {
         code: 200,
         message: "RFID Successfully linked to this student",
@@ -277,10 +334,12 @@ const validateStudent = asyncHandler(async (req: Request, res: Response, rfidNum
 
 export {
     getAllStudents,
+    getAllArchivedStudents,
     getStudent,
     storeStudent,
     updateStudent,
     deleteStudent,
+    restoreStudent,
     linkRfid,
     unlinkRfid,
     validateStudent,

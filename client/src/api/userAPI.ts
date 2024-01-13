@@ -14,6 +14,17 @@ const getUsers = async () => {
     }
 }
 
+const getArchivedUsers = async () => {
+    try {
+        return await fetch(`${API_URL}/users/archived`, {
+            credentials: "include"
+        }).then(res => res.json());
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 const getUserByID = async (id: string | number) => {
     try {
         return await fetch(`${API_URL}/users/${id}`, {
@@ -65,6 +76,17 @@ const deleteUser = async (id: string | number) => {
     }
 }
 
+const restoreUser = async (id: string | number) => {
+    try {
+        return await fetch(`${API_URL}/users/${id}/restore`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const resetUserPassword = async (id: string | number) => {
     try {
         return await fetch(`${API_URL}/users/${id}/reset`, {
@@ -78,11 +100,11 @@ const resetUserPassword = async (id: string | number) => {
 
 export {
     getUsers,
+    getArchivedUsers,
     getUserByID,
     storeUser,
     updateUser,
     deleteUser,
-    resetUserPassword
+    restoreUser,
+    resetUserPassword,
 }
-
-

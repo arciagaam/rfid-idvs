@@ -52,24 +52,22 @@ const StudentIDValidation = () => {
     }, [slug]);
 
     return (
-        <>
-            <div className="flex flex-col gap-6 w-full justify-between">
-                <h2 className='text-lg font-bold'>ID Validation - {departmentName ? departmentName : "Invalid Department"}</h2>
+        <div className="flex flex-col gap-6 w-full justify-between">
+            <h2 className='text-lg font-bold'>ID Validation - {departmentName ? departmentName : "Invalid Department"}</h2>
 
-                <Tabs defaultValue="student_id">
-                    <TabsList>
-                        <TabsTrigger value="student_id">Student ID</TabsTrigger>
-                        <TabsTrigger value="validation_history">Validation History</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="student_id">
-                        <StudentID slug={slug} courses={courses} />
-                    </TabsContent>
-                    <TabsContent value="validation_history">
-                        <ValidationHistory slug={slug} courses={courses}/>
-                    </TabsContent>
-                </Tabs>
-            </div>
-        </>
+            <Tabs defaultValue="student_id">
+                <TabsList>
+                    <TabsTrigger value="student_id">Student ID</TabsTrigger>
+                    <TabsTrigger value="validation_history">Validation History</TabsTrigger>
+                </TabsList>
+                <TabsContent value="student_id">
+                    <StudentID slug={slug} courses={courses} />
+                </TabsContent>
+                <TabsContent value="validation_history">
+                    <ValidationHistory slug={slug} courses={courses} />
+                </TabsContent>
+            </Tabs>
+        </div>
     )
 }
 

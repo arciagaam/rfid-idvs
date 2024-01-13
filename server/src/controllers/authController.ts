@@ -22,7 +22,8 @@ const authenticateUser = asyncHandler(async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({
             where: {
-                username
+                username,
+                deleted_at: null
             },
             include: {
                 role: true
