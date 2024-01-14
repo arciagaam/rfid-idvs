@@ -72,7 +72,7 @@ const Root = ({ ...props }: TModalProps) => {
             <DialogTrigger onClick={() => setOpen(!open)} asChild>
                 {trigger}
             </DialogTrigger>
-            <DialogContent onInteractOutside={(e) => { e.preventDefault() }} className={twMerge("max-w-[80vw] max-h-[80vh] overflow-auto", className)}>
+            <DialogContent onInteractOutside={(e) => { e.preventDefault() }} className={twMerge("max-w-[80vw] max-h-[80vh] overflow-auto min-w-fit", className)}>
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogDescription>

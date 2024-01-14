@@ -23,10 +23,14 @@ import { Archived } from "./pages/admin/archived"
 import { Dashboard as UserDashboard } from "./pages/user/dashboard"
 import { StudentIDValidation as UserStudentIDValidation } from "./pages/user/student_id_validation"
 import { ManageAccount } from "./pages/common/manage_account"
+import PrintReport from "./pages/admin/student_id_validation/components/PrintReport"
 
 function App() {
     return (
         <Routes>
+
+            <Route path="/print/validation" element={<PrintReport/>}/>
+
             <Route element={<RootLayout />}>
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />

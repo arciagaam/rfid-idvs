@@ -8,6 +8,7 @@ import { DataTable } from '@/components/global/DataTable';
 import { CoursesFilter } from "./CoursesFilter";
 import { ValidationStatusFilter } from "./ValidationStatusFilter";
 import { ValidateStudentModal } from "./ValidateStudentModal";
+import { PrintReportModal } from "../../components/PrintReportModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -109,7 +110,15 @@ const StudentsTable = ({ slug, termId, courses }: TValidatedStudentTable) => {
                 </div>
             </div>
 
-            <DataTable columns={studentColumns} data={students} additionalColumns={<ValidateStudentModal setStudents={setStudents} term_id={termId} />} />
+            <DataTable columns={studentColumns} data={students} additionalColumns={
+                <>
+                    <div className="flex items-center justify-center gap-3">
+                        <PrintReportModal term_id={termId} selectedCourses={selectedCourses} validated_status={status}/>
+                        <ValidateStudentModal setStudents={setStudents} term_id={termId}  />
+                    </div>
+                </>
+
+            } />
         </>
     )
 }
