@@ -136,7 +136,6 @@ const reportIDValidation = asyncHandler(async (req: Request, res: Response) => {
     }
 
     const sortedStudents = students.sort((a, b) => a.id - b.id)
-    console.log(sortedStudents)
     const payload = {
         code: 200,
         message: "Department and student from term successfully retrieved.",
