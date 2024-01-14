@@ -7,3 +7,13 @@
 * {
     font-family: 'Red Hat Display', sans-serif;
 }
+
+#login-page {
+    background-image: repeating-linear-gradient(45deg, rgba(74, 104, 207, 0.1) 0, rgba(74, 104, 207, 0.1) 1px, transparent 0, transparent 25%);
+    background-size: 32px 32px;
+    mask-image: -webkit-gradient(linear, left top, right bottom, 
+      color-stop(0.00,  rgba(0,0,0,1)),
+      color-stop(0.35,  rgba(0,0,0,0.75)),
+      color-stop(0.50,  rgba(0,0,0,0.5)),
+      color-stop(1.00,  rgba(0,0,0,0)));
+}
