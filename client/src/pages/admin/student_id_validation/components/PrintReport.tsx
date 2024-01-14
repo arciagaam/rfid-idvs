@@ -108,13 +108,5 @@ function formatDate(date = new Date()) {
     return [year, month, day].join('-')
 }
 
-const formatTime = (time: string) => {
-    if (time) {
-        const date = new Date(time)
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-    }
-    return 'N/A'
-}
-
 export default PrintReport
 
