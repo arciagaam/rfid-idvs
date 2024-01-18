@@ -26,7 +26,7 @@ const Home = () => {
 
             <section className="h-full flex flex-col justify-center w-full">
                 <div className="flex flex-col gap-6 text-white p-8">
-                    <h1 className="text-8xl font-bold w-3/4">RFID Validation System</h1>
+                    <h1 className="text-8xl font-bold w-2/4">Office of Student Affairs and Services RFID Validation</h1>
                     <p className="text-xl w-2/4 text-white/75">Say goodbye to manual checks and hello to instant, accurate asset visibility with our RFID Validation System.</p>
                 </div>
             </section>
