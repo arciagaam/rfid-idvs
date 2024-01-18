@@ -26,7 +26,7 @@ const DeleteUserForm = ({ id }: { id: string | number }) => {
 
     return (
         <form id='delete-user-form' onSubmit={handleFormSubmit} className="flex flex-col gap-5">
-            <p>Are you sure you want to delete the user?</p>
+            <p>Are you sure you want to archive the user?</p>
         </form>
     )
 }

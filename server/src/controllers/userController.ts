@@ -134,7 +134,7 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
     if (parseInt(id) === 1) {
         res.status(401);
-        throw new Error("Cannot delete the admin account.");
+        throw new Error("Cannot archive the admin account.");
     }
 
     await prisma.user.update({
@@ -148,7 +148,7 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
     const payload = {
         code: 200,
-        message: "User successfully deleted.",
+        message: "User successfully archived.",
         data: {}
     };
 
