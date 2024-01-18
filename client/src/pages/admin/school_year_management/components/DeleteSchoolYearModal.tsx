@@ -13,7 +13,7 @@ const DeleteSchoolYearModal = ({ id }: TDeleteSchoolYearModalProps) => {
 
             title={`Delete School Year`}
 
-            description={`Delete selected school year. Click delete when you're are sure.`}
+        description={`Delete selected school year. Click delete when you're are sure.`}
 
             body={<DeleteSchoolYearForm id={id} />}
 

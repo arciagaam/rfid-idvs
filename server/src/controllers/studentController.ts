@@ -199,7 +199,7 @@ const deleteStudent = asyncHandler(async (req: Request, res: Response) => {
 
         const payload = {
             code: 200,
-            message: "Student successfully deleted.",
+            message: "Student successfully archived.",
             data: {}
         };
 
