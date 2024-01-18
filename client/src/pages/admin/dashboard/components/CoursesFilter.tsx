@@ -36,6 +36,14 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
         }
     }
 
+    const SelectedValuesTitle = () => {
+        const filteredCourses = courses.filter((course => selectedValues.includes(course.id)));
+
+        const filteredCoursesLabels = filteredCourses.map(filteredCourse => filteredCourse.name)
+
+        return filteredCoursesLabels.join(', ');
+    }
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -43,10 +51,11 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[256px] justify-between"
+                    className="w-[256px] justify-between overflow-hidden"
+                    title={SelectedValuesTitle()}
                 >
                     {selectedValues.length
-                        ? `${selectedValues.length} course${selectedValues.length > 1 ? "s" : ""} selected`
+                        ? SelectedValuesTitle()
                         : "Select courses..."}
                 </Button>
             </PopoverTrigger>
