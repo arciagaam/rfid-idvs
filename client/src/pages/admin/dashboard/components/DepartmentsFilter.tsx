@@ -36,6 +36,14 @@ const DepartmentsFilter = ({ departments, selectedValues, setSelectedValues }: T
         }
     }
 
+    const SelectedValuesTitle = () => {
+        const filteredDepartments = departments.filter((department => selectedValues.includes(department.id)));
+
+        const filteredDepartmentsLabels = filteredDepartments.map(filteredDepartment => filteredDepartment.name)
+
+        return filteredDepartmentsLabels.join(', ');
+    }
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -43,10 +51,11 @@ const DepartmentsFilter = ({ departments, selectedValues, setSelectedValues }: T
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[256px] justify-between"
+                    className="w-[256px] justify-between overflow-clip"
+                    title={SelectedValuesTitle()}
                 >
                     {selectedValues.length
-                        ? `${selectedValues.length} department${selectedValues.length > 1 ? "s" : ""} selected`
+                        ? SelectedValuesTitle()
                         : "Select departments..."}
                 </Button>
             </PopoverTrigger>
