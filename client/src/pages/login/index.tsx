@@ -9,6 +9,7 @@ const Login = () => {
                     <img className="w-64 lg:w-3/4 object-cover aspect-square rounded-full overflow-clip" src="/images/logo.png" alt="" />
                 </div>
                 <div className="flex flex-col justify-center w-full h-full p-12 gap-6">
+                    <img src="/images/login.png" alt="User login" className="w-24 hidden lg:block self-center aspect-square" />
                     <div className="flex flex-col">
                         <strong className="font-bold text-3xl">Login to your account</strong>
                         <p className="text-black/50">Enter your details to login</p>
