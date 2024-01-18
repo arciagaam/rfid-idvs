@@ -9,8 +9,6 @@ const Home = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-
-        
         if (user !== null) {
             if (user.role_id === 1) {
                 return navigate("/admin")
@@ -23,28 +21,28 @@ const Home = () => {
     }, [user, navigate]);
 
     return (
-        <div className="flex flex-col relative overflow-x-hidden">
+        <div className="w-full h-screen flex flex-col relative overflow-hidden">
             <NavBar />
 
-            <div className="w-screen inset-0 h-screen -translate-y-1/2 rotate-12 absolute -z-[1] scale-125 bg-blue-100/75"></div>
-            <div className="w-screen inset-0 h-screen -translate-y-1/3 rotate-12 absolute -z-[2] scale-125 bg-blue-300/50"></div>
-            <div className="w-screen inset-0 h-screen -translate-y-1/4 rotate-12 absolute -z-[3] scale-125 bg-blue-200/25"></div>
-
-            <section className="w-full h-screen flex flex-col justify-center items-center">
-                <div className="flex flex-col gap-6 items-center">
-                    <h2 className="text-blue-700 font-medium border bg-blue-200 border-blue-700 py-2 px-4 rounded-full">Laguna State Polytechnic University</h2>
-                    <h1 className="text-6xl font-bold">RFID Validation System</h1>
-                    <p className="text-xl text-black/75 w-3/4 text-center">Say goodbye to manual checks and hello to instant, accurate asset visibility with our RFID Validation System.</p>
+            <section className="h-full flex flex-col justify-center w-full">
+                <div className="flex flex-col gap-6 text-white p-8">
+                    <h1 className="text-8xl font-bold w-3/4">RFID Validation System</h1>
+                    <p className="text-xl w-2/4 text-white/75">Say goodbye to manual checks and hello to instant, accurate asset visibility with our RFID Validation System.</p>
                 </div>
             </section>
+
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-black/70 -z-[1]"></div>
+            <img src="/images/home_bg.jpg" alt="Home" className="absolute inset-0 w-full h-full object-cover -z-[2]" />
         </div>
     )
 }
 
 const NavBar = () => {
     return (
-        <nav className="w-full fixed flex flex-row items-center justify-between py-4 px-8">
-            <Link to="/home" className="font-bold text-xl">RFID</Link>
+        <nav className="w-full fixed flex flex-row items-center justify-between py-4 px-8 bg-white/75 backdrop-blur-md">
+            <Link to="/home" className="font-bold text-xl">
+                <img src="/images/logo.png" alt="Logo" className="w-12 h-12" />
+            </Link>
             <Link to="/login">
                 <Button>Login</Button>
             </Link>
