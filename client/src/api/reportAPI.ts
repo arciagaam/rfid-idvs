@@ -18,4 +18,19 @@ const printReport = async (body: z.infer<typeof ReportSchema>) => {
     }
 };
 
-export { printReport }
+const printAllReport = async (body: z.infer<typeof ReportSchema>) => {
+    try {
+        return await fetch(`${API_URL}/reports/all`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(body)
+        });
+    } catch (error) {
+        console.error(error)
+    }
+};
+
+export { printReport, printAllReport }

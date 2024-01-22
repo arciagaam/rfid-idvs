@@ -20,8 +20,8 @@ const PrintReport = () => {
 
     setTimeout(() => {
         window.print();
-        window.close();
         localStorage.removeItem('print');
+        window.close();
     }, 200)
 
     if(report.data.length) {
@@ -36,7 +36,7 @@ const PrintReport = () => {
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col">
                                 <p className='font-bold'>Filter (Validation Status)</p>
-                                <p>{report.validation_status}</p>
+                                <p>{report.validation_status ?? report.verification_status}</p>
                             </div>
                             <div className="flex flex-col">
                                 <p className='font-bold'>Filter (Year Level)</p>
@@ -79,7 +79,7 @@ const PrintReport = () => {
                                     </td>
                                     <td>{item.year} - {item.section}</td>
                                     <td>{item.course.department.full_name}</td>
-                                    <td>{item.validated_status ? 'Validated' : 'Non - Validated'}</td>
+                                    <td>{item.validated ? 'Validated' : 'Non - Validated'}</td>
                                 </tr>
                             ))
                         }

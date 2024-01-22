@@ -121,7 +121,7 @@ const NavigationItemGroup = ({ children }: { children: React.ReactNode }) => {
                     </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                    <div className="flex flex-col gap-2 pt-2 pl-4">
+                    <div className="grid grid-cols-3 gap-2 pt-2 pl-4">
                         {children}
                     </div>
                 </AccordionContent>

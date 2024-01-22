@@ -14,6 +14,8 @@ import {
     IoTrashBinOutline
 } from "react-icons/io5";
 
+import { TbReportSearch } from "react-icons/tb";
+
 const AdminLayout = () => {
     const navigate = useNavigate();
 
@@ -73,6 +75,12 @@ const AdminLayout = () => {
                     <IoCalendarClearOutline />
                     <span>School Year Management</span>
                 </NavigationItem>
+
+                <NavigationItem to="reports">
+                    <TbReportSearch />
+                    <span>Reports</span>
+                </NavigationItem>
+                
                 <NavigationItem to="archived">
                     <IoTrashBinOutline />
                     <span>Archived</span>
