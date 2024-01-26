@@ -86,7 +86,6 @@ const Reports = () => {
                 const resData = { data: res.data };
 
                 res.data.forEach((student: TStudentAPI) => {
-                    console.log(student);
                     reportsTableData.push(
                         {
                             id: student.id,
@@ -129,12 +128,17 @@ const Reports = () => {
 
         if (res.data) {
             const resData = { data: res.data };
-            const formValues = printReportForm.getValues()
+            const formValues = printReportForm.getValues();
+            const activeSchoolYear = schoolYears.find((schoolYear) => schoolYear.id == selectedSchoolYearId);
+            const activeTerm = activeSchoolYear?.terms.find((term) => term.id == selectedTermId)?.term ?? "N/A";
             Object.assign(resData, {
                 startDate: formValues.start_date,
                 endDate: formValues.end_date,
                 studentYearLevel: formValues.student_year_level,
-                validation_status: formValues.verification_status
+                validation_status: formValues.verification_status,
+                termSchoolYear: activeTerm,
+                schoolYearStart: activeSchoolYear?.year_start ?? "N/A",
+                schoolYearEnd: activeSchoolYear?.year_end ?? "N/A",
             })
 
             localStorage.setItem('print', JSON.stringify(resData));

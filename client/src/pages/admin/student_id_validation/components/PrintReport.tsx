@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import { TReport } from '@/types/TReport';
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const PrintReport = () => {
@@ -8,7 +9,7 @@ const PrintReport = () => {
         if (localStorage.getItem('print') == null) {
             navigate('/admin/home');
         }
-    }, [])
+    }, [navigate]);
 
     const data = localStorage.getItem('print') ?? null;
 
@@ -16,7 +17,7 @@ const PrintReport = () => {
         return false;
     }
 
-    const report = JSON.parse(data!);
+    const report: TReport = JSON.parse(data!);
 
     setTimeout(() => {
         window.print();
@@ -24,14 +25,13 @@ const PrintReport = () => {
         window.close();
     }, 200)
 
-    if(report.data.length) {
+    if (report.data.length) {
         return (
             <div className="flex flex-col gap-5">
-    
+
                 <div className="flex justify-between w-full">
-                    <h2 className='text-2xl'>Semester {report.data[0].term}  <span className='ml-5'>{report.data[0].school_year.year_start} - {report.data[0].school_year.year_end}</span> </h2>
-    
-    
+                    <h2 className='text-2xl'>Semester {report.termSchoolYear}  <span className='ml-5'>{report.schoolYearStart} - {report.schoolYearEnd}</span> </h2>
+
                     <div className="flex gap-5 items-start text-lg">
                         <div className="flex flex-col gap-5">
                             <div className="flex flex-col">
@@ -43,19 +43,19 @@ const PrintReport = () => {
                                 <p>{report.studentYearLevel || 'N/A'}</p>
                             </div>
                         </div>
-    
+
                         <div className="flex gap-2 ml-10">
                             <p className='font-bold'>Date From:</p>
                             <p>{formatDate(new Date(report.startDate))}</p>
                         </div>
-    
+
                         <div className="flex gap-2">
                             <p className='font-bold'>Date To:</p>
                             <p>{formatDate(new Date(report.endDate))}</p>
                         </div>
                     </div>
                 </div>
-    
+
                 <table className='border'>
                     <thead>
                         <tr>
@@ -69,7 +69,7 @@ const PrintReport = () => {
                     <tbody>
                         {
                             report.data.map((item, index: number) => (
-    
+
                                 <tr key={index} className='border text-center'>
                                     <td className='py-2 px-2'>{item.student_number}</td>
                                     <td>
@@ -85,11 +85,11 @@ const PrintReport = () => {
                         }
                     </tbody>
                 </table>
-    
+
             </div>
         )
     } else {
-        return( 
+        return (
             <p>
                 No reports for the given filter.
             </p>
