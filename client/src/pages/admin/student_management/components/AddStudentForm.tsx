@@ -38,6 +38,7 @@ const AddStudentForm = ({ courses }: TAddUserFormProps) => {
         resolver: zodResolver(studentSchema),
         defaultValues: {
             student_number: "",
+            email: "",
             first_name: "",
             middle_name: "",
             last_name: "",
@@ -80,6 +81,7 @@ const AddStudentForm = ({ courses }: TAddUserFormProps) => {
                 {
                     id: res.data.id,
                     studentNumber: res.data.student_number,
+                    email: res.data.email,
                     fullName: `${res.data.first_name} ${(res.data.middle_name ?? '')} ${res.data.last_name}`,
                     rfidStatus: res.data.rfid_number ? true : false,
                     departmentCourse: `${res.data.course.department.name} - ${res.data.course.name}`,
@@ -123,6 +125,20 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                         <FormLabel>Student Number</FormLabel>
                         <FormControl>
                             <Input placeholder="Enter student number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
+            <FormField
+                control={addStudentForm.control}
+                name="email"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Student Email</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter student email" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

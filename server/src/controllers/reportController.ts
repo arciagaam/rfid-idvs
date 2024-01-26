@@ -148,7 +148,6 @@ const reportIDValidation = asyncHandler(async (req: Request, res: Response) => {
 const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) => {
 
     const { term_id, student_year_level, verification_status, start_date, end_date } = req.body
-    console.log(verification_status)
     const students: TStudentValidationDTO[] = [];
 
     const studentSelect: Prisma.studentSelect = {
