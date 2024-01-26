@@ -22,6 +22,7 @@ const useStudentProvider = () => {
                             rfidStatus: student.rfidNumber ? true : false,
                             departmentCourse: `${student.course.department.name} - ${student.course.name}`,
                             yearSection: `${student.year} - ${student.section}`,
+                            rfidNumber: student.rfidNumber
                         }
                     )
                 });

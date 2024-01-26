@@ -19,6 +19,7 @@ export type TStudentTable = {
     rfidStatus: boolean;
     departmentCourse: string;
     yearSection: string;
+    rfidNumber: string;
 }
 
 export const studentColumns: ColumnDef<TStudentTable>[] = [
@@ -58,7 +59,7 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
         enableHiding: false,
         header: "Actions",
         cell: ({ row }) => {
-            const { id, rfidStatus } = row.original
+            const { id, rfidStatus, rfidNumber } = row.original
 
             return (
                 <DropdownMenu>
@@ -72,7 +73,7 @@ export const studentColumns: ColumnDef<TStudentTable>[] = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
                         <StudentModal id={id} isEditing={true} />
-                        <RFIDModal status={rfidStatus} id={id} />
+                        <RFIDModal status={rfidStatus} id={id} rfid_number={rfidNumber} />
                         <DeleteStudentModal id={id} />
                     </DropdownMenuContent>
                 </DropdownMenu>

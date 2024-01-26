@@ -22,20 +22,21 @@ let timeout: ReturnType<typeof setTimeout>
 type TRFIDFormProps = {
     id: number;
     status: boolean;
+    rfid_number: string;
 };
 
 
-const RFIDForm = ({ id, status }: TRFIDFormProps) => {
+const RFIDForm = ({ id, status, rfid_number }: TRFIDFormProps) => {
     const { setStudents } = useStudent();
-    const [tappedRfid, setTappedRfid] = useState("");
+    const [tappedRfid, setTappedRfid] = useState(rfid_number);
 
     const linkStudentForm = useForm<z.infer<typeof RFIDSchema>>({
         resolver: zodResolver(RFIDSchema),
         defaultValues: {
             id: id,
-            rfid_number: "",
+            rfid_number: tappedRfid
         },
-    })
+    });
 
     useEffect(() => {
         const withTimeoutOpenModal = () => {
@@ -44,39 +45,39 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 openModal();
             }, 10000);
         }
+
         const openModal = async () => {
-            await triggerModal('link_rfid', true)
+            await triggerModal('link_rfid', true);
         }
 
         withTimeoutOpenModal();
         openModal();
 
         return () => clearTimeout(timeout)
-    }, [])
+    }, []);
 
-    useEffect(() => {
-        linkStudentForm.reset({
-            id: id,
-            rfid_number: tappedRfid
-        });
-
-    }, [id, tappedRfid, linkStudentForm]);
-
+    // useEffect(() => {
+    //     linkStudentForm.reset({
+    //         id: id,
+    //         rfid_number: tappedRfid
+    //     });
+    // }, [id, tappedRfid, linkStudentForm]);
 
     useEffect(() => {
         const socket = io(import.meta.env.VITE_SOCKET_API_URL)
 
         socket.on('new_rfid_tap', (rfidData: string) => {
-            setTappedRfid(rfidData)
-        })
+            setTappedRfid(rfidData);
+        });
 
         return () => {
-            socket.disconnect()
+            socket.disconnect();
         }
     }, [])
 
     const handleFormSubmit = async (values: z.infer<typeof RFIDSchema>) => {
         const req = await studentRFID(id, values, status ? "unlink" : "link");
+
         if (!req) return;
 
         const res = await req.json();
@@ -96,9 +97,15 @@ const RFIDForm = ({ id, status }: TRFIDFormProps) => {
                 })
             })
 
-            setTappedRfid("");
-            toast.success(res.message)
+            if (status) {
+                setTappedRfid("");
+                linkStudentForm.reset({
+                    id: id,
+                    rfid_number: ""
+                });
+            }
 
+            toast.success(res.message)
         }
     }
 

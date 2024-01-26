@@ -286,7 +286,6 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const unlinkRfid = asyncHandler(async (req: Request, res: Response) => {
-
     const { id } = req.body;
 
     await prisma.student.update({
