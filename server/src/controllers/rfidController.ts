@@ -76,13 +76,13 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 }
             };
 
-            await sendMail({
-                to: email,
-                subject: "Password Reset Code",
-                text: `This is the reset code: ${resetCode}`
-            }, (info) => {
-                console.log(`Password reset code sent: ${info.messageId}`);
-            });
+            // await sendMail({
+            //     to: email,
+            //     subject: "Password Reset Code",
+            //     text: `This is the reset code: ${resetCode}`
+            // }, (info) => {
+            //     console.log(`Password reset code sent: ${info.messageId}`);
+            // });
 
             console.log(payload)
 

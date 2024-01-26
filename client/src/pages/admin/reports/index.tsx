@@ -1,4 +1,5 @@
-import { printAllReport, printReport } from '@/api/reportAPI';
+import { printAllReport } from '@/api/reportAPI';
+import { DataTable } from '@/components/global/DataTable';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -14,14 +15,16 @@ import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { fromTheme } from 'tailwind-merge';
 import { z } from 'zod';
+import { TReportsTable, reportColumns } from './columns';
+import { TStudentAPI } from '@/types/TStudent';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Reports = () => {
     const [schoolYears, setSchoolYears] = useState<TSchoolYear[]>([]);
     const [selectedSchoolYearId, setSelectedSchoolYearId] = useState<Pick<TSchoolYear, 'id'>['id']>(1);
     const [selectedTermId, setSelectedTermId] = useState<Pick<TTerm, 'id'>['id']>(1);
+    const [reports, setReports] = useState<TReportsTable[]>([]);
 
     const printReportForm = useForm<z.infer<typeof AllReportsSchema>>({
         resolver: zodResolver(AllReportsSchema),
@@ -31,7 +34,7 @@ const Reports = () => {
             verification_status: '',
             start_date: new Date(),
             end_date: new Date()
-        }
+        },
     })
 
     useEffect(() => {
@@ -64,6 +67,53 @@ const Reports = () => {
         fetchSchoolYears();
     }, []);
 
+    useEffect(() => {
+        const subscription = printReportForm.watch(async (values) => {
+            const formValues = values as z.infer<typeof AllReportsSchema>;
+
+            Object.assign(formValues, {
+                term_id: selectedTermId,
+            });
+
+            const req = await printAllReport(formValues);
+
+            if (!req) return;
+
+            const res = await req.json();
+
+            if (res.data) {
+                const reportsTableData: TReportsTable[] = [];
+                const resData = { data: res.data };
+
+                res.data.forEach((student: TStudentAPI) => {
+                    console.log(student);
+                    reportsTableData.push(
+                        {
+                            id: student.id,
+                            studentNumber: student.student_number,
+                            fullName: `${student.first_name} ${(student.middle_name ?? '')} ${student.last_name}`,
+                            department: `${student.course.department.full_name}`,
+                            yearSection: `${student.year} - ${student.section}`,
+                            status: student.validated ? "Validated" : "Non-validated"
+                        }
+                    )
+                });
+
+                const formValues = printReportForm.getValues()
+                Object.assign(resData, {
+                    startDate: formValues.start_date,
+                    endDate: formValues.end_date,
+                    studentYearLevel: formValues.student_year_level,
+                    validation_status: formValues.verification_status
+                });
+
+                setReports(reportsTableData);
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, [selectedTermId, printReportForm, printReportForm.watch]);
+
     const handleFormSubmit = async (values: z.infer<typeof AllReportsSchema>) => {
         const formValues = values;
 
@@ -78,15 +128,14 @@ const Reports = () => {
         const res = await req.json();
 
         if (res.data) {
-            const resData = {data: res.data};
-            const formValues = printReportForm.getValues() 
+            const resData = { data: res.data };
+            const formValues = printReportForm.getValues()
             Object.assign(resData, {
-                startDate: formValues.start_date, 
+                startDate: formValues.start_date,
                 endDate: formValues.end_date,
                 studentYearLevel: formValues.student_year_level,
                 validation_status: formValues.verification_status
             })
-
 
             localStorage.setItem('print', JSON.stringify(resData));
             window.open(window.location.origin + '/print/validation');
@@ -276,7 +325,9 @@ const Reports = () => {
                     </form>
                 </Form>
 
-                <Button form='print-all-report-form' type='submit'>Print Report</Button>
+                <DataTable columns={reportColumns} data={reports} additionalColumns={
+                    <Button form='print-all-report-form' type='submit'>Print Report</Button>
+                } />
             </div>
         </div>
     )

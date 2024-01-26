@@ -19,3 +19,22 @@ export type TStudent = {
         }
     }
 }
+
+export type TStudentAPI = {
+    id: number,
+    student_number: string,
+    rfid_number: string,
+    first_name: string,
+    middle_name: string,
+    last_name: string,
+    year: string,
+    section: string,
+    course: {
+        department: {
+            name: string
+            id: number
+            full_name: string,
+        }
+    }
+    validated: boolean;
+}
