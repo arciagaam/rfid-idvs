@@ -9,7 +9,8 @@
     "install:client": "cd ./client && npm install",
     "install:server": "cd ./server && npm install",
     "install:all" : "npm ci && cd ./client && npm ci && cd ../server && npm ci",
-    "dev": "npm-run-all --parallel client server"
+    "dev": "npm-run-all --parallel client server",
+    "migrate": "cd ./server && npx prisma migrate dev -n init && npx prisma migrate reset -f && npx ts-node ./src/seeders/dbSeeder.ts"
   },
   "author": "",
   "license": "ISC",
