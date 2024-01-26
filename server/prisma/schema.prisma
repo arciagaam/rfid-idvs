@@ -58,6 +58,7 @@ model course {
 model student {
     id             Int                  @id @default(autoincrement())
     course_id      Int
+    email          String?              
     student_number String               @unique
     rfid_number    String?              @unique
     first_name     String

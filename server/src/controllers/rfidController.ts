@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "../middlewares/asyncHandler";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
+import { sendMail } from "../utils/mail";
 const prisma = new PrismaClient();
 
 const errorHasCode = (value: unknown): value is { code: number } => {
@@ -74,6 +75,14 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                     validated: true
                 }
             };
+
+            await sendMail({
+                to: email,
+                subject: "Password Reset Code",
+                text: `This is the reset code: ${resetCode}`
+            }, (info) => {
+                console.log(`Password reset code sent: ${info.messageId}`);
+            });
 
             console.log(payload)
 
