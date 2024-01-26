@@ -23,6 +23,7 @@ const selectStudentDTO: () => Prisma.studentSelect = () => {
         // Student information
         rfid_number: true,
         student_number: true,
+        email: true,
         year: true,
         terms: true,
         course: {
@@ -129,6 +130,8 @@ const getStudent = asyncHandler(async (req: Request, res: Response) => {
 
 const storeStudent = asyncHandler(async (req: Request, res: Response) => {
     const body = req.body as any;
+
+    console.log(body)
 
     try {
         const student = await prisma.student.create({

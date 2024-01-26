@@ -20,6 +20,7 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 },
                 select: {
                     id: true,
+                    email: true,
                     first_name: true,
                     middle_name: true,
                     last_name: true,
@@ -66,6 +67,7 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 }
             });
 
+
             const payload = {
                 code: 200,
                 message: "Student validated.",
@@ -76,15 +78,15 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 }
             };
 
-            await sendMail({
-                to: email,
-                subject: "Password Reset Code",
-                text: `This is the reset code: ${resetCode}`
-            }, (info) => {
-                console.log(`Password reset code sent: ${info.messageId}`);
-            });
-
-            console.log(payload)
+            if (student.email) {
+                sendMail({
+                    to: student.email,
+                    subject: "Student Validation",
+                    text: `Hello ${student.first_name}${student.middle_name !='' ? ` ${student.middle_name} ` : ' '}${student.last_name}, you are now validated for Semester ${term?.term} - School Year ${term?.school_year.year_start} - ${term?.school_year.year_end}`
+                }, (info) => {
+                    console.log(`Student validation sent: ${info.messageId}`);
+                });
+            }
 
             req.io.emit("validate_rfid_tap", payload);
             return res.status(200).json(payload);

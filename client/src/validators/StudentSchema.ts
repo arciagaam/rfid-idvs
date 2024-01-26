@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const studentSchema = z.object({
     student_number: z.coerce.string(),
+    email: z.string().optional(),
     first_name: z.string(),
     middle_name: z.string().optional(),
     last_name: z.string(),
