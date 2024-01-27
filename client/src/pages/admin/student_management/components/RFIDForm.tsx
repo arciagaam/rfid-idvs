@@ -38,8 +38,6 @@ const RFIDForm = ({ id, status, rfid_number }: TRFIDFormProps) => {
         },
     });
 
-    console.log(linkStudentForm.getValues());
-
     useEffect(() => {
         const withTimeoutOpenModal = () => {
             timeout = setTimeout(async () => {
