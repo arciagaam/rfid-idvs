@@ -38,6 +38,8 @@ const RFIDForm = ({ id, status, rfid_number }: TRFIDFormProps) => {
         },
     });
 
+    console.log(linkStudentForm.getValues());
+
     useEffect(() => {
         const withTimeoutOpenModal = () => {
             timeout = setTimeout(async () => {
@@ -68,12 +70,13 @@ const RFIDForm = ({ id, status, rfid_number }: TRFIDFormProps) => {
 
         socket.on('new_rfid_tap', (rfidData: string) => {
             setTappedRfid(rfidData);
+            linkStudentForm.setValue("rfid_number", rfidData);
         });
 
         return () => {
             socket.disconnect();
         }
-    }, [])
+    }, [linkStudentForm]);
 
     const handleFormSubmit = async (values: z.infer<typeof RFIDSchema>) => {
         const req = await studentRFID(id, values, status ? "unlink" : "link");
