@@ -154,8 +154,12 @@ const Reports = () => {
             <h2 className='text-lg font-bold'>Print Reports</h2>
 
             <div className="flex flex-col gap-5">
-                <Form {...printReportForm}>
-                    <form id="print-all-report-form" onSubmit={printReportForm.handleSubmit(handleFormSubmit)} className='grid grid-cols-2 gap-5 w-full'>
+                <Form {...printReportForm} >
+                    <form id="print-all-report-form" onSubmit={printReportForm.handleSubmit(handleFormSubmit)} className='grid grid-cols-2 gap-5 w-full' onKeyDown={(e) => {
+                        if (e.code == "Enter") {
+                            e.preventDefault();
+                        }
+                    }}>
                         <div className="flex gap-5">
                             <div className="flex flex-col">
                                 <p className="text-base font-medium">School Year</p>
