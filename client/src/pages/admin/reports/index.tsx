@@ -324,7 +324,7 @@ const Reports = () => {
                             name="verification_status"
                             render={({ field }) => (
                                 <FormItem className='col-span-2'>
-                                    <FormLabel className='text-base'>Select Verification Status <span className='text-xs text-black/50 ml-2 text-top'>optional</span></FormLabel>
+                                    <FormLabel className='text-base'>Select Validation Status <span className='text-xs text-black/50 ml-2 text-top'>optional</span></FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -333,8 +333,8 @@ const Reports = () => {
                                         </FormControl>
                                         <SelectContent>
                                             <SelectItem value="all">All</SelectItem>
-                                            <SelectItem value="verified">Verified</SelectItem>
-                                            <SelectItem value="non-verified">Non-Verified</SelectItem>
+                                            <SelectItem value="verified">Validated</SelectItem>
+                                            <SelectItem value="non-verified">Non-Validated</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
