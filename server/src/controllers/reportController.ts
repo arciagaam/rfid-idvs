@@ -147,6 +147,13 @@ const reportIDValidation = asyncHandler(async (req: Request, res: Response) => {
 const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) => {
     const { term_id, student_year_level, verification_status, start_date, end_date } = req.body
     const students: TStudentValidationDTO[] = [];
+    
+    let startDate = new Date(new Date(start_date).setUTCHours(0, 0, 0, 0))
+    let endDate = new Date(new Date(end_date).setUTCHours(23, 59, 59, 999))
+
+    startDate = new Date(startDate.setDate(startDate.getDate() + 1));
+    endDate = new Date(endDate.setDate(endDate.getDate() + 1));
+
 
     const studentSelect: Prisma.studentSelect = {
         id: true,
@@ -179,8 +186,8 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
             where: {
                 student: studentWhere(),
                 created_at: {
-                    gte: new Date(new Date(start_date).setUTCHours(0, 0, 0, 0)),
-                    lte: new Date(new Date(end_date).setUTCHours(23, 59, 59, 999)),
+                    gte: startDate,
+                    lte: endDate,
                 },
                 term_id: term_id,
             },
@@ -208,8 +215,8 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
         const _validatedStudents = await prisma.term_student.findMany({
             where: {
                 created_at: {
-                    gte: new Date(new Date(start_date).setUTCHours(0, 0, 0, 0)),
-                    lte: new Date(new Date(end_date).setUTCHours(23, 59, 59, 999)),
+                    gte: startDate,
+                    lte: endDate,
                 },
                 term_id: term_id,
             },

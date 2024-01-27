@@ -26,13 +26,16 @@ const Reports = () => {
     const [selectedTermId, setSelectedTermId] = useState<Pick<TTerm, 'id'>['id']>(1);
     const [reports, setReports] = useState<TReportsTable[]>([]);
 
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 1);
+    
     const printReportForm = useForm<z.infer<typeof AllReportsSchema>>({
         resolver: zodResolver(AllReportsSchema),
         defaultValues: {
             term_id: '',
             student_year_level: '',
             verification_status: '',
-            start_date: new Date(),
+            start_date: startDate,
             end_date: new Date()
         },
     })

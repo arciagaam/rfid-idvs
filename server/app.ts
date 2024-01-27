@@ -9,6 +9,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 
+
 let connectionLogged = false
 
 export const USER_IMAGE_STORAGE_PATH = path.join(__dirname, "public", "images", "users")
