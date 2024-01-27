@@ -345,7 +345,7 @@ const Reports = () => {
                 </Form>
 
                 <DataTable columns={reportColumns} data={reports} additionalColumns={
-                    <Button form='print-all-report-form' type='submit'>Print Report</Button>
+                    <Button type='button'>Print Report</Button>
                 } />
             </div>
         </div>
