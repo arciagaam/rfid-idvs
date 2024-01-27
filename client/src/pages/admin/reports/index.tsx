@@ -28,7 +28,7 @@ const Reports = () => {
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 1);
-    
+
     const printReportForm = useForm<z.infer<typeof AllReportsSchema>>({
         resolver: zodResolver(AllReportsSchema),
         defaultValues: {
@@ -232,7 +232,13 @@ const Reports = () => {
                                                         mode='single'
                                                         // captionLayout='dropdown-buttons'
                                                         selected={field.value}
-                                                        onSelect={field.onChange}
+                                                        onSelect={
+                                                            (day) => {
+                                                                if (day && day.getTime() != field.value.getTime()) {
+                                                                    field.onChange(day);
+                                                                }
+                                                            }
+                                                        }
                                                         fromYear={1960}
                                                         toYear={new Date().getFullYear()}
                                                         disabled={(date) =>
@@ -278,7 +284,13 @@ const Reports = () => {
                                                         mode='single'
                                                         // captionLayout='dropdown-buttons'
                                                         selected={field.value}
-                                                        onSelect={field.onChange}
+                                                        onSelect={
+                                                            (day) => {
+                                                                if (day && day.getTime() != field.value.getTime()) {
+                                                                    field.onChange(day);
+                                                                }
+                                                            }
+                                                        }
                                                         fromYear={1960}
                                                         toYear={new Date().getFullYear()}
                                                         disabled={(date) =>
