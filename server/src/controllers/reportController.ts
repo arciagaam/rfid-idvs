@@ -208,6 +208,7 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
             },
         });
 
+
         const validatedStudents = _students.map((value) => ({ ...value.student, ...value.term, validated: true, validated_at: value.created_at }))
 
         students.push(...validatedStudents);
@@ -247,6 +248,7 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
 
         const _students = await prisma.student.findMany({
             where: {
+                ...studentWhere(),
                 id: {
                     notIn: validatedStudentsId
                 },
