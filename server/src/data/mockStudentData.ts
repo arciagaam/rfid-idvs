@@ -10,6 +10,7 @@ const mockStudentGenerator: () => Omit<TMockStudent, "student_number"> = () => (
         last_name: faker.person.lastName(),
         address_line_1: faker.location.streetAddress(),
         address_line_2: faker.location.streetAddress(),
+        email: faker.internet.email(),
         province: faker.location.state(),
         city: faker.location.city(),
         section: faker.word.adverb(),

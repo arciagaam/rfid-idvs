@@ -5,10 +5,6 @@ import asyncHandler from "../middlewares/asyncHandler";
 
 const prisma = new PrismaClient();
 
-const getDashboard = asyncHandler(async (req: Request, res: Response) => {
-
-})
-
 const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) => {
     const { term_id, department_ids, course_ids } = req.body;
 
@@ -46,12 +42,21 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
         }
     }
 
-    const students = await prisma.student.count();
+    const students = await prisma.student.count({
+        where: {
+            deleted_at: {
+                not: null
+            }
+        }
+    });
 
     const validatedStudents = await prisma.term_student.findMany({
         where: {
             student: {
-                course: courseSelect()
+                course: courseSelect(),
+                deleted_at: {
+                    not: null
+                }
             },
             term_id: parseInt(term_id)
         },
@@ -68,6 +73,9 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
         where: {
             id: {
                 notIn: validatedStudents
+            },
+            deleted_at: {
+                not: null
             },
             course: courseSelect(),
         }
@@ -89,6 +97,5 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export {
-    getDashboard,
     getDashboardWithTerm
 };
