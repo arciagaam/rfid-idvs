@@ -349,7 +349,7 @@ const Reports = () => {
                 </Form>
 
                 <DataTable columns={reportColumns} data={reports} additionalColumns={
-                    <Button type='button'>Print Report</Button>
+                    <Button form='print-all-report-form' type='submit'>Print Report</Button>
                 } />
             </div>
         </div>
