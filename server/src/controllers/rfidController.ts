@@ -3,6 +3,7 @@ import asyncHandler from "../middlewares/asyncHandler";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { prismaErrorHandler } from "../utils/prismaErrorHandler";
 import { sendMail } from "../utils/mail";
+import { ordinalSuffix } from "../helpers/helpers";
 const prisma = new PrismaClient();
 
 const errorHasCode = (value: unknown): value is { code: number } => {
@@ -82,7 +83,7 @@ const tapRfid = asyncHandler(async (req: any, res: Response) => {
                 sendMail({
                     to: student.email,
                     subject: "Student Validation",
-                    text: `Hello ${student.first_name}${student.middle_name !='' ? ` ${student.middle_name} ` : ' '}${student.last_name}, you are now validated for Semester ${term?.term} - School Year ${term?.school_year.year_start} - ${term?.school_year.year_end}`
+                    text: `${student.first_name}${student.middle_name !='' ? ` ${student.middle_name} ` : ' '}${student.last_name}, ID has already been validated for ${ordinalSuffix(term!.term ?? 0)} Semester A.Y. ${term?.school_year.year_start}-${term?.school_year.year_end}`
                 }, (info) => {
                     console.log(`Student validation sent: ${info.messageId}`);
                 });
