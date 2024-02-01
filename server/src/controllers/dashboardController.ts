@@ -44,9 +44,7 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
 
     const students = await prisma.student.count({
         where: {
-            deleted_at: {
-                not: null
-            }
+            deleted_at: null
         }
     });
 
@@ -54,9 +52,7 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
         where: {
             student: {
                 course: courseSelect(),
-                deleted_at: {
-                    not: null
-                }
+                deleted_at: null
             },
             term_id: parseInt(term_id)
         },
@@ -74,9 +70,7 @@ const getDashboardWithTerm = asyncHandler(async (req: Request, res: Response) =>
             id: {
                 notIn: validatedStudents
             },
-            deleted_at: {
-                not: null
-            },
+            deleted_at: null,
             course: courseSelect(),
         }
     });
