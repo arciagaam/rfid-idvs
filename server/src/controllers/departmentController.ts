@@ -65,7 +65,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         rfid_number: true,
         year: true,
         section: true,
-        student_number: true
+        student_number: true,
     }
 
     const courseSelect: () => Prisma.courseWhereInput = () => {
@@ -102,6 +102,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         const _students = await prisma.term_student.findMany({
             where: {
                 student: {
+                    deleted_at: null,
                     course: courseSelect()
                 },
                 created_at: dateFilter(),
@@ -124,6 +125,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
         const _validatedStudents = await prisma.term_student.findMany({
             where: {
                 student: {
+                    deleted_at: null,
                     course: courseSelect()
                 },
                 term_id: term_id,
@@ -145,6 +147,7 @@ const getDepartmentWithTerm = asyncHandler(async (req: Request, res: Response) =
                     notIn: validatedStudentsId
                 },
                 course: courseSelect(),
+                deleted_at: null
             },
             select: studentSelect,
         });

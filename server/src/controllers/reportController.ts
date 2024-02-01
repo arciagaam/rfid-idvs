@@ -175,11 +175,14 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
     const studentWhere: () => Prisma.studentWhereInput = () => {
         if (student_year_level) {
             return {
-                year: parseInt(student_year_level)
+                year: parseInt(student_year_level),
+                deleted_at: null
             }
         }
 
-        return {}
+        return {
+            deleted_at: null
+        }
     }
 
     if (verification_status === "verified" || verification_status === "all") {
