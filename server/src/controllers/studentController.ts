@@ -266,6 +266,7 @@ const triggerModal = asyncHandler(async (req: any, res: Response, next: NextFunc
 
 const linkRfid = asyncHandler(async (req: Request, res: Response) => {
     const { id, rfid_number } = req.body;
+    console.log('link?')
     await prisma.student.update({
         where: {
             id: parseInt(id)
@@ -281,6 +282,7 @@ const linkRfid = asyncHandler(async (req: Request, res: Response) => {
             rfidNumber: rfid_number
         }
     };
+
 
     res.status(200).json(payload);
 })

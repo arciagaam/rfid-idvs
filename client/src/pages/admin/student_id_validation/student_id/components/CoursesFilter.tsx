@@ -52,7 +52,7 @@ const CoursesFilter = ({ courses, selectedValues, setSelectedValues }: TCourseFi
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[256px] justify-between"
+                    className="w-[256px] justify-between overflow-hidden"
                     title={SelectedValuesTitle()}
                 >
                     {selectedValues.length

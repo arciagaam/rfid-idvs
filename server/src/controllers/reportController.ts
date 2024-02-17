@@ -135,10 +135,24 @@ const reportIDValidation = asyncHandler(async (req: Request, res: Response) => {
     }
 
     const sortedStudents = students.sort((a, b) => a.id - b.id)
+
+    const term = await prisma.term.findFirst({
+        where: {
+            id: term_id
+        },
+        select: {
+            term: true,
+            school_year: true
+        }
+    })
+    
     const payload = {
         code: 200,
         message: "Department and student from term successfully retrieved.",
-        data: sortedStudents
+        data: {
+            term: term,
+            students: sortedStudents
+        }
     };
 
     res.status(200).json(payload);
@@ -148,7 +162,7 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
     const { term_id, student_year_level, verification_status, start_date, end_date } = req.body
 
     const students: TStudentValidationDTO[] = [];
-    
+
     let startDate = new Date(new Date(start_date).setUTCHours(0, 0, 0, 0))
     let endDate = new Date(new Date(end_date).setUTCHours(23, 59, 59, 999))
 
@@ -186,7 +200,7 @@ const allReportsIDValidation = asyncHandler(async (req: Request, res: Response) 
     }
 
     if (verification_status === "verified" || verification_status === "all") {
-        
+
         const _students = await prisma.term_student.findMany({
             where: {
                 student: studentWhere(),

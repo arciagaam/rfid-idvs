@@ -39,7 +39,7 @@ const PrintReportModalBody = ({term_id, selectedCourses, validated_status}: {ter
             selected_courses: selectedCourses,
             name: slug
         });
-
+        
 
         const req = await printReport(formValues);
 
@@ -47,11 +47,17 @@ const PrintReportModalBody = ({term_id, selectedCourses, validated_status}: {ter
 
         const res = await req.json();
 
+        
+
         if (res.data) {
-            const resData = {data: res.data};
+            const resData = {data: res.data.students};
             const formValues = printReportForm.getValues() 
+       
 
             Object.assign(resData, {
+                termSchoolYear: res.data.term.term,
+                schoolYearStart: res.data.term?.school_year?.year_start ?? "N/A",
+                schoolYearEnd: res.data.term?.school_year?.year_end ?? "N/A",
                 startDate: formValues.start_date, 
                 endDate: formValues.end_date,
                 studentYearLevel: formValues.student_year_level,

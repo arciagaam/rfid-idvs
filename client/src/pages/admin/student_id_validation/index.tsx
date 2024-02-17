@@ -53,7 +53,7 @@ const StudentIDValidation = () => {
 
     return (
         <div className="flex flex-col gap-6 w-full justify-between">
-            <h2 className='text-lg font-bold'>ID Validation - {departmentName ? departmentName : "Invalid Department"}</h2>
+            <h2 className='text-lg font-bold self-center'>ID Validation - {departmentName ? departmentName : "Invalid Department"}</h2>
 
             <Tabs defaultValue="student_id">
                 <TabsList>

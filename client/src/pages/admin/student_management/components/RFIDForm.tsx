@@ -107,6 +107,11 @@ const RFIDForm = ({ id, status, rfid_number }: TRFIDFormProps) => {
             }
 
             toast.success(res.message)
+            return;
+        }
+
+        if (res.message) {
+            toast.error('This RFID Number is already linked to another student');
         }
     }
 

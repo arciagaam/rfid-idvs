@@ -192,9 +192,9 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                 name="address_line_1"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Address Line 1</FormLabel>
+                        <FormLabel>Street</FormLabel>
                         <FormControl>
-                            <Input placeholder="Enter address line 1" {...field} />
+                            <Input placeholder="Enter street" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -206,9 +206,9 @@ const StudentInformationForm = ({ addStudentForm, courses }: {
                 name="address_line_2"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Address Line 2 <FormLabelHelper /></FormLabel>
+                        <FormLabel>Barangay<FormLabelHelper /></FormLabel>
                         <FormControl>
-                            <Input placeholder="Enter address line 2" {...field} />
+                            <Input placeholder="Enter barangay" {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
