@@ -202,7 +202,7 @@ const PrintReportModalBody = ({term_id, selectedCourses, validated_status}: {ter
                         name="student_year_level"
                         render={({ field }) => (
                             <FormItem className='flex-1'>
-                                <FormLabel>Student Year Level <span className='text-xs text-black/50 ml-2 text-top'>optional</span> </FormLabel>
+                                <FormLabel>Student Year Level </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Year Level" {...field} />
                                 </FormControl>

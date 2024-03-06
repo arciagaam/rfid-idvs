@@ -315,7 +315,7 @@ const Reports = () => {
                             name="student_year_level"
                             render={({ field }) => (
                                 <FormItem className='flex-1'>
-                                    <FormLabel>Student Year Level <span className='text-xs text-black/50 ml-2 text-top'>optional</span> </FormLabel>
+                                    <FormLabel>Student Year Level </FormLabel>
                                     <FormControl>
                                         <Input placeholder="Year Level" {...field} />
                                     </FormControl>
@@ -328,7 +328,7 @@ const Reports = () => {
                             name="verification_status"
                             render={({ field }) => (
                                 <FormItem className='col-span-2'>
-                                    <FormLabel className='text-base'>Select Validation Status <span className='text-xs text-black/50 ml-2 text-top'>optional</span></FormLabel>
+                                    <FormLabel className='text-base'>Select Validation Status </FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                         <FormControl>
                                             <SelectTrigger>

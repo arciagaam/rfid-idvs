@@ -188,7 +188,7 @@ const EditStudentForm = ({ id, courses }: TEditUserFormProps) => {
                     name="address_line_1"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Street</FormLabel>
+                            <FormLabel>Street <FormLabelHelper /></FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter street" {...field} />
                             </FormControl>
@@ -202,7 +202,7 @@ const EditStudentForm = ({ id, courses }: TEditUserFormProps) => {
                     name="address_line_2"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Barangay<FormLabelHelper /></FormLabel>
+                            <FormLabel>Barangay</FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter barangay" {...field} />
                             </FormControl>
