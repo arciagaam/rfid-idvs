@@ -190,9 +190,9 @@ const PageForm = ({ page, form, nextPage, prevPage }: TPageForm) => {
                     name="confirm_password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Password</FormLabel>
+                            <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your password" type="password" {...field} />
+                                <Input placeholder="Enter you password again" type="password" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

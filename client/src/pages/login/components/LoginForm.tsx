@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
     Form,
@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -24,6 +26,7 @@ import { loginSchema } from "@/validators/LoginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginForm = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const loginForm = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -53,7 +56,7 @@ const LoginForm = () => {
     }, [user, navigate]);
 
     return (
-            <Form {...loginForm}>
+        <Form {...loginForm}>
             <form
                 onSubmit={loginForm.handleSubmit(handleFormSubmit)}
                 className="w-full flex flex-col gap-4"
@@ -84,7 +87,20 @@ const LoginForm = () => {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your password" type="password" {...field} />
+                                <>
+                                    <div className="relative">
+                                        <Input placeholder="Enter your password" type={showPassword ? "text" : "password"} {...field} />
+                                        <button className="absolute right-2 top-1/2 -translate-y-1/2" onClick={() => setShowPassword(!showPassword)} type="button">
+                                            {
+                                                showPassword ? (
+                                                    <FaEye />
+                                                ) : (
+                                                    <FaEyeSlash />
+                                                )
+                                            }
+                                        </button>
+                                    </div>
+                                </>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
